@@ -123,6 +123,61 @@ const faqItems = [
 
 const heroImage = '/images/hero-devices.webp';
 const heroImageExists = publicImageExists(heroImage);
+
+// Hero panel: τα 10 «πράγματα». idle = ο πόνος του πελάτη, active = τι αναλαμβάνουμε.
+// Τα icons είναι inline SVG paths (24×24, stroke currentColor) — μηδέν extra request.
+const heroChips = [
+  {
+    idle: 'Δεν με βρίσκουν στο Google',
+    active: 'SEO & AEO',
+    icon: '<circle cx="11" cy="11" r="7"/><path d="M20 20l-3.6-3.6"/>',
+  },
+  {
+    idle: 'Επισκέψεις, αλλά όχι πωλήσεις',
+    active: 'Conversion optimization',
+    icon: '<path d="M3 5h18l-7 8v6.5l-4 1.8V13L3 5z"/>',
+  },
+  {
+    idle: 'Ακριβά clicks, λίγες πωλήσεις',
+    active: 'Διαφήμιση με μετρήσιμο ROAS',
+    icon: '<circle cx="12" cy="12" r="7.5"/><circle cx="12" cy="12" r="3"/><path d="M12 2.2v2.6M12 19.2v2.6M2.2 12h2.6M19.2 12h2.6"/>',
+  },
+  {
+    idle: 'Δεν προλαβαίνω να το τρέχω',
+    active: 'Το αναλαμβάνουμε εμείς',
+    icon: '<circle cx="12" cy="12" r="8.5"/><path d="M12 7.2V12l3.1 2.1"/>',
+  },
+  {
+    idle: 'Αφήνουν το καλάθι στη μέση',
+    active: 'Checkout σε 3 βήματα',
+    icon: '<path d="M2.6 3.5h2.3l2.2 10.4a1.6 1.6 0 0 0 1.6 1.3h7.6a1.6 1.6 0 0 0 1.6-1.2L19.6 7H5.7"/><circle cx="9.6" cy="19.4" r="1.4"/><circle cx="16.6" cy="19.4" r="1.4"/>',
+  },
+  {
+    idle: 'Αργεί, ειδικά στο κινητό',
+    active: 'Φορτώνει κάτω από 1 δευτ.',
+    icon: '<path d="M13.2 2.2 4.6 13.6h6.2L10.8 21.8l8.6-11.4h-6.2l0-8.2z"/>',
+  },
+  {
+    idle: 'Στοκ & παραγγελίες στο χέρι',
+    active: 'Σύνδεση με ERP και feeds',
+    icon: '<path d="M20 11a8 8 0 0 0-13.7-5.4L4.2 7.8"/><path d="M4 4.2v4h4"/><path d="M4 13a8 8 0 0 0 13.7 5.4l2.1-2.2"/><path d="M20 19.8v-4h-4"/>',
+  },
+  {
+    idle: 'Δεν με εμπιστεύονται αρκετά',
+    active: 'Ασφάλεια, κριτικές, πληρωμές',
+    icon: '<path d="M12 2.8 19.3 6v5.4c0 4.5-3 8.2-7.3 9.4-4.3-1.2-7.3-4.9-7.3-9.4V6L12 2.8z"/><path d="M8.9 11.9l2.2 2.2 4.2-4.3"/>',
+  },
+  {
+    idle: 'Πνίγομαι στα μηνύματα',
+    active: 'Αυτοματισμοί & support',
+    icon: '<path d="M20.6 11.9c0 3.9-3.9 7.1-8.6 7.1-1 0-2-.15-2.9-.42L4 20.5l1.5-3.7C4.2 15.5 3.4 13.8 3.4 11.9c0-3.9 3.9-7.1 8.6-7.1s8.6 3.2 8.6 7.1z"/>',
+  },
+  {
+    idle: 'Δεν ξέρω τι πιάνει τελικά',
+    active: 'Analytics που καταλαβαίνεις',
+    icon: '<path d="M3.2 20.2h17.6"/><path d="M6.8 20.2v-6.1M12 20.2V9.2M17.2 20.2v-8.3"/>',
+  },
+];
 ---
 
 <BaseLayout
@@ -135,27 +190,244 @@ const heroImageExists = publicImageExists(heroImage);
        HERO
        ═══════════════════════════════════════════════ -->
   <section class="hero">
-    <div class="container hero__container">
-      <h1 class="hero__title reveal">
-        Φτιάχνουμε e-shop και<br/>
-        ιστοσελίδες που <em>πουλάνε</em>.
-      </h1>
-      <p class="hero__sub reveal">
-        Από την ιδέα μέχρι την πρώτη παραγγελία, και μετά. Σχεδιάζουμε, στήνουμε
-        και φροντίζουμε την online παρουσία σου, για να ασχολείσαι εσύ με αυτό που
-        ξέρεις καλύτερα: την επιχείρησή σου.
-      </p>
-      <div class="hero__cta reveal">
-        <a href="/contact" class="btn-hero-primary">
-          Πες μας για το project σου
-          <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
-        </a>
-        <a href="/portfolio" class="btn-hero-secondary">
-          Δες τις δουλειές μας →
-        </a>
+    <div class="container hero__grid">
+      <div class="hero__copy">
+        <span class="hero__eyebrow reveal">Κατασκευή e-shop &amp; ιστοσελίδων</span>
+        <h1 class="hero__title reveal">
+          Από την ιδέα,<br/>
+          σε <em>pixel</em> και <em>κώδικα</em>.
+        </h1>
+        <p class="hero__lead reveal">
+          Φτιάχνουμε e-shop και ιστοσελίδες που πουλάνε.
+        </p>
+        <p class="hero__sub reveal">
+          Τα περισσότερα projects δεν κολλάνε στην ιδέα. Κολλάνε στην οργάνωση.
+          Εμείς βάζουμε σε σειρά τα κομμάτια — σχεδιασμό, κώδικα, ταχύτητα, SEO,
+          συνδέσεις — και τα κάνουμε ένα site που δουλεύει.
+        </p>
+        <div class="hero__cta reveal">
+          <a href="/contact" class="btn-hero-primary" data-hero-trigger>
+            Πες μας για το project σου
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </a>
+          <a href="/portfolio" class="btn-hero-secondary">
+            Δες τις δουλειές μας →
+          </a>
+        </div>
+        <p class="hero__trust reveal">Χωρίς jargon. Με μετρήσιμα αποτελέσματα.</p>
+      </div>
+
+      <div class="hero__panel" data-hero-panel>
+        <div class="hero__panel-head" aria-hidden="true">
+          <span class="hero__panel-dot" data-hero-dot></span>
+          <span class="hero__panel-title" data-hero-title>10 πράγματα που σε τρώνε</span>
+        </div>
+
+        <div class="hero__chips" data-hero-layer aria-hidden="true">
+          {heroChips.map((c) => (
+            <div class="hchip" data-hchip data-idle={c.idle} data-active={c.active}>
+              <span class="hchip__dot"></span>
+              <svg class="hchip__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" set:html={c.icon} />
+              <span class="hchip__label" data-hchip-label>{c.idle}</span>
+              <svg class="hchip__check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12.6l5 5 11-11"/></svg>
+            </div>
+          ))}
+        </div>
+
+        <!-- Το panel είναι διακοσμητικό, οι υπηρεσίες όμως όχι: τις δίνουμε ως λίστα στα screen readers. -->
+        <ul class="hero__sr-list">
+          {heroChips.map((c) => <li>{c.active}</li>)}
+        </ul>
       </div>
     </div>
   </section>
+
+  <!-- Hero panel: chaos → order. Vanilla JS, ένα rAF loop, μηδέν dependencies. -->
+  <script is:inline>
+    (() => {
+      const panel = document.querySelector('[data-hero-panel]');
+      if (!panel) return;
+      const layer = panel.querySelector('[data-hero-layer]');
+      const head = panel.querySelector('[data-hero-title]');
+      const trigger = document.querySelector('[data-hero-trigger]');
+      const nodes = [].slice.call(layer.querySelectorAll('[data-hchip]'));
+      if (nodes.length !== 10) return;
+
+      const T_IDLE = '10 πράγματα που σε τρώνε';
+      const T_ON = '10 πράγματα που αναλαμβάνουμε';
+
+      // Σταθερά, όχι τυχαία ανά load: το layout δεν «χοροπηδάει» σε resize.
+      const SX = [.05, .82, .24, .96, 0, .58, .11, .90, .34, .72];
+      const SY = [.02, .10, .22, .31, .42, .50, .62, .71, .81, .96];
+      const ROT = [-6.2, 4.8, -3.1, 7.4, -8.3, 2.6, -5.4, 8.1, -2.2, 5.9];
+      const PER = [12300, 15100, 13700, 16400, 12900, 14600, 17000, 13100, 15800, 14100];
+
+      const RM = matchMedia('(prefers-reduced-motion: reduce)').matches;
+      const HOVER = matchMedia('(hover: hover) and (pointer: fine)').matches;
+      const ROW = 32, GAP = 5, PADX = 14, PADY = 28;
+
+      const items = nodes.map((el, i) => ({
+        el: el,
+        label: el.querySelector('[data-hchip-label]'),
+        idle: el.getAttribute('data-idle'),
+        on: el.getAttribute('data-active'),
+        rot: ROT[i], per: PER[i], ph: i * 1.71,
+        x: 0, y: 0, r: ROT[i], sx: 0, sy: 0, cx: 0, cy: 0,
+        pop: 0, flick: 0, op: 1,
+      }));
+
+      layer.classList.add('is-ready');
+
+      let active = false, engaged = false, locked = false, placed = false;
+      let swapT = null, autoOn = null, autoOff = null, raf = 0;
+
+      function draw(it, jx, jy) {
+        it.el.style.transform =
+          'translate3d(' + (it.x + jx).toFixed(2) + 'px,' + (it.y + jy).toFixed(2) + 'px,0)' +
+          ' rotate(' + it.r.toFixed(2) + 'deg) scale(' + (1 + it.pop).toFixed(3) + ')';
+      }
+
+      function layout() {
+        const w = layer.clientWidth, h = layer.clientHeight;
+        const cw = Math.min(248, Math.max(196, panel.clientWidth - 40));
+        const spanX = Math.max(0, w - cw - PADX * 2);
+        const spanY = Math.max(0, h - ROW - PADY * 2);
+        const colX = Math.round((w - cw) / 2);
+        const colTop = Math.round((h - (10 * ROW + 9 * GAP)) / 2);
+
+        for (let i = 0; i < 10; i++) {
+          const it = items[i];
+          it.el.style.width = cw + 'px';
+          it.sx = Math.round(PADX + SX[i] * spanX);
+          it.sy = Math.round(PADY + SY[i] * spanY);
+          it.cx = colX;
+          it.cy = colTop + i * (ROW + GAP);
+        }
+
+        // Πρώτο πέρασμα (και reduced motion): κουμπώνει κατευθείαν, χωρίς fly-in.
+        if (!placed || RM) {
+          placed = true;
+          const ordered = RM || active;
+          for (let i = 0; i < 10; i++) {
+            const it = items[i];
+            it.x = ordered ? it.cx : it.sx;
+            it.y = ordered ? it.cy : it.sy;
+            it.r = ordered ? 0 : it.rot;
+            draw(it, 0, 0);
+          }
+        }
+      }
+
+      // Ένα κοινό timeout: γρήγορο hover in/out δεν ξεσυγχρονίζει τα labels.
+      function setLabels(on) {
+        clearTimeout(swapT);
+        layer.classList.add('is-swapping');
+        swapT = setTimeout(() => {
+          for (let i = 0; i < 10; i++) items[i].label.textContent = on ? items[i].on : items[i].idle;
+          layer.classList.remove('is-swapping');
+        }, 170);
+      }
+
+      function setState(on) {
+        if (on === active || (locked && !on)) return;
+        active = on;
+        panel.classList.toggle('is-active', on);
+        head.textContent = on ? T_ON : T_IDLE;
+        if (RM) return;
+        if (on) for (let i = 0; i < 10; i++) items[i].pop = 0.045;
+        setLabels(on);
+      }
+
+      function bind() {
+        if (!trigger) return;
+        trigger.addEventListener('mouseenter', () => { engage(); setState(true); });
+        trigger.addEventListener('focus', () => { engage(); setState(true); });
+        trigger.addEventListener('mouseleave', () => setState(false));
+        trigger.addEventListener('blur', () => setState(false));
+      }
+
+      function engage() {
+        if (engaged) return;
+        engaged = true;
+        clearTimeout(autoOn);
+        clearTimeout(autoOff);
+      }
+
+      // Reduced motion: η τελική εικόνα, χωρίς καμία κίνηση.
+      if (RM) {
+        for (let i = 0; i < 10; i++) items[i].label.textContent = items[i].on;
+        layout();
+        new ResizeObserver(layout).observe(layer);
+        bind();
+        return;
+      }
+
+      const t0 = performance.now();
+      function frame(now) {
+        const t = now - t0, k = active ? 0.16 : 0.08;
+
+        for (let i = 0; i < 10; i++) {
+          const it = items[i];
+          let tx, ty, tr;
+
+          if (active) {
+            tx = it.cx; ty = it.cy; tr = 0;
+            it.flick = 0;
+          } else {
+            const a = (t / it.per) * 6.28318 + it.ph;
+            tx = it.sx + Math.sin(a) * 6;
+            ty = it.sy + Math.cos(a * 0.78 + it.ph) * 7;
+            tr = it.rot;
+            if (it.flick > 0) it.flick--;
+            else if (Math.random() < 0.0024) it.flick = 2 + ((Math.random() * 5) | 0);
+          }
+
+          it.x += (tx - it.x) * k;
+          it.y += (ty - it.y) * k;
+          it.r += (tr - it.r) * k;
+          it.pop = it.pop > 0.0004 ? it.pop * 0.87 : 0;
+
+          let jx = 0, jy = 0;
+          const op = it.flick > 0 ? 0.16 : 1;
+          if (op < 1) { jx = Math.random() * 4 - 2; jy = Math.random() * 4 - 2; }
+          if (op !== it.op) { it.op = op; it.el.style.opacity = op; }
+
+          draw(it, jx, jy);
+        }
+        raf = requestAnimationFrame(frame);
+      }
+
+      layout();
+      new ResizeObserver(layout).observe(layer);
+      raf = requestAnimationFrame(frame);
+      bind();
+
+      document.addEventListener('visibilitychange', () => {
+        if (document.hidden) { cancelAnimationFrame(raf); raf = 0; }
+        else if (!raf) raf = requestAnimationFrame(frame);
+      });
+
+      if (HOVER) {
+        autoOn = setTimeout(() => {
+          if (engaged) return;
+          setState(true);
+          autoOff = setTimeout(() => { if (!engaged) setState(false); }, 2200);
+        }, 1500);
+      } else if ('IntersectionObserver' in window) {
+        // Χωρίς hover: τακτοποιείται μία φορά μόλις γίνει ορατό και μένει έτσι.
+        const io = new IntersectionObserver((es) => {
+          for (const e of es) {
+            if (!e.isIntersecting) continue;
+            engage();
+            setState(true);
+            locked = true;
+            io.disconnect();
+          }
+        }, { threshold: 0.5 });
+        io.observe(panel);
+      }
+    })();
+  </script>
 
   <!-- ═══════════════════════════════════════════════
        SERVICES + STATS
@@ -390,37 +662,65 @@ const heroImageExists = publicImageExists(heroImage);
      ═══════════════════════════════════════════ */
 
   .hero {
-    padding: calc(var(--navbar-height) + 4rem) 0 3.5rem;
+    /* Τοπικά tokens του hero, χαρτογραφημένα στο υπάρχον design system. */
+    --h-accent: var(--accent-violet);
+    --h-accent-ink: color-mix(in srgb, var(--accent-violet) 68%, #000);
+    --h-ok: var(--accent-emerald);
+    --h-ok-ink: color-mix(in srgb, var(--accent-emerald) 74%, #000);
+    --h-alert: var(--accent-rose);
+    --h-muted: #6b7280;
+    --h-line: var(--theme-surface-2);
+
+    padding: calc(var(--navbar-height) + 3.25rem) 0 3.5rem;
   }
 
-  .hero__container {
-    max-width: 780px;
+  .hero__grid {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 480px;
+    gap: 40px;
+    align-items: center;
+  }
+
+  .hero__eyebrow {
+    display: block;
+    font-size: 0.72rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.16em;
+    color: var(--h-accent-ink);
+    margin-bottom: 0.9rem;
   }
 
   .hero__title {
-    font-size: clamp(2.6rem, 6vw, 4.5rem);
+    font-size: clamp(1.94rem, 4.4vw, 2.625rem);
     font-weight: 800;
-    letter-spacing: -0.04em;
-    line-height: 1.05;
+    letter-spacing: -0.035em;
+    line-height: 1.06;
     color: var(--theme-on-bg);
-    margin-bottom: 1.25rem;
+    margin-bottom: 0.85rem;
   }
 
   .hero__title em {
     font-style: normal;
-    background: linear-gradient(135deg, var(--accent-blue), var(--accent-violet));
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
+    color: var(--h-accent);
+  }
+
+  /* Κρατάει τα κύρια keywords ψηλά στο DOM μετά το νέο h1. */
+  .hero__lead {
+    font-size: 1rem;
+    font-weight: 600;
+    line-height: 1.45;
+    color: var(--theme-on-bg);
+    margin-bottom: 0.75rem;
   }
 
   .hero__sub {
-    font-size: 1.15rem;
-    line-height: 1.65;
+    font-size: 0.9375rem;
+    line-height: 1.62;
     color: var(--theme-on-bg);
-    opacity: 0.7;
-    margin-bottom: 2rem;
-    max-width: 640px;
+    opacity: 0.68;
+    margin-bottom: 1.75rem;
+    max-width: 46ch;
   }
 
   .hero__cta {
@@ -428,6 +728,177 @@ const heroImageExists = publicImageExists(heroImage);
     align-items: center;
     gap: 1.5rem;
     flex-wrap: wrap;
+  }
+
+  .hero__trust {
+    margin-top: 1.1rem;
+    font-size: 11.5px;
+    font-weight: 500;
+    color: var(--h-muted);
+  }
+
+  /* ── Panel ─────────────────────────────────── */
+
+  .hero__panel {
+    position: relative;
+    height: 436px;
+    background: #fff;
+    border: 1px solid var(--h-line);
+    border-radius: 14px;
+    overflow: hidden;
+    transition: border-color 0.35s ease, box-shadow 0.35s ease;
+  }
+
+  .hero__panel.is-active {
+    border-color: color-mix(in srgb, var(--h-accent) 32%, transparent);
+    box-shadow:
+      0 0 0 4px color-mix(in srgb, var(--h-accent) 7%, transparent),
+      0 14px 44px -22px color-mix(in srgb, var(--h-accent) 70%, transparent);
+  }
+
+  .hero__panel-head {
+    position: absolute;
+    inset: 0 0 auto 0;
+    z-index: 2;
+    height: 42px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 0 14px;
+    background: #fff;
+    border-bottom: 1px solid var(--h-line);
+  }
+
+  .hero__panel-dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    flex: none;
+    background: var(--h-alert);
+    animation: hero-blink 1.5s steps(1, end) infinite;
+  }
+
+  @keyframes hero-blink {
+    0%, 49% { opacity: 1; }
+    50%, 100% { opacity: 0.18; }
+  }
+
+  .hero__panel.is-active .hero__panel-dot {
+    background: var(--h-ok);
+    opacity: 1;
+    animation: none;
+    box-shadow: 0 0 0 3px color-mix(in srgb, var(--h-ok) 24%, transparent);
+  }
+
+  .hero__panel-title {
+    font-size: 11.5px;
+    font-weight: 600;
+    color: var(--h-muted);
+    transition: color 0.35s ease;
+  }
+
+  .hero__panel.is-active .hero__panel-title {
+    color: var(--h-ok-ink);
+  }
+
+  /* ── Chips ─────────────────────────────────── */
+
+  .hero__chips {
+    position: absolute;
+    inset: 42px 0 0 0;
+    overflow: hidden;
+  }
+
+  /* Fallback χωρίς JS: στατική, τακτοποιημένη στήλη. */
+  .hero__chips:not(.is-ready) {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 5px;
+  }
+
+  .hchip {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    height: 32px;
+    padding: 0 11px;
+    border-radius: 9px;
+    background: #fff;
+    border: 1px solid var(--h-line);
+    font-size: 11.5px;
+    font-weight: 600;
+    color: var(--h-muted);
+    white-space: nowrap;
+    overflow: hidden;
+    box-sizing: border-box;
+    transition: color 0.35s ease, border-color 0.35s ease, box-shadow 0.35s ease;
+  }
+
+  .hero__chips.is-ready .hchip {
+    position: absolute;
+    top: 0;
+    left: 0;
+    will-change: transform;
+  }
+
+  .hchip__dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    flex: none;
+    background: var(--h-alert);
+    transition: background 0.35s ease;
+  }
+
+  .hchip__icon {
+    width: 15px;
+    height: 15px;
+    flex: none;
+  }
+
+  .hchip__label {
+    flex: 1 1 auto;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    transition: opacity 0.16s ease;
+  }
+
+  /* Το «σβήσιμο» είναι ακαριαίο, το fade-in 160ms. */
+  .hero__chips.is-swapping .hchip__label {
+    opacity: 0;
+    transition: none;
+  }
+
+  .hchip__check {
+    width: 14px;
+    height: 14px;
+    flex: none;
+    color: var(--h-ok);
+    opacity: 0;
+    transition: opacity 0.3s ease;
+  }
+
+  .hero__panel.is-active .hchip {
+    color: #111827;
+    border-color: color-mix(in srgb, var(--h-accent) 28%, transparent);
+    box-shadow: 0 2px 10px -6px color-mix(in srgb, var(--h-accent) 50%, transparent);
+  }
+
+  .hero__panel.is-active .hchip__dot { background: var(--h-ok); }
+  .hero__panel.is-active .hchip__check { opacity: 1; }
+
+  .hero__sr-list {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    margin: -1px;
+    padding: 0;
+    overflow: hidden;
+    clip-path: inset(50%);
+    white-space: nowrap;
+    border: 0;
   }
 
   .btn-hero-primary {
@@ -446,6 +917,11 @@ const heroImageExists = publicImageExists(heroImage);
   .btn-hero-primary:hover {
     opacity: 0.85;
     transform: translateY(-1px);
+  }
+
+  .btn-hero-primary:focus-visible {
+    outline: 2px solid var(--h-accent);
+    outline-offset: 3px;
   }
 
   .btn-hero-secondary {
@@ -924,6 +1400,19 @@ const heroImageExists = publicImageExists(heroImage);
     }
   }
 
+  /* Το hero σπάει στα 880px, ανεξάρτητα από τα υπόλοιπα breakpoints. */
+  @media (max-width: 879px) {
+    .hero__grid {
+      grid-template-columns: minmax(0, 1fr);
+      gap: 32px;
+    }
+
+    .hero__panel {
+      width: 100%;
+      max-width: 480px;
+    }
+  }
+
   @media (max-width: 768px) {
     .hide-mobile { display: none; }
 
@@ -931,12 +1420,6 @@ const heroImageExists = publicImageExists(heroImage);
       padding-top: calc(var(--navbar-height) + 2.5rem);
       padding-bottom: 2.5rem;
     }
-
-    .hero__title {
-      font-size: clamp(2rem, 8vw, 3rem);
-    }
-
-    .hero__sub { font-size: 1rem; }
 
     .hero__cta {
       flex-direction: column;
@@ -966,12 +1449,17 @@ const heroImageExists = publicImageExists(heroImage);
   }
 
   @media (max-width: 420px) {
-    .hero__title {
-      font-size: 1.85rem;
-    }
-
     .bento__card {
       padding: 1.25rem;
+    }
+  }
+
+  /* Reduced motion: καμία κίνηση — μόνο η τελική, τακτοποιημένη εικόνα. */
+  @media (prefers-reduced-motion: reduce) {
+    .hero__panel-dot { animation: none; }
+    .hchip, .hchip__label, .hchip__check, .hero__panel,
+    .hero__panel-title, .hchip__dot {
+      transition-duration: 0.01ms;
     }
   }
 </style>
