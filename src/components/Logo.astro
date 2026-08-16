@@ -1,18 +1,49 @@
 ---
+/**
+ * Το λογότυπο ως <img>. Τα SVG ζουν στο public/assets/logos/ και δεν γίνονται
+ * inline: τα δύο αρχεία μοιράζονται τα ίδια class names (.st0/.st1/.st2) από το
+ * Illustrator και θα συγκρούονταν αν έμπαιναν μαζί στην ίδια σελίδα.
+ *
+ * tone: 'ink' για ανοιχτά φόντα, 'light' για σκούρα (footer, διάφανο navbar
+ * πάνω από σκούρο hero) όπου το σκούρο γκρι του wordmark δεν διαβάζεται.
+ *
+ * Τα PNG δίπλα στα SVG είναι για χρήσεις που δεν σηκώνουν SVG (email, OG).
+ */
+export interface Props {
+	variant?: 'horizontal' | 'vertical';
+	tone?: 'ink' | 'light';
+	alt?: string;
+	/** Όταν το ίδιο λογότυπο υπάρχει ήδη στη σελίδα — το κρύβει από τους readers. */
+	decorative?: boolean;
+	class?: string;
+	loading?: 'eager' | 'lazy';
+}
+
+const {
+	variant = 'horizontal',
+	tone = 'ink',
+	alt = 'phpixel',
+	decorative = false,
+	class: className,
+	loading = 'eager',
+} = Astro.props;
+
+/** Ακέραιες τιμές του viewBox — κρατάνε το aspect ratio πριν φορτώσει το αρχείο. */
+const size = {
+	horizontal: { width: 488, height: 163 },
+	vertical: { width: 701, height: 700 },
+}[variant];
+
+const src = `/assets/logos/phpixel-${variant}${tone === 'light' ? '-light' : ''}.svg`;
 ---
 
-<p class="odyssey-logo">phpixel</p>
-
-<style>
-	.odyssey-logo {
-		width: fit-content;
-		margin: 0;
-		font-family: var(--theme-font-family-serif);
-    font-size: var(--font-size-md);
-		color: inherit;
-	}
-	.odyssey-logo:hover {
-		text-decoration: underline;
-		cursor: pointer;
-	}
-</style>
+<img
+	src={src}
+	alt={decorative ? '' : alt}
+	aria-hidden={decorative ? 'true' : undefined}
+	width={size.width}
+	height={size.height}
+	loading={loading}
+	decoding="async"
+	class:list={['logo-img', `logo-img--${variant}`, className]}
+/>

@@ -1,10 +1,10 @@
 ---
 /**
  * Navbar + mobile overlay. Τα styles ζουν στο src/styles/layout.css γιατί
- * μοιράζονται κλάσεις με τον Footer (.logo-text, .logo-accent) και με τις
- * σελίδες (.btn).
+ * μοιράζονται κλάσεις με τον Footer (.logo-img) και με τις σελίδες (.btn).
  */
 import { Icon } from 'astro-icon/components';
+import Logo from '../Logo.astro';
 import { nav } from '../../config/site';
 
 export interface Props {
@@ -18,8 +18,16 @@ const currentPath = Astro.url.pathname;
 
 <header class:list={['navbar', { 'navbar--dark-hero': darkHero }]} id="navbar">
 	<div class="navbar__inner">
-		<a href="/" class="navbar__logo" transition:name="logo">
-			<span class="logo-text">ph<span class="logo-accent">pixel</span></span>
+		<a href="/" class="navbar__logo" transition:name="logo" aria-label="phpixel, αρχική σελίδα">
+			<Logo variant="horizontal" class="navbar__logo-img navbar__logo-img--ink" decorative />
+			{darkHero && (
+				<Logo
+					variant="horizontal"
+					tone="light"
+					class="navbar__logo-img navbar__logo-img--light"
+					decorative
+				/>
+			)}
 		</a>
 
 		<nav class="navbar__nav" id="main-nav">

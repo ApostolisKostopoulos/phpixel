@@ -5,14 +5,22 @@
  * Styles: src/styles/layout.css.
  */
 import { Icon } from 'astro-icon/components';
+import Logo from '../Logo.astro';
 import { site, footerLists, footerSocials } from '../../config/site';
 ---
 
 <footer class="footer" id="footer">
 	<div class="footer__inner">
 		<div class="footer__brand">
-			<span class="logo-text logo-text--footer">ph<span class="logo-accent">pixel</span></span>
-			<p class="footer__tagline">{site.tagline}</p>
+			{/* Το κάθετο λογότυπο έχει ήδη μέσα του το tagline, γι' αυτό δεν
+			    επαναλαμβάνεται από κάτω σε <p>. */}
+			<Logo
+				variant="vertical"
+				tone="light"
+				alt={`${site.name}. ${site.tagline}`}
+				loading="lazy"
+				class="footer__logo"
+			/>
 			<p class="footer__contact">
 				<a href={`mailto:${site.contact.email}`}>{site.contact.email}</a>
 			</p>
