@@ -235,187 +235,228 @@ const heroChips = [
   <!-- Hero panel: chaos → order. Vanilla JS, ένα rAF loop, μηδέν dependencies. -->
   <script is:inline>
     (() => {
-      const panel = document.querySelector('[data-hero-panel]');
-      if (!panel) return;
-      const layer = panel.querySelector('[data-hero-layer]');
-      const head = panel.querySelector('[data-hero-title]');
-      const trigger = document.querySelector('[data-hero-trigger]');
-      const nodes = [].slice.call(layer.querySelectorAll('[data-hchip]'));
-      if (nodes.length !== 10) return;
+      // Ο ClientRouter εκτελεί ένα inline script ΜΙΑ φορά ανά session: όταν
+      // γυρνάς στην αρχική με client-side navigation δεν ξανατρέχει, οπότε το
+      // panel έμενε νεκρό μέχρι το επόμενο refresh. Γι' αυτό το init δένεται
+      // και στο astro:page-load (ίδιο μοτίβο με Header/CookieConsent), αφού
+      // πρώτα κλείσει το προηγούμενο instance.
+      let live = null;
 
-      const T_IDLE = '10 πράγματα που σε τρώνε';
-      const T_ON = '10 πράγματα που αναλαμβάνουμε';
+      function initHeroPanel() {
+        const panel = document.querySelector('[data-hero-panel]');
+        if (live && live.panel === panel) return;
+        // Φεύγοντας από την αρχική: το rAF loop δεν έχει λόγο να τρέχει άλλο.
+        if (live) { live.dispose(); live = null; }
+        if (!panel) return;
 
-      // Σταθερά, όχι τυχαία ανά load: το layout δεν «χοροπηδάει» σε resize.
-      const SX = [.05, .82, .24, .96, 0, .58, .11, .90, .34, .72];
-      const SY = [.02, .10, .22, .31, .42, .50, .62, .71, .81, .96];
-      const ROT = [-6.2, 4.8, -3.1, 7.4, -8.3, 2.6, -5.4, 8.1, -2.2, 5.9];
-      const PER = [12300, 15100, 13700, 16400, 12900, 14600, 17000, 13100, 15800, 14100];
+        const layer = panel.querySelector('[data-hero-layer]');
+        const head = panel.querySelector('[data-hero-title]');
+        const trigger = document.querySelector('[data-hero-trigger]');
+        const nodes = [].slice.call(layer.querySelectorAll('[data-hchip]'));
+        if (nodes.length !== 10) return;
 
-      const RM = matchMedia('(prefers-reduced-motion: reduce)').matches;
-      const HOVER = matchMedia('(hover: hover) and (pointer: fine)').matches;
-      const ROW = 32, GAP = 5, PADX = 14, PADY = 28;
+        const T_IDLE = '10 πράγματα που σε τρώνε';
+        const T_ON = '10 πράγματα που αναλαμβάνουμε';
 
-      const items = nodes.map((el, i) => ({
-        el: el,
-        label: el.querySelector('[data-hchip-label]'),
-        idle: el.getAttribute('data-idle'),
-        on: el.getAttribute('data-active'),
-        rot: ROT[i], per: PER[i], ph: i * 1.71,
-        x: 0, y: 0, r: ROT[i], sx: 0, sy: 0, cx: 0, cy: 0,
-        pop: 0, flick: 0, op: 1,
-      }));
+        // Σταθερά, όχι τυχαία ανά load: το layout δεν «χοροπηδάει» σε resize.
+        const SX = [.05, .82, .24, .96, 0, .58, .11, .90, .34, .72];
+        const SY = [.02, .10, .22, .31, .42, .50, .62, .71, .81, .96];
+        const ROT = [-6.2, 4.8, -3.1, 7.4, -8.3, 2.6, -5.4, 8.1, -2.2, 5.9];
+        const PER = [12300, 15100, 13700, 16400, 12900, 14600, 17000, 13100, 15800, 14100];
 
-      layer.classList.add('is-ready');
+        const RM = matchMedia('(prefers-reduced-motion: reduce)').matches;
+        const HOVER = matchMedia('(hover: hover) and (pointer: fine)').matches;
+        const ROW = 32, GAP = 5, PADX = 14, PADY = 28;
 
-      let active = false, engaged = false, locked = false, placed = false;
-      let swapT = null, autoOn = null, autoOff = null, raf = 0;
+        const items = nodes.map((el, i) => ({
+          el: el,
+          label: el.querySelector('[data-hchip-label]'),
+          idle: el.getAttribute('data-idle'),
+          on: el.getAttribute('data-active'),
+          rot: ROT[i], per: PER[i], ph: i * 1.71,
+          x: 0, y: 0, r: ROT[i], sx: 0, sy: 0, cx: 0, cy: 0,
+          pop: 0, flick: 0, op: 1,
+        }));
 
-      function draw(it, jx, jy) {
-        it.el.style.transform =
-          'translate3d(' + (it.x + jx).toFixed(2) + 'px,' + (it.y + jy).toFixed(2) + 'px,0)' +
-          ' rotate(' + it.r.toFixed(2) + 'deg) scale(' + (1 + it.pop).toFixed(3) + ')';
-      }
+        layer.classList.add('is-ready');
 
-      function layout() {
-        const w = layer.clientWidth, h = layer.clientHeight;
-        const cw = Math.min(248, Math.max(196, panel.clientWidth - 40));
-        const spanX = Math.max(0, w - cw - PADX * 2);
-        const spanY = Math.max(0, h - ROW - PADY * 2);
-        const colX = Math.round((w - cw) / 2);
-        const colTop = Math.round((h - (10 * ROW + 9 * GAP)) / 2);
+        let active = false, engaged = false, locked = false, placed = false;
+        let swapT = null, autoOn = null, autoOff = null, raf = 0;
+        let ro = null, io = null;
 
-        for (let i = 0; i < 10; i++) {
-          const it = items[i];
-          it.el.style.width = cw + 'px';
-          it.sx = Math.round(PADX + SX[i] * spanX);
-          it.sy = Math.round(PADY + SY[i] * spanY);
-          it.cx = colX;
-          it.cy = colTop + i * (ROW + GAP);
+        // Οι listeners πάνω στο panel φεύγουν μαζί με το DOM στο swap. Ό,τι ζει
+        // εκτός του (rAF, observers, timers, document listener) κλείνει εδώ.
+        function dispose() {
+          cancelAnimationFrame(raf);
+          raf = 0;
+          clearTimeout(swapT);
+          clearTimeout(autoOn);
+          clearTimeout(autoOff);
+          if (ro) ro.disconnect();
+          if (io) io.disconnect();
+          document.removeEventListener('visibilitychange', onVisibility);
         }
 
-        // Πρώτο πέρασμα (και reduced motion): κουμπώνει κατευθείαν, χωρίς fly-in.
-        if (!placed || RM) {
-          placed = true;
-          const ordered = RM || active;
+        function onVisibility() {
+          if (document.hidden) { cancelAnimationFrame(raf); raf = 0; }
+          else if (!raf) raf = requestAnimationFrame(frame);
+        }
+
+        function draw(it, jx, jy) {
+          it.el.style.transform =
+            'translate3d(' + (it.x + jx).toFixed(2) + 'px,' + (it.y + jy).toFixed(2) + 'px,0)' +
+            ' rotate(' + it.r.toFixed(2) + 'deg) scale(' + (1 + it.pop).toFixed(3) + ')';
+        }
+
+        function layout() {
+          const w = layer.clientWidth, h = layer.clientHeight;
+          // Σε client-side navigation το πρώτο layout μπορεί να πέσει πάνω στο
+          // view transition, με το panel ακόμα μηδενικό. Το ResizeObserver
+          // ξαναχτυπάει μόλις πάρει διαστάσεις.
+          if (!w || !h) return;
+          const cw = Math.min(248, Math.max(196, panel.clientWidth - 40));
+          const spanX = Math.max(0, w - cw - PADX * 2);
+          const spanY = Math.max(0, h - ROW - PADY * 2);
+          const colX = Math.round((w - cw) / 2);
+          const colTop = Math.round((h - (10 * ROW + 9 * GAP)) / 2);
+
           for (let i = 0; i < 10; i++) {
             const it = items[i];
-            it.x = ordered ? it.cx : it.sx;
-            it.y = ordered ? it.cy : it.sy;
-            it.r = ordered ? 0 : it.rot;
-            draw(it, 0, 0);
-          }
-        }
-      }
-
-      // Ένα κοινό timeout: γρήγορο hover in/out δεν ξεσυγχρονίζει τα labels.
-      function setLabels(on) {
-        clearTimeout(swapT);
-        layer.classList.add('is-swapping');
-        swapT = setTimeout(() => {
-          for (let i = 0; i < 10; i++) items[i].label.textContent = on ? items[i].on : items[i].idle;
-          layer.classList.remove('is-swapping');
-        }, 170);
-      }
-
-      function setState(on) {
-        if (on === active || (locked && !on)) return;
-        active = on;
-        panel.classList.toggle('is-active', on);
-        head.textContent = on ? T_ON : T_IDLE;
-        if (RM) return;
-        if (on) for (let i = 0; i < 10; i++) items[i].pop = 0.045;
-        setLabels(on);
-      }
-
-      function bind() {
-        if (!trigger) return;
-        trigger.addEventListener('mouseenter', () => { engage(); setState(true); });
-        trigger.addEventListener('focus', () => { engage(); setState(true); });
-        trigger.addEventListener('mouseleave', () => setState(false));
-        trigger.addEventListener('blur', () => setState(false));
-      }
-
-      function engage() {
-        if (engaged) return;
-        engaged = true;
-        clearTimeout(autoOn);
-        clearTimeout(autoOff);
-      }
-
-      // Reduced motion: η τελική εικόνα, χωρίς καμία κίνηση.
-      if (RM) {
-        for (let i = 0; i < 10; i++) items[i].label.textContent = items[i].on;
-        layout();
-        new ResizeObserver(layout).observe(layer);
-        bind();
-        return;
-      }
-
-      const t0 = performance.now();
-      function frame(now) {
-        const t = now - t0, k = active ? 0.16 : 0.08;
-
-        for (let i = 0; i < 10; i++) {
-          const it = items[i];
-          let tx, ty, tr;
-
-          if (active) {
-            tx = it.cx; ty = it.cy; tr = 0;
-            it.flick = 0;
-          } else {
-            const a = (t / it.per) * 6.28318 + it.ph;
-            tx = it.sx + Math.sin(a) * 6;
-            ty = it.sy + Math.cos(a * 0.78 + it.ph) * 7;
-            tr = it.rot;
-            if (it.flick > 0) it.flick--;
-            else if (Math.random() < 0.0024) it.flick = 2 + ((Math.random() * 5) | 0);
+            it.el.style.width = cw + 'px';
+            it.sx = Math.round(PADX + SX[i] * spanX);
+            it.sy = Math.round(PADY + SY[i] * spanY);
+            it.cx = colX;
+            it.cy = colTop + i * (ROW + GAP);
           }
 
-          it.x += (tx - it.x) * k;
-          it.y += (ty - it.y) * k;
-          it.r += (tr - it.r) * k;
-          it.pop = it.pop > 0.0004 ? it.pop * 0.87 : 0;
-
-          let jx = 0, jy = 0;
-          const op = it.flick > 0 ? 0.16 : 1;
-          if (op < 1) { jx = Math.random() * 4 - 2; jy = Math.random() * 4 - 2; }
-          if (op !== it.op) { it.op = op; it.el.style.opacity = op; }
-
-          draw(it, jx, jy);
+          // Πρώτο πέρασμα (και reduced motion): κουμπώνει κατευθείαν, χωρίς fly-in.
+          if (!placed || RM) {
+            placed = true;
+            const ordered = RM || active;
+            for (let i = 0; i < 10; i++) {
+              const it = items[i];
+              it.x = ordered ? it.cx : it.sx;
+              it.y = ordered ? it.cy : it.sy;
+              it.r = ordered ? 0 : it.rot;
+              draw(it, 0, 0);
+            }
+          }
         }
-        raf = requestAnimationFrame(frame);
-      }
 
-      layout();
-      new ResizeObserver(layout).observe(layer);
-      raf = requestAnimationFrame(frame);
-      bind();
+        // Ένα κοινό timeout: γρήγορο hover in/out δεν ξεσυγχρονίζει τα labels.
+        function setLabels(on) {
+          clearTimeout(swapT);
+          layer.classList.add('is-swapping');
+          swapT = setTimeout(() => {
+            for (let i = 0; i < 10; i++) items[i].label.textContent = on ? items[i].on : items[i].idle;
+            layer.classList.remove('is-swapping');
+          }, 170);
+        }
 
-      document.addEventListener('visibilitychange', () => {
-        if (document.hidden) { cancelAnimationFrame(raf); raf = 0; }
-        else if (!raf) raf = requestAnimationFrame(frame);
-      });
+        function setState(on) {
+          if (on === active || (locked && !on)) return;
+          active = on;
+          panel.classList.toggle('is-active', on);
+          head.textContent = on ? T_ON : T_IDLE;
+          if (RM) return;
+          if (on) for (let i = 0; i < 10; i++) items[i].pop = 0.045;
+          setLabels(on);
+        }
 
-      if (HOVER) {
-        autoOn = setTimeout(() => {
+        function bind() {
+          if (!trigger) return;
+          trigger.addEventListener('mouseenter', () => { engage(); setState(true); });
+          trigger.addEventListener('focus', () => { engage(); setState(true); });
+          trigger.addEventListener('mouseleave', () => setState(false));
+          trigger.addEventListener('blur', () => setState(false));
+        }
+
+        function engage() {
           if (engaged) return;
-          setState(true);
-          autoOff = setTimeout(() => { if (!engaged) setState(false); }, 2200);
-        }, 1500);
-      } else if ('IntersectionObserver' in window) {
-        // Χωρίς hover: τακτοποιείται μία φορά μόλις γίνει ορατό και μένει έτσι.
-        const io = new IntersectionObserver((es) => {
-          for (const e of es) {
-            if (!e.isIntersecting) continue;
-            engage();
-            setState(true);
-            locked = true;
-            io.disconnect();
+          engaged = true;
+          clearTimeout(autoOn);
+          clearTimeout(autoOff);
+        }
+
+        // Reduced motion: η τελική εικόνα, χωρίς καμία κίνηση.
+        if (RM) {
+          for (let i = 0; i < 10; i++) items[i].label.textContent = items[i].on;
+          layout();
+          ro = new ResizeObserver(layout);
+          ro.observe(layer);
+          bind();
+          live = { panel: panel, dispose: dispose };
+          return;
+        }
+
+        const t0 = performance.now();
+        function frame(now) {
+          const t = now - t0, k = active ? 0.16 : 0.08;
+
+          for (let i = 0; i < 10; i++) {
+            const it = items[i];
+            let tx, ty, tr;
+
+            if (active) {
+              tx = it.cx; ty = it.cy; tr = 0;
+              it.flick = 0;
+            } else {
+              const a = (t / it.per) * 6.28318 + it.ph;
+              tx = it.sx + Math.sin(a) * 6;
+              ty = it.sy + Math.cos(a * 0.78 + it.ph) * 7;
+              tr = it.rot;
+              if (it.flick > 0) it.flick--;
+              else if (Math.random() < 0.0024) it.flick = 2 + ((Math.random() * 5) | 0);
+            }
+
+            it.x += (tx - it.x) * k;
+            it.y += (ty - it.y) * k;
+            it.r += (tr - it.r) * k;
+            it.pop = it.pop > 0.0004 ? it.pop * 0.87 : 0;
+
+            let jx = 0, jy = 0;
+            const op = it.flick > 0 ? 0.16 : 1;
+            if (op < 1) { jx = Math.random() * 4 - 2; jy = Math.random() * 4 - 2; }
+            if (op !== it.op) { it.op = op; it.el.style.opacity = op; }
+
+            draw(it, jx, jy);
           }
-        }, { threshold: 0.5 });
-        io.observe(panel);
+          raf = requestAnimationFrame(frame);
+        }
+
+        layout();
+        ro = new ResizeObserver(layout);
+        ro.observe(layer);
+        raf = requestAnimationFrame(frame);
+        bind();
+
+        document.addEventListener('visibilitychange', onVisibility);
+
+        if (HOVER) {
+          autoOn = setTimeout(() => {
+            if (engaged) return;
+            setState(true);
+            autoOff = setTimeout(() => { if (!engaged) setState(false); }, 2200);
+          }, 1500);
+        } else if ('IntersectionObserver' in window) {
+          // Χωρίς hover: τακτοποιείται μία φορά μόλις γίνει ορατό και μένει έτσι.
+          io = new IntersectionObserver((es) => {
+            for (const e of es) {
+              if (!e.isIntersecting) continue;
+              engage();
+              setState(true);
+              locked = true;
+              io.disconnect();
+            }
+          }, { threshold: 0.5 });
+          io.observe(panel);
+        }
+
+        live = { panel: panel, dispose: dispose };
       }
+
+      initHeroPanel();
+      document.addEventListener('astro:page-load', initHeroPanel);
     })();
   </script>
 
