@@ -1,41 +1,62 @@
 ---
 /**
- * /about — ποιος είναι πίσω από την phpixel.
+ * /about — ποιοι είναι πίσω από την phpixel.
  *
- * Δομή βασισμένη σε ό,τι κάνει μια σελίδα «Σχετικά» να δουλεύει: ποιος είσαι,
- * γιατί ξεκίνησες, πώς δουλεύεις, τι πιστεύεις, τι ΔΕΝ κάνεις, απόδειξη, και
- * ένα ξεκάθαρο επόμενο βήμα. Πρώτο πρόσωπο ενικού: το site λέει «μιλάς με
- * αυτόν που γράφει τον κώδικα», οπότε εδώ μιλάει αυτός ο άνθρωπος.
+ * Δομή βασισμένη σε ό,τι κάνει μια σελίδα «Σχετικά» να δουλεύει: ποιοι είμαστε,
+ * γιατί ξεκινήσαμε, πώς δουλεύουμε, τι πιστεύουμε, τι ΔΕΝ κάνουμε, απόδειξη, και
+ * ένα ξεκάθαρο επόμενο βήμα. Πληθυντικός: η phpixel είναι ομάδα, όχι ένα άτομο.
+ * Ο ιδρυτής αναφέρεται ονομαστικά (E-E-A-T + Person schema στο route), αλλά η
+ * σελίδα δεν είναι βιογραφικό του.
  *
  * Οι «αξίες» δεν γράφονται εδώ: έρχονται από το κοινό <Differentiators />,
  * ώστε να λένε το ίδιο πράγμα με το /how-we-work.
  */
 import { Icon } from 'astro-icon/components';
-import { site } from '@config/site';
 import SectionHeader from '@components/sections/SectionHeader.astro';
 import Differentiators from '@components/sections/Differentiators.astro';
 import { getProjects } from '@utils/content';
-import { publicImageExists } from '@utils/publicImages';
-
-// Πορτρέτο: μπαίνει μόλις υπάρξει το αρχείο, αλλιώς δείχνει καθαρό μονόγραμμα
-// αντί για σπασμένη εικόνα.
-const portrait = '/images/about-apostolis.webp';
-const hasPortrait = publicImageExists(portrait);
 
 const projects = await getProjects();
 const projectCount = projects.length;
+// Πόσα projects συνεχίζουν μετά το launch: βγαίνει από το `ongoing` του κάθε
+// case study, οπότε το νούμερο δεν μπορεί να ξεφύγει από την πραγματικότητα.
+const ongoingCount = projects.filter((p) => p.data.ongoing).length;
 
-// Πώς δουλεύω: τα τρία πράγματα που αλλάζουν πραγματικά την εμπειρία του πελάτη.
-const howIWork = [
+// Ποιοι μπαίνουν σε ένα project: οι ρόλοι, όχι ονόματα και τίτλοι.
+const roles = [
+  {
+    icon: 'ic:baseline-code',
+    title: 'Development',
+    text: 'E-shop, ιστοσελίδες και custom εφαρμογές, γραμμένα από την αρχή.',
+  },
+  {
+    icon: 'ic:baseline-brush',
+    title: 'Design & UX',
+    text: 'Πώς φαίνεται και, κυρίως, πώς δουλεύει στο κινητό.',
+  },
+  {
+    icon: 'ic:baseline-edit-note',
+    title: 'Περιεχόμενο',
+    text: 'Κείμενα που εξηγούν τι κάνεις, χωρίς γεμίσματα.',
+  },
+  {
+    icon: 'ic:baseline-campaign',
+    title: 'SEO & διαφήμιση',
+    text: 'Για να σε βρίσκουν αφού ανέβει το site, όχι μόνο να υπάρχει.',
+  },
+];
+
+// Πώς δουλεύουμε: τα τρία πράγματα που αλλάζουν πραγματικά την εμπειρία του πελάτη.
+const howWeWork = [
   {
     icon: 'ic:baseline-record-voice-over',
-    title: 'Μιλάς μαζί μου, όχι με λογαριασμό email',
-    desc: 'Ο ίδιος άνθρωπος από την πρώτη κουβέντα μέχρι το launch και μετά. Χωρίς ενδιάμεσους, χωρίς tickets, χωρίς να εξηγείς το project σου από την αρχή σε κάθε νέο πρόσωπο.',
+    title: 'Μιλάς με ανθρώπους, όχι με λογαριασμό email',
+    desc: 'Οι ίδιοι άνθρωποι από την πρώτη κουβέντα μέχρι το launch και μετά. Χωρίς ενδιάμεσους, χωρίς tickets, χωρίς να εξηγείς το project σου από την αρχή σε κάθε νέο πρόσωπο.',
   },
   {
     icon: 'ic:baseline-groups',
     title: 'Ομάδα ανά project, όχι οργανόγραμμα',
-    desc: 'Όταν η δουλειά χρειάζεται designer, κειμενογράφο ή marketer, μπαίνουν συνεργάτες που έχω δουλέψει ξανά μαζί τους. Πληρώνεις για δουλειά, όχι για γραφεία.',
+    desc: 'Όταν η δουλειά χρειάζεται designer, κειμενογράφο ή marketer, μπαίνουν συνεργάτες που έχουμε δουλέψει ξανά μαζί τους. Πληρώνεις για δουλειά, όχι για γραφεία.',
   },
   {
     icon: 'ic:baseline-visibility',
@@ -44,18 +65,17 @@ const howIWork = [
   },
 ];
 
-// Τι δεν κάνω: ξεκαθαρίζει το ταίριασμα πριν χαθεί ο χρόνος και των δύο.
+// Τι δεν κάνουμε: ξεκαθαρίζει το ταίριασμα πριν χαθεί ο χρόνος και των δύο.
 const notForYou = [
-  'Δεν αναλαμβάνω projects που δεν πιστεύω ότι θα αποδώσουν. Θα σου πω γιατί, και τι θα έκανα στη θέση σου.',
-  'Δεν υπόσχομαι θέσεις στη Google ούτε ποσοστά πωλήσεων. Το SEO και η διαφήμιση δουλεύονται, δεν αγοράζονται σε πακέτο.',
-  'Δεν φτιάχνω site που δεν μπορείς να διαχειριστείς μόνος σου. Αν χρειάζεσαι εμένα για κάθε αλλαγή κειμένου, κάτι έκανα λάθος.',
-  'Δεν εξαφανίζομαι μετά το launch. Αυτό είναι το σημείο όπου ξεκινάει η δουλειά, όχι όπου τελειώνει.',
+  'Δεν αναλαμβάνουμε projects που δεν πιστεύουμε ότι θα αποδώσουν. Θα σου πούμε γιατί, και τι θα κάναμε στη θέση σου.',
+  'Δεν υποσχόμαστε θέσεις στη Google ούτε ποσοστά πωλήσεων. Το SEO και η διαφήμιση δουλεύονται, δεν αγοράζονται σε πακέτο.',
+  'Δεν εξαφανιζόμαστε μετά το launch. Αυτό είναι το σημείο όπου ξεκινάει η δουλειά, όχι όπου τελειώνει.',
 ];
 
 const facts = [
-  { icon: 'ic:baseline-schedule', label: '10+ χρόνια', text: 'μέσα στο e-commerce, πρώτα ως developer σε μεγάλα καταστήματα.' },
-  { icon: 'ic:baseline-public', label: 'Πανελλαδικά', text: 'τα projects τρέχουν online: κλήσεις, preview links, καθημερινή επικοινωνία.' },
-  { icon: 'ic:baseline-workspace-premium', label: `${projectCount} case studies`, text: 'με ονόματα, live URLs και το τι πραγματικά έγινε σε κάθε ένα.' },
+  { icon: 'ic:baseline-schedule', label: '10+ χρόνια', text: 'μέσα στο e-commerce, από μεγάλα καταστήματα μέχρι μικρές επιχειρήσεις.' },
+  { icon: 'ic:baseline-autorenew', label: `${ongoingCount} στα ${projectCount} projects`, text: 'συνεχίζουν μαζί μας μετά το launch, με SEO, διαφήμιση, email marketing ή συντήρηση.' },
+  { icon: 'ic:baseline-construction', label: 'Από το μηδέν ή από τη μέση', text: 'άλλα projects ξεκίνησαν από λευκή σελίδα, άλλα ήταν e-shop που υπήρχε και δεν πουλούσε.' },
 ];
 ---
 
@@ -66,42 +86,37 @@ const facts = [
       <div class="ab-hero__copy reveal">
         <span class="ab-badge">Σχετικά</span>
         <h1>
-          Με λένε Αποστόλη<br />
-          και <span class="accent-text">γράφω τον κώδικα</span>
+          Μια μικρή ομάδα<br />
+          που <span class="accent-text">ξέρει τι φτιάχνει</span>
         </h1>
         <p class="ab-hero__lead">
-          Η phpixel δεν είναι agency με ορόφους. Είμαι εγώ, δέκα και πλέον χρόνια
-          μέσα στο e-commerce, και οι συνεργάτες που μπαίνουν όταν η δουλειά τους
-          χρειάζεται. Αν με πάρεις τηλέφωνο, θα σου απαντήσει αυτός που θα
-          δουλέψει το project σου.
+          Η phpixel δεν είναι agency με ορόφους και λογαριασμούς email. Είμαστε
+          λίγοι άνθρωποι με δέκα και πλέον χρόνια μέσα στο e-commerce, που
+          δουλεύουμε μαζί σε κάθε project. Όποιον πάρεις τηλέφωνο, ξέρει το
+          project σου.
         </p>
         <div class="ab-hero__actions">
-          <a href="/contact" class="btn btn--primary">Πες μου για το project σου</a>
+          <a href="/contact" class="btn btn--primary">Πες μας για το project σου</a>
           <a href="/portfolio" class="btn btn--outline">Δες δουλειές</a>
         </div>
       </div>
 
-      <div class="ab-hero__portrait reveal" style="transition-delay: 0.15s">
-        {hasPortrait ? (
-          <img
-            src={portrait}
-            alt="Ο Αποστόλης Κωστόπουλος, ιδρυτής της phpixel"
-            width="800"
-            height="1000"
-            loading="eager"
-            decoding="async"
-            class="ab-portrait__img"
-          />
-        ) : (
-          <div class="ab-portrait__fallback" aria-hidden="true">
-            <span class="ab-portrait__mark">ph<span class="logo-accent">pixel</span></span>
-          </div>
-        )}
-        <p class="ab-portrait__caption">
-          <strong>Αποστόλης Κωστόπουλος</strong>
-          <span>{site.blogAuthor.oneLiner}</span>
-        </p>
-      </div>
+      <aside class="ab-roles reveal" style="transition-delay: 0.15s">
+        <h2 class="ab-roles__title">Ποιοι μπαίνουν στο project σου</h2>
+        <ul class="ab-roles__list">
+          {roles.map((r) => (
+            <li class="ab-role">
+              <span class="ab-role__icon">
+                <Icon name={r.icon} />
+              </span>
+              <span class="ab-role__text">
+                <strong>{r.title}</strong>
+                <span>{r.text}</span>
+              </span>
+            </li>
+          ))}
+        </ul>
+      </aside>
     </div>
   </section>
 
@@ -111,23 +126,23 @@ const facts = [
       <div class="ab-story__text reveal">
         <SectionHeader title="Γιατί υπάρχει η phpixel" subtitle="Η ιστορία" align="left" />
         <p>
-          Ξεκίνησα ως developer, χτίζοντας και συντηρώντας μεγάλα ηλεκτρονικά
-          καταστήματα. Εκεί έμαθα κάτι που δεν φαίνεται από έξω: τα περισσότερα
-          e-shop δεν χάνουν πωλήσεις επειδή είναι άσχημα. Τις χάνουν επειδή
-          κανείς δεν κοίταξε ποτέ τι κάνει ο πελάτης από τη στιγμή που μπαίνει
-          μέχρι τη στιγμή που πληρώνει.
+          Η phpixel ξεκίνησε από τον κώδικα: χρόνια δουλειάς μέσα σε μεγάλα
+          ηλεκτρονικά καταστήματα. Εκεί φαίνεται κάτι που δεν φαίνεται από έξω.
+          Τα e-shop σπάνια χάνουν πωλήσεις επειδή είναι άσχημα. Τις χάνουν επειδή
+          κανείς δεν κοίταξε ποτέ τη διαδρομή του πελάτη, από τη στιγμή που
+          μπαίνει μέχρι τη στιγμή που πληρώνει.
         </p>
         <p>
-          Παράλληλα έβλεπα ελληνικές επιχειρήσεις να πληρώνουν για sites που
-          κανείς δεν τους εξήγησε, να μιλάνε με τρεις διαφορετικούς ανθρώπους σε
+          Την ίδια περίοδο βλέπαμε ελληνικές επιχειρήσεις να πληρώνουν για sites
+          που κανείς δεν τους εξήγησε, να μιλάνε με τρία διαφορετικά άτομα σε
           κάθε αλλαγή, και να μένουν μόνες τους την επόμενη μέρα του launch.
           Ήξεραν τη δουλειά τους. Απλώς δεν είχαν κάποιον να τους πει την αλήθεια.
         </p>
         <p>
-          Η phpixel φτιάχτηκε για να είναι αυτό: ένας άνθρωπος που ξέρει τι
-          γράφει, σου εξηγεί γιατί το γράφει, και μένει εκεί και μετά. Είναι
-          μικρή επίτηδες. Αν μεγάλωνε, θα έχανε ακριβώς αυτό που την κάνει να
-          αξίζει.
+          Έτσι φτιάχτηκε η phpixel: μια ομάδα αρκετά μικρή ώστε να ξέρει κάθε
+          project απέξω, και αρκετά έμπειρη ώστε να μη μαθαίνει πάνω σου. Μένει
+          μικρή επίτηδες. Αν γινόταν οργανόγραμμα, θα έχανε ακριβώς αυτό που την
+          κάνει να αξίζει.
         </p>
       </div>
 
@@ -147,17 +162,17 @@ const facts = [
     </div>
   </section>
 
-  <!-- ============== ΠΩΣ ΔΟΥΛΕΥΩ ============== -->
+  <!-- ============== ΠΩΣ ΔΟΥΛΕΥΟΥΜΕ ============== -->
   <section class="ab-how">
     <div class="container">
       <div class="reveal">
         <SectionHeader
-          title="Πώς είναι να δουλεύεις μαζί μου"
+          title="Πώς είναι να δουλεύεις μαζί μας"
           subtitle="Στην πράξη"
         />
       </div>
       <div class="ab-how__grid">
-        {howIWork.map((item, i) => (
+        {howWeWork.map((item, i) => (
           <div class="ab-how__card reveal" style={`transition-delay: ${i * 0.1}s`}>
             <div class="ab-how__icon">
               <Icon name={item.icon} />
@@ -177,12 +192,12 @@ const facts = [
   <!-- ============== ΤΙ ΜΑΣ ΔΙΑΦΟΡΟΠΟΙΕΙ (κοινό με το /how-we-work) ============== -->
   <Differentiators background="surface" />
 
-  <!-- ============== ΤΙ ΔΕΝ ΚΑΝΩ ============== -->
+  <!-- ============== ΤΙ ΔΕΝ ΚΑΝΟΥΜΕ ============== -->
   <section class="ab-not">
     <div class="container ab-not__inner">
       <div class="ab-not__intro reveal">
         <SectionHeader
-          title="Και τι δεν κάνω"
+          title="Και τι δεν κάνουμε"
           subtitle="Για να μη χάσουμε χρόνο"
           align="left"
         />
@@ -211,12 +226,12 @@ const facts = [
           <p>
             Κάθε project στο portfolio έχει όνομα, διεύθυνση και case study με το
             τι υπήρχε πριν, τι φτιάξαμε και τι τρέχει σήμερα. Μπες και κρίνε μόνος
-            σου, χωρίς να με πιστέψεις στα λόγια.
+            σου, χωρίς να μας πιστέψεις στα λόγια.
           </p>
         </div>
         <div class="ab-proof__actions">
           <a href="/portfolio" class="btn btn--primary">Δες τα case studies</a>
-          <a href="/contact" class="btn btn--outline">Μίλα μαζί μου</a>
+          <a href="/contact" class="btn btn--outline">Μίλα μαζί μας</a>
         </div>
       </div>
     </div>
@@ -280,52 +295,74 @@ const facts = [
     flex-wrap: wrap;
   }
 
-  /* Portrait */
-  .ab-hero__portrait {
-    display: flex;
-    flex-direction: column;
-    gap: 1rem;
-  }
-
-  .ab-portrait__img,
-  .ab-portrait__fallback {
-    width: 100%;
-    aspect-ratio: 4 / 5;
+  /* Κάρτα ρόλων: αντικαθιστά το πορτρέτο, γιατί η phpixel δεν είναι ένα πρόσωπο. */
+  .ab-roles {
+    padding: 2rem;
+    background: var(--glass-bg);
+    backdrop-filter: var(--glass-blur);
+    -webkit-backdrop-filter: var(--glass-blur);
+    border: 1px solid var(--glass-border);
     border-radius: var(--theme-shape-radius-lg);
-    object-fit: cover;
-    box-shadow: 0 16px 48px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 16px 48px rgba(0, 0, 0, 0.08);
   }
 
-  .ab-portrait__fallback {
+  .ab-roles__title {
+    font-size: 0.8rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    opacity: 0.55;
+    margin-bottom: 1.5rem;
+  }
+
+  .ab-roles__list {
+    list-style: none;
+    display: grid;
+    gap: 1.25rem;
+    margin: 0;
+    padding: 0;
+  }
+
+  .ab-role {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.9rem;
+  }
+
+  .ab-role__icon {
+    width: 38px;
+    height: 38px;
     display: flex;
     align-items: center;
     justify-content: center;
-    background: linear-gradient(135deg, var(--theme-surface-2) 0%, var(--theme-surface-1) 100%);
-    border: 1px solid var(--glass-border);
+    border-radius: 0.7rem;
+    background: color-mix(in srgb, var(--accent-violet) 12%, transparent);
+    color: var(--accent-violet);
+    flex-shrink: 0;
   }
 
-  .ab-portrait__mark {
-    font-family: var(--font-heading);
-    font-weight: 900;
-    font-size: clamp(1.8rem, 4vw, 2.6rem);
-    letter-spacing: -0.03em;
-    opacity: 0.5;
+  .ab-role__icon svg,
+  .ab-role__icon [data-icon] {
+    width: 20px;
+    height: 20px;
   }
 
-  .ab-portrait__caption {
+  .ab-role__text {
     display: flex;
     flex-direction: column;
-    gap: 0.15rem;
-    font-size: 0.9rem;
+    gap: 0.1rem;
   }
 
-  .ab-portrait__caption strong {
+  .ab-role__text strong {
+    font-size: 0.95rem;
     font-weight: 700;
+    letter-spacing: -0.01em;
   }
 
-  .ab-portrait__caption span {
-    opacity: 0.6;
-    line-height: 1.5;
+  .ab-role__text span {
+    font-size: 0.88rem;
+    line-height: 1.55;
+    opacity: 0.65;
   }
 
   /* ============== ΙΣΤΟΡΙΑ ============== */
@@ -399,7 +436,7 @@ const facts = [
     opacity: 0.65;
   }
 
-  /* ============== ΠΩΣ ΔΟΥΛΕΥΩ ============== */
+  /* ============== ΠΩΣ ΔΟΥΛΕΥΟΥΜΕ ============== */
   .ab-how {
     padding: var(--section-padding);
   }
@@ -468,7 +505,7 @@ const facts = [
     text-underline-offset: 2px;
   }
 
-  /* ============== ΤΙ ΔΕΝ ΚΑΝΩ ============== */
+  /* ============== ΤΙ ΔΕΝ ΚΑΝΟΥΜΕ ============== */
   .ab-not {
     padding: var(--section-padding);
   }
@@ -584,8 +621,9 @@ const facts = [
       gap: 2.5rem;
     }
 
-    .ab-hero__portrait {
-      max-width: 380px;
+    .ab-roles {
+      max-width: 480px;
+      padding: 1.75rem;
     }
 
     .ab-how__grid {

@@ -128,9 +128,9 @@ export const seo: Record<string, PageSeo> = {
 		description: site.description,
 	},
 	about: {
-		title: 'Ποιος Είμαι | phpixel',
+		title: 'Ποιοι Είμαστε | phpixel',
 		description:
-			'Πίσω από την phpixel υπάρχει ένας άνθρωπος: ο Αποστόλης Κωστόπουλος, με 10+ χρόνια στο e-commerce. Δες πώς δουλεύω, τι αναλαμβάνω και τι όχι.',
+			'Πίσω από την phpixel υπάρχει μια μικρή ομάδα με 10+ χρόνια στο e-commerce. Δες πώς δουλεύουμε, τι αναλαμβάνουμε και τι όχι.',
 	},
 	services: {
 		title: 'Υπηρεσίες: Κατασκευή E-shop, Ιστοσελίδων, SEO & Marketing | phpixel',
