@@ -34,14 +34,28 @@ export interface Props {
 	schema?: Record<string, unknown>[];
 }
 
+/**
+ * Το προεπιλεγμένο link preview. Νέο URL αντί για overwrite του παλιού
+ * /social.png: Facebook και LinkedIn κρατάνε στην cache την εικόνα ανά URL,
+ * οπότε ίδιο όνομα θα σήμαινε ότι θα σέρβιραν τη μία για μέρες.
+ */
+const DEFAULT_OG_IMAGE = '/og/phpixel-social.png';
+
 const {
 	title = `${site.name} | ${site.tagline}`,
 	description = site.description,
-	image = '/social.png',
+	image = DEFAULT_OG_IMAGE,
 	type = 'website',
 	breadcrumbs,
 	schema: pageSchema = [],
 } = Astro.props;
+
+/**
+ * Οι διαστάσεις μπαίνουν μόνο για τις δικές μας 1200x630 εικόνες. Τα blog post
+ * και τα portfolio περνάνε δικές τους εικόνες αυθαίρετου μεγέθους — εκεί ένα
+ * σταθερό width/height θα ήταν ψέμα.
+ */
+const isSizedOgImage = typeof image === 'string' && image.startsWith('/og/');
 
 /**
  * Με `build.format: 'file'` το Astro.url.pathname στο build είναι το όνομα του
@@ -79,7 +93,10 @@ const jsonLd = graph([
 
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<link rel="icon" type="image/png" href="/favicon.png" />
+<link rel="icon" href="/favicon.png" type="image/png" />
+<link rel="icon" href="/favicon-32.png" type="image/png" sizes="32x32" />
+<link rel="icon" href="/icon-192.png" type="image/png" sizes="192x192" />
+<link rel="apple-touch-icon" href="/apple-touch-icon.png" sizes="180x180" />
 
 <!-- Primary Meta Tags -->
 <title>{title}</title>
@@ -97,6 +114,14 @@ const jsonLd = graph([
 <meta property="og:title" content={title} />
 <meta property="og:description" content={description} />
 <meta property="og:image" content={ogImage} />
+<meta property="og:image:alt" content={title} />
+{isSizedOgImage && (
+	<>
+		<meta property="og:image:type" content="image/png" />
+		<meta property="og:image:width" content="1200" />
+		<meta property="og:image:height" content="630" />
+	</>
+)}
 
 <!-- Twitter -->
 <meta property="twitter:card" content="summary_large_image" />
@@ -104,6 +129,7 @@ const jsonLd = graph([
 <meta property="twitter:title" content={title} />
 <meta property="twitter:description" content={description} />
 <meta property="twitter:image" content={ogImage} />
+<meta property="twitter:image:alt" content={title} />
 
 <!-- Fonts — μη μπλοκάρον φόρτωμα: το κείμενο εμφανίζεται αμέσως με fallback font -->
 <link rel="preconnect" href="https://fonts.googleapis.com" />

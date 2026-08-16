@@ -49,7 +49,7 @@ export function professionalServiceSchema(origin?: URL): Json {
 		'@id': businessId(origin),
 		name: site.name,
 		url: abs(origin, '/'),
-		image: abs(origin, '/social.png'),
+		image: abs(origin, '/og/phpixel-social.png'),
 		email: site.contact.email,
 		areaServed: 'GR',
 		address: { '@type': 'PostalAddress', addressCountry: 'GR' },
