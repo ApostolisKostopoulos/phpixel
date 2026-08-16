@@ -1,0 +1,127 @@
+---
+/**
+ * Το σκελετό κάθε σελίδας: <html>, <head>, skip link, main, slots για
+ * header/footer, και το scroll-reveal. Δεν ξέρει τίποτα για navbar ή footer —
+ * αυτά μπαίνουν από το Page.astro, ώστε μια σελίδα να μπορεί να τα παραλείψει.
+ */
+import { ViewTransitions } from 'astro:transitions';
+import { site } from '../config/site';
+import BaseHead from '../components/head/BaseHead.astro';
+import type { Props as BaseHeadProps } from '../components/head/BaseHead.astro';
+import SkipLink from '../components/core/SkipLink.astro';
+import CookieConsent from '../components/core/CookieConsent.astro';
+
+export interface Props {
+	seo?: BaseHeadProps;
+}
+
+const { seo } = Astro.props;
+---
+
+<html lang={site.lang}>
+	<head>
+		<BaseHead {...seo} />
+		<ViewTransitions />
+
+		<!-- Progressive enhancement: το reveal-on-scroll κρύβει περιεχόμενο ΜΟΝΟ όταν
+		     τρέχει JS. Χωρίς JS (και για crawlers) όλα είναι ορατά by default. -->
+		<script is:inline>document.documentElement.classList.add('js-reveal');</script>
+	</head>
+
+	<body>
+		<!-- Skip link: πρώτο εστιάσιμο στοιχείο, για πρόσβαση με πληκτρολόγιο -->
+		<SkipLink />
+
+		<slot name="header" />
+
+		<main id="content" transition:animate="fade">
+			<slot />
+		</main>
+
+		<slot name="footer" />
+
+		<CookieConsent />
+
+		<!-- Scroll Reveal Observer -->
+		<script is:inline>
+			(() => {
+				const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
+				let pending = [];
+				let observer = null;
+
+				const show = (el) => {
+					el.classList.add('is-visible');
+					if (observer) observer.unobserve(el);
+				};
+
+				// Ό,τι βρίσκεται στο ή πάνω από το κάτω όριο του viewport εμφανίζεται
+				// αμέσως — καλύπτει anchor links (/#footer), End, restored scroll κ.λπ.
+				// Το IntersectionObserver δεν πυροδοτείται ποτέ για στοιχεία που είναι
+				// ήδη ΠΑΝΩ από το viewport, γι' αυτό χρειάζεται το catch-up.
+				const revealUpToViewport = () => {
+					if (!pending.length) return;
+					const limit = window.innerHeight;
+					pending = pending.filter((el) => {
+						if (el.getBoundingClientRect().top < limit) {
+							show(el);
+							return false;
+						}
+						return true;
+					});
+				};
+
+				// Σε απότομα jumps (End χωρίς smooth scroll) στοιχεία μπορεί να
+				// προσπεράσουν το viewport χωρίς να τα προλάβει ο observer.
+				const revealPassed = () => {
+					if (!pending.length) return;
+					pending = pending.filter((el) => {
+						if (el.getBoundingClientRect().bottom < 0) {
+							show(el);
+							return false;
+						}
+						return true;
+					});
+				};
+
+				let scrollScheduled = false;
+				const onScroll = () => {
+					if (scrollScheduled) return;
+					scrollScheduled = true;
+					requestAnimationFrame(() => {
+						scrollScheduled = false;
+						revealPassed();
+					});
+				};
+
+				const init = () => {
+					if (observer) observer.disconnect();
+					pending = Array.from(document.querySelectorAll('.reveal:not(.is-visible)'));
+
+					if (reduceMotion.matches || !('IntersectionObserver' in window)) {
+						pending.forEach((el) => el.classList.add('is-visible'));
+						pending = [];
+						return;
+					}
+
+					observer = new IntersectionObserver((entries) => {
+						entries.forEach((entry) => {
+							if (entry.isIntersecting) {
+								show(entry.target);
+								pending = pending.filter((el) => el !== entry.target);
+							}
+						});
+					}, { threshold: 0.1 });
+
+					pending.forEach((el) => observer.observe(el));
+					revealUpToViewport();
+				};
+
+				init();
+				window.addEventListener('load', revealUpToViewport);
+				window.addEventListener('hashchange', revealUpToViewport);
+				window.addEventListener('scroll', onScroll, { passive: true });
+				document.addEventListener('astro:page-load', init);
+			})();
+		</script>
+	</body>
+</html>

@@ -1,0 +1,55 @@
+---
+/**
+ * Footer. Κανόνας ιδιοκτήτη: email ναι, τηλέφωνο όχι (μόνο στο /contact),
+ * και καμία γραμμή διεύθυνσης.
+ * Styles: src/styles/layout.css.
+ */
+import { Icon } from 'astro-icon/components';
+import { site, footerLists, footerSocials } from '../../config/site';
+---
+
+<footer class="footer" id="footer">
+	<div class="footer__inner">
+		<div class="footer__brand">
+			<span class="logo-text logo-text--footer">ph<span class="logo-accent">pixel</span></span>
+			<p class="footer__tagline">{site.tagline}</p>
+			<p class="footer__contact">
+				<a href={`mailto:${site.contact.email}`}>{site.contact.email}</a>
+			</p>
+			<div class="footer__socials">
+				{footerSocials.map((social) => (
+					<a
+						href={social.url}
+						target="_blank"
+						rel="noopener noreferrer"
+						aria-label={social.name}
+						class="social-link"
+					>
+						<Icon name={social.icon} />
+					</a>
+				))}
+			</div>
+		</div>
+
+		{footerLists.map((list) => (
+			<div class="footer__list">
+				<p class="footer__list-title">{list.title}</p>
+				<ul>
+					{list.items.map((item) => (
+						<li><a href={item.slug}>{item.title}</a></li>
+					))}
+				</ul>
+			</div>
+		))}
+	</div>
+
+	<div class="footer__bottom">
+		<p>
+			&copy; {new Date().getFullYear()} {site.name}. All rights reserved.
+			<span class="footer__bottom-sep">|</span>
+			<button type="button" class="footer__cookie-settings" data-cookie-settings>
+				Ρυθμίσεις cookies
+			</button>
+		</p>
+	</div>
+</footer>

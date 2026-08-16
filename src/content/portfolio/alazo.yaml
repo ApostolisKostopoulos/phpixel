@@ -1,0 +1,65 @@
+# Πηγή: phpixel-case-study-questionnaire.xlsx — μόνο επιβεβαιωμένα γεγονότα.
+order: 3
+anchor: alazo
+name: Αλάζω
+tagline: Από μηδενική online παρουσία σε site με online ραντεβού για διαιτολόγο και βελονιστή.
+description: Το Αλάζω (διαιτολόγος και βελονιστής) δεν είχε καμία παρουσία στο internet. Φτιάξαμε το lifechanging.gr σε WordPress, με SEO, φροντισμένο UX/UI και online κράτηση ραντεβού.
+industry: Υγεία & ευεξία
+category: Website
+year: 2025
+url: https://lifechanging.gr
+tags:
+  - Website
+  - Online Ραντεβού
+  - SEO
+stack:
+  - WordPress
+thumb: /assets/images/portfolio/alazo-thumb.jpg
+image: /images/portfolio/alazo.webp
+imageAlt: Η ιστοσελίδα του Αλάζω
+hero: /assets/images/portfolio/alazo-home.jpg
+heroAlt: Η αρχική σελίδα της ιστοσελίδας lifechanging.gr
+gallery:
+  - src: /assets/images/portfolio/alazo-home.jpg
+    alt: Η αρχική σελίδα της ιστοσελίδας lifechanging.gr
+    caption: 'Το homepage: καθαρό, με ξεκάθαρη πορεία προς το ραντεβού.'
+  - src: /assets/images/portfolio/alazo-services.jpg
+    alt: Η σελίδα υπηρεσιών της ιστοσελίδας lifechanging.gr
+    caption: 'Η σελίδα υπηρεσιών: ο επισκέπτης καταλαβαίνει τι προσφέρεται πριν κλείσει ραντεβού.'
+  - src: /assets/images/portfolio/alazo-booking.jpg
+    alt: Η φόρμα online κράτησης ραντεβού στο lifechanging.gr
+    caption: 'Το online ραντεβού σε δράση: επιλογή υπηρεσίας και ώρας μέσα από το site.'
+metrics: []
+accent: '#e8593c'
+caseStudy:
+  heroTitle: Πώς το Αλάζω απέκτησε online παρουσία και ραντεβού που κλείνονται από το site
+  heroSub: 'Ιστοσελίδα για διαιτολόγο και βελονιστή: από το μηδέν σε site με online κράτηση ραντεβού.'
+  metaTitle: 'Αλάζω: Ιστοσελίδα με online ραντεβού για διαιτολόγο | Case Study | phpixel'
+  metaDescription: 'Ιστοσελίδα για διαιτολόγο και βελονιστή: το Αλάζω πέρασε από μηδενική online παρουσία σε site με online κράτηση ραντεβού, SEO και φροντισμένο UX.'
+  client:
+    title: Το Αλάζω
+    html:
+      - 'Πίσω από το Αλάζω βρίσκεται ένας επαγγελματίας υγείας με δύο ειδικότητες: διαιτολόγος και βελονιστής. Μας βρήκε από σύσταση.'
+  challenge:
+    title: Μηδενική παρουσία στο internet
+    html:
+      - 'Η δουλειά υπήρχε, οι πελάτες όμως δεν μπορούσαν να τη βρουν: καμία παρουσία στο internet, κανένα σημείο να δει κανείς τις υπηρεσίες ή να κλείσει ραντεβού.'
+  goal:
+    title: Να κλείνονται ραντεβού online
+    html:
+      - Παρουσία στο internet με ένα γρήγορο site και online κράτηση ραντεβού, ώστε ο επισκέπτης να κλείνει ώρα μόνος του, χωρίς τηλεφωνήματα.
+  approach:
+    title: Τι φτιάξαμε
+    html:
+      - 'Στήσαμε το lifechanging.gr σε WordPress: <a href="/kataskevi-istoselidon">κατασκευή ιστοσελίδας</a> με φροντισμένο UX/UI, SEO και ενσωματωμένο σύστημα online ραντεβού.'
+      - Ο επισκέπτης βλέπει τις υπηρεσίες, διαλέγει και κλείνει ραντεβού, όλα μέσα από το site.
+  deliverables:
+    - Κατασκευή ιστοσελίδας
+    - Online σύστημα ραντεβού
+    - SEO
+    - UX/UI σχεδιασμός
+  cta:
+    heading: Θες κι εσύ ένα site που κλείνει ραντεβού για σένα;
+    text: Πες μας τι κάνεις και πώς δουλεύεις. Θα σου πούμε τίμια τι χρειάζεται, χωρίς δέσμευση.
+    serviceHref: /kataskevi-istoselidon
+    serviceLabel: Κατασκευή Ιστοσελίδων

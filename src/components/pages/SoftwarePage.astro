@@ -1,0 +1,251 @@
+---
+import SectionHeader from '@components/sections/SectionHeader.astro';
+import GlassCard from '@components/cards/GlassCard.astro';
+import FaqSection from '@components/sections/FaqSection.astro';
+import RelatedLinks from '@components/sections/RelatedLinks.astro';
+
+const features = [
+  {
+    icon: 'ic:baseline-autorenew',
+    title: 'Αυτοματισμοί',
+    desc: 'Η χειροκίνητη δουλειά που τρώει ώρες κάθε εβδομάδα (καταχωρήσεις, αντιγραφές, εξαγωγές) γίνεται αυτόματα και σωστά.',
+    accent: 'var(--accent-blue)',
+  },
+  {
+    icon: 'ic:baseline-sync',
+    title: 'Συνδέσεις συστημάτων',
+    desc: 'Το e-shop, το ERP, το λογιστικό και ο courier μιλάνε μεταξύ τους. Τα δεδομένα περνούν μόνα τους, χωρίς διπλοκαταχωρήσεις.',
+    accent: 'var(--accent-violet)',
+  },
+  {
+    icon: 'ic:baseline-dashboard',
+    title: 'Dashboards & αναφορές',
+    desc: 'Βλέπεις πωλήσεις, αποθέματα και ό,τι σε ενδιαφέρει σε μία οθόνη, όχι σε πέντε διαφορετικά προγράμματα.',
+    accent: 'var(--accent-emerald)',
+  },
+  {
+    icon: 'ic:baseline-code',
+    title: 'Web εφαρμογές στα μέτρα σου',
+    desc: 'Όταν κανένα έτοιμο εργαλείο δεν κάνει αυτό που χρειάζεσαι, φτιάχνουμε ένα που το κάνει. Ούτε παραπάνω, ούτε παρακάτω.',
+    accent: 'var(--accent-amber)',
+  },
+  {
+    icon: 'ic:baseline-security',
+    title: 'Ασφάλεια & πρόσβαση',
+    desc: 'Ο καθένας στην ομάδα σου βλέπει ό,τι πρέπει να βλέπει. Τα δεδομένα σου μένουν προστατευμένα.',
+    accent: 'var(--accent-rose)',
+  },
+  {
+    icon: 'ic:baseline-support-agent',
+    title: 'Συντήρηση & εξέλιξη',
+    desc: 'Η εφαρμογή δεν μένει στάσιμη: διορθώσεις, βελτιώσεις και νέες δυνατότητες όσο μεγαλώνει η επιχείρησή σου.',
+    accent: 'var(--accent-blue)',
+  },
+];
+
+const problems = [
+  {
+    name: 'Χειροκίνητη δουλειά που τρώει ώρες',
+    desc: 'Αν κάποιος στην ομάδα σου περνάει κάθε μέρα δεδομένα από το ένα πρόγραμμα στο άλλο, αυτό αυτοματοποιείται.',
+  },
+  {
+    name: 'Συστήματα που δεν μιλάνε μεταξύ τους',
+    desc: 'E-shop, ERP, αποθήκη, λογιστικό: τα συνδέουμε ώστε να δουλεύουν σαν ένα.',
+  },
+  {
+    name: 'Αποφάσεις χωρίς καθαρή εικόνα',
+    desc: 'Ένα dashboard που δείχνει τα νούμερα που μετράνε, την ώρα που τα χρειάζεσαι.',
+  },
+];
+
+const faqItems = [
+  {
+    q: 'Χρειάζομαι custom εφαρμογή ή φτάνει κάτι έτοιμο;',
+    a: 'Καμιά φορά φτάνει το έτοιμο, και αν ισχύει αυτό για σένα, θα σου το πούμε. Custom λύση αξίζει όταν η ροή της δουλειάς σου δεν χωράει στα έτοιμα εργαλεία, ή όταν πληρώνεις κάθε μήνα για πέντε προγράμματα που κάνουν ό,τι θα έκανε ένα.',
+  },
+  {
+    q: 'Πόσο κοστίζει μια custom εφαρμογή;',
+    a: 'Εξαρτάται από το πρόβλημα που λύνει: ένας απλός αυτοματισμός είναι πολύ πιο οικονομικός από μια πλήρη εφαρμογή με χρήστες και dashboard. Θα καταλάβουμε πρώτα τι χρειάζεσαι και θα πάρεις αναλυτική προσφορά, συχνά με πρόταση να ξεκινήσουμε από ένα μικρό, χρήσιμο πρώτο βήμα.',
+  },
+  {
+    q: 'Ποιος συντηρεί την εφαρμογή μετά την παράδοση;',
+    a: 'Εμείς, αν το θες. Προσφέρουμε συντήρηση με ενημερώσεις, backups και υποστήριξη. Ο κώδικας όμως είναι δικός σου: αν κάποια στιγμή θελήσεις να συνεχίσεις με άλλη ομάδα, μπορείς.',
+  },
+];
+---
+
+  <!-- Hero -->
+  <section class="dev-hero">
+    <div class="dev-hero__bg"></div>
+    <div class="container dev-hero__inner">
+      <div class="dev-hero__content reveal">
+        <span class="dev-badge">Custom Εφαρμογές</span>
+        <h1>
+          Custom<br />
+          <span class="accent-text">Εφαρμογές</span>
+        </h1>
+        <p class="dev-hero__sub">
+          Κάθε επιχείρηση έχει μια δουλειά που γίνεται «με το χέρι» ενώ δεν θα έπρεπε.
+          Φτιάχνουμε εργαλεία που την αναλαμβάνουν: αυτοματισμούς, dashboards και
+          συνδέσεις ανάμεσα στα συστήματα που ήδη χρησιμοποιείς.
+        </p>
+      </div>
+
+      <!-- Problems we solve -->
+      <div class="dev-hero__platforms reveal" style="transition-delay: 0.2s">
+        {problems.map((p) => (
+          <div class="platform-card">
+            <h3 class="platform-card__title">{p.name}</h3>
+            <p>{p.desc}</p>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- Features Grid -->
+  <section class="dev-features">
+    <div class="container">
+      <div class="reveal">
+        <SectionHeader title="Τι αναλαμβάνουμε" subtitle="Custom Εφαρμογές">
+          Ξεκινάμε από το πρόβλημα, όχι από την τεχνολογία. Χρησιμοποιούμε εργαλεία που έχουν αποδείξει ότι δουλεύουν (όπως React και Node.js), αλλά αυτό είναι δική μας δουλειά να το σκεφτόμαστε, όχι δική σου.
+        </SectionHeader>
+      </div>
+
+      <div class="features-grid">
+        {features.map((f, i) => (
+          <div class="reveal" style={`transition-delay: ${i * 0.05}s`}>
+            <GlassCard
+              icon={f.icon}
+              title={f.title}
+              description={f.desc}
+              accent={f.accent}
+            />
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- Εσωτερικά links (topic cluster) -->
+  <RelatedLinks
+    services={[
+      { label: 'Κατασκευή E-shop', href: '/kataskevi-eshop' },
+      { label: 'Ιστοσελίδες & Landing Pages', href: '/kataskevi-istoselidon' },
+      { label: 'SEO & AEO', href: '/seo' },
+    ]}
+    articles={[
+      { label: 'UX/UI Design και μετατροπές', href: '/blog/posts/ux-ui' },
+    ]}
+  />
+
+  <!-- FAQ -->
+  <FaqSection items={faqItems} title="Συχνές ερωτήσεις για custom εφαρμογές" />
+
+
+
+
+<style>
+  /* Hero */
+  .dev-hero {
+    position: relative;
+    padding: calc(var(--navbar-height) + 4rem) 0 4rem;
+  }
+
+  .dev-hero__bg {
+    position: absolute;
+    inset: 0;
+    background: var(--gradient-subtle);
+  }
+
+  .dev-hero__inner {
+    position: relative;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 4rem;
+    align-items: center;
+  }
+
+  .dev-badge {
+    display: inline-block;
+    padding: 0.35rem 1rem;
+    font-size: 0.8rem;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    background: var(--theme-surface-1);
+    border-radius: 2rem;
+    margin-bottom: 1.5rem;
+  }
+
+  .dev-hero__content h1 { margin-bottom: 1.5rem; }
+
+  .accent-text {
+    background: var(--gradient-accent);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  .dev-hero__sub {
+    font-size: 1.1rem;
+    line-height: 1.75;
+    opacity: 0.7;
+    max-width: 460px;
+  }
+
+  .dev-hero__platforms {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+  }
+
+  .platform-card {
+    padding: 1.5rem 2rem;
+    background: var(--glass-bg);
+    backdrop-filter: var(--glass-blur);
+    border: 1px solid var(--glass-border);
+    border-radius: var(--theme-shape-radius);
+    transition: var(--theme-transition);
+  }
+
+  .platform-card:hover {
+    transform: translateX(8px);
+    border-color: var(--accent-blue);
+  }
+
+  .platform-card__title {
+    font-family: var(--font-heading);
+    font-weight: 800;
+    line-height: 1.15;
+    font-size: 1.1rem;
+    margin-bottom: 0.25rem;
+    opacity: 1;
+  }
+
+  .platform-card p {
+    font-size: 0.9rem;
+    opacity: 0.6;
+  }
+
+  /* Features */
+  .dev-features {
+    padding: var(--section-padding);
+    background: var(--theme-surface-1);
+  }
+
+  .features-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: var(--theme-grid-gap);
+  }
+
+  @media (max-width: 1024px) {
+    .features-grid { grid-template-columns: repeat(2, 1fr); }
+  }
+
+  @media (max-width: 768px) {
+    .dev-hero__inner { grid-template-columns: 1fr; gap: 2rem; }
+    .features-grid { grid-template-columns: 1fr; }
+  }
+</style>

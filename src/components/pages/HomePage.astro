@@ -1,0 +1,1455 @@
+---
+import { Icon } from 'astro-icon/components';
+import { site, SHOW_TESTIMONIALS } from '@config/site';
+import { getProjects, getTestimonials } from '@utils/content';
+import FaqSection from '@components/sections/FaqSection.astro';
+import { publicImageExists } from '@utils/publicImages';
+
+const projects = (await getProjects()).map((p) => ({ slug: p.id, ...p.data }));
+const testimonials = (await getTestimonials()).map((t) => t.data);
+
+const services = [
+  {
+    icon: 'ic:baseline-shopping-cart',
+    title: 'Κατασκευή E-shop',
+    href: '/kataskevi-eshop',
+    desc: 'Ηλεκτρονικά καταστήματα που μετατρέπουν επισκέπτες σε πελάτες. WooCommerce ή custom κατασκευή: διαλέγουμε ό,τι ταιριάζει στο προϊόν σου, όχι ό,τι μας βολεύει.',
+    chips: ['WooCommerce', 'Custom', 'ERP', 'B2C & B2B'],
+    variant: 'eshop',
+  },
+  {
+    icon: 'ic:baseline-language',
+    title: 'Ιστοσελίδες & Landing Pages',
+    href: '/kataskevi-istoselidon',
+    desc: 'Γρήγορες, καθαρές σελίδες που εξηγούν τι κάνεις και γιατί να σε διαλέξουν. Φτιαγμένες για να τις βρίσκει η Google.',
+    chips: ['Ταχύτητα', 'SEO-ready', 'Custom design'],
+    variant: 'website',
+  },
+  {
+    icon: 'ic:baseline-search',
+    title: 'SEO & AEO',
+    href: '/seo',
+    desc: 'Να σε βρίσκουν όσοι σε ψάχνουν, στην Google και στα AI εργαλεία που πλέον προτείνουν προϊόντα και επιχειρήσεις.',
+    chips: ['On-page', 'Technical', 'AEO/GEO'],
+    variant: 'seo',
+  },
+  {
+    icon: 'ic:baseline-mail',
+    title: 'Email Marketing',
+    href: '/email-marketing',
+    desc: 'Αυτόματα emails που φέρνουν πελάτες πίσω: εγκαταλελειμμένα καλάθια, newsletters, follow-ups. Δουλεύουν κι όταν κοιμάσαι.',
+    chips: ['Flows', 'Καλάθια', 'Newsletters'],
+    variant: 'email',
+  },
+  {
+    icon: 'ic:baseline-ads-click',
+    title: 'Google Ads & Social',
+    href: '/diafimisi',
+    desc: 'Διαφήμιση με μετρήσιμο αποτέλεσμα. Ξέρεις τι ξοδεύεις και τι σου φέρνει πίσω.',
+    chips: ['Google Ads', 'Meta', 'Reporting'],
+    variant: 'ads',
+  },
+  {
+    icon: 'ic:baseline-code',
+    title: 'Custom Εφαρμογές',
+    href: '/software-development',
+    desc: 'Όταν τα έτοιμα δεν φτάνουν: εφαρμογές, dashboards και συνδέσεις με ERP, φτιαγμένα στα μέτρα σου.',
+    chips: ['Αυτοματισμοί', 'API', 'Dashboards'],
+    variant: 'apps',
+  },
+];
+
+const processSteps = [
+  {
+    num: '01',
+    title: 'Γνωριμία',
+    desc: 'Μιλάμε για τους στόχους σου, βλέπουμε τον ανταγωνισμό και καταλαβαίνουμε τι πραγματικά χρειάζεσαι και τι όχι.',
+  },
+  {
+    num: '02',
+    title: 'Σχεδιασμός',
+    desc: 'Wireframes και σχέδια πριν γραφτεί γραμμή κώδικα. Ξέρεις τι θα πάρεις πριν ξεκινήσουμε.',
+  },
+  {
+    num: '03',
+    title: 'Κατασκευή',
+    desc: 'Καθαρός κώδικας, πρώτα το κινητό. Βλέπεις την πρόοδο σε κάθε βήμα, χωρίς εκπλήξεις στο τέλος.',
+  },
+  {
+    num: '04',
+    title: 'Launch & μετά',
+    desc: 'Βγαίνουμε live, στήνουμε analytics και δεν εξαφανιζόμαστε. Το site σου έχει άνθρωπο.',
+  },
+];
+
+const faqItems = [
+  {
+    q: 'Πόσο κοστίζει ένα e-shop;',
+    a: 'Εξαρτάται από το τι χρειάζεσαι: πόσα προϊόντα έχεις, αν θες σύνδεση με ERP, courier ή Skroutz, πόσο custom θα είναι ο σχεδιασμός. Στην ελληνική αγορά οι τιμές έχουν τεράστιο εύρος, γι’ αυτό δεν πετάμε νούμερα στα τυφλά. Θα δούμε μαζί τι πραγματικά χρειάζεσαι (και τι όχι) και θα πάρεις αναλυτική προσφορά χωρίς κρυφά κόστη. Η πρώτη κουβέντα δεν σε δεσμεύει σε τίποτα.',
+  },
+  {
+    q: 'Σε πόσο καιρό θα είναι έτοιμο;',
+    a: 'Ιστοσελίδα: συνήθως 2–4 εβδομάδες. E-shop: 3–6 εβδομάδες. Custom εφαρμογή: 1–3 μήνες. Θα σου πούμε ρεαλιστικό χρονοδιάγραμμα από την αρχή, όχι αυτό που θες να ακούσεις.',
+  },
+  {
+    q: 'Θα μπορώ να διαχειρίζομαι μόνος μου το περιεχόμενο;',
+    a: 'Ναι. Κάθε site παραδίδεται με εύχρηστο σύστημα διαχείρισης και θα σου δείξουμε πώς να αλλάζεις προϊόντα, τιμές και κείμενα μόνος σου. Κι αν κολλήσεις, είμαστε ένα μήνυμα μακριά.',
+  },
+  {
+    q: 'Έχω ήδη e-shop που δεν αποδίδει. Το αναλαμβάνετε;',
+    a: 'Ναι, και είναι από τις πιο συχνές δουλειές μας. Ξεκινάμε με έναν έλεγχο σε ταχύτητα, SEO και εμπειρία αγοράς, και σου λέμε τι φταίει και τι αξίζει να διορθωθεί. Καμιά φορά δεν χρειάζεσαι καινούριο site, χρειάζεσαι το σωστό χέρι στο υπάρχον.',
+  },
+  {
+    q: 'Συνδέεται το e-shop με το ERP ή το λογιστικό μου;',
+    a: 'Ναι. Στήνουμε αυτόματο συγχρονισμό προϊόντων, αποθεμάτων και παραγγελιών με το ERP σου, καθώς και συνδέσεις με courier, τρόπους πληρωμής και πλατφόρμες όπως το Skroutz.',
+  },
+  {
+    q: 'Τι γίνεται μετά το launch;',
+    a: 'Δεν εξαφανιζόμαστε. Αναλαμβάνουμε τη φροντίδα του site (ενημερώσεις, backups, ασφάλεια, φιλοξενία) με πακέτα υποστήριξης, ώστε να έχεις πάντα έναν άνθρωπο να παίρνει τηλέφωνο.',
+  },
+  {
+    q: 'Κάνετε SEO;',
+    a: 'Κάθε site που φτιάχνουμε έχει γερές βάσεις SEO από την πρώτη μέρα. Προσφέρουμε και συνεχές SEO ως υπηρεσία, μαζί με βελτιστοποίηση για τις AI μηχανές αναζήτησης (AEO/GEO), εκεί όπου ψάχνουν όλο και περισσότεροι πελάτες σήμερα.',
+  },
+  {
+    q: 'Πού βρίσκεστε; Δουλεύετε πανελλαδικά;',
+    a: 'Η έδρα μας είναι στην Ελλάδα και δουλεύουμε με επιχειρήσεις σε όλη τη χώρα. Τα περισσότερα projects τρέχουν εξ ολοκλήρου online: κλήσεις, preview links, καθημερινή επικοινωνία.',
+  },
+];
+
+const heroImage = '/images/hero-devices.webp';
+const heroImageExists = publicImageExists(heroImage);
+
+// Hero panel: τα 10 «πράγματα». idle = ο πόνος του πελάτη, active = τι αναλαμβάνουμε.
+// Τα icons είναι inline SVG paths (24×24, stroke currentColor) — μηδέν extra request.
+const heroChips = [
+  {
+    idle: 'Δεν με βρίσκουν στο Google',
+    active: 'SEO & AEO',
+    icon: '<circle cx="11" cy="11" r="7"/><path d="M20 20l-3.6-3.6"/>',
+  },
+  {
+    idle: 'Επισκέψεις, αλλά όχι πωλήσεις',
+    active: 'Conversion optimization',
+    icon: '<path d="M3 5h18l-7 8v6.5l-4 1.8V13L3 5z"/>',
+  },
+  {
+    idle: 'Ακριβά clicks, λίγες πωλήσεις',
+    active: 'Διαφήμιση με μετρήσιμο ROAS',
+    icon: '<circle cx="12" cy="12" r="7.5"/><circle cx="12" cy="12" r="3"/><path d="M12 2.2v2.6M12 19.2v2.6M2.2 12h2.6M19.2 12h2.6"/>',
+  },
+  {
+    idle: 'Δεν προλαβαίνω να το τρέχω',
+    active: 'Το αναλαμβάνουμε εμείς',
+    icon: '<circle cx="12" cy="12" r="8.5"/><path d="M12 7.2V12l3.1 2.1"/>',
+  },
+  {
+    idle: 'Αφήνουν το καλάθι στη μέση',
+    active: 'Checkout σε 3 βήματα',
+    icon: '<path d="M2.6 3.5h2.3l2.2 10.4a1.6 1.6 0 0 0 1.6 1.3h7.6a1.6 1.6 0 0 0 1.6-1.2L19.6 7H5.7"/><circle cx="9.6" cy="19.4" r="1.4"/><circle cx="16.6" cy="19.4" r="1.4"/>',
+  },
+  {
+    idle: 'Αργεί, ειδικά στο κινητό',
+    active: 'Φορτώνει κάτω από 1 δευτ.',
+    icon: '<path d="M13.2 2.2 4.6 13.6h6.2L10.8 21.8l8.6-11.4h-6.2l0-8.2z"/>',
+  },
+  {
+    idle: 'Στοκ & παραγγελίες στο χέρι',
+    active: 'Σύνδεση με ERP και feeds',
+    icon: '<path d="M20 11a8 8 0 0 0-13.7-5.4L4.2 7.8"/><path d="M4 4.2v4h4"/><path d="M4 13a8 8 0 0 0 13.7 5.4l2.1-2.2"/><path d="M20 19.8v-4h-4"/>',
+  },
+  {
+    idle: 'Δεν με εμπιστεύονται αρκετά',
+    active: 'Ασφάλεια, κριτικές, πληρωμές',
+    icon: '<path d="M12 2.8 19.3 6v5.4c0 4.5-3 8.2-7.3 9.4-4.3-1.2-7.3-4.9-7.3-9.4V6L12 2.8z"/><path d="M8.9 11.9l2.2 2.2 4.2-4.3"/>',
+  },
+  {
+    idle: 'Πνίγομαι στα μηνύματα',
+    active: 'Αυτοματισμοί & support',
+    icon: '<path d="M20.6 11.9c0 3.9-3.9 7.1-8.6 7.1-1 0-2-.15-2.9-.42L4 20.5l1.5-3.7C4.2 15.5 3.4 13.8 3.4 11.9c0-3.9 3.9-7.1 8.6-7.1s8.6 3.2 8.6 7.1z"/>',
+  },
+  {
+    idle: 'Δεν ξέρω τι πιάνει τελικά',
+    active: 'Analytics που καταλαβαίνεις',
+    icon: '<path d="M3.2 20.2h17.6"/><path d="M6.8 20.2v-6.1M12 20.2V9.2M17.2 20.2v-8.3"/>',
+  },
+];
+---
+
+  <!-- ═══════════════════════════════════════════════
+       HERO
+       ═══════════════════════════════════════════════ -->
+  <section class="hero">
+    <div class="container hero__grid">
+      <div class="hero__copy">
+        <span class="hero__eyebrow reveal">Κατασκευή e-shop &amp; ιστοσελίδων</span>
+        <h1 class="hero__title reveal">
+          Από την ιδέα,<br/>
+          σε <em>pixel</em> και <em>κώδικα</em>.
+        </h1>
+        <p class="hero__lead reveal">
+          Φτιάχνουμε e-shop και ιστοσελίδες που πουλάνε.
+        </p>
+        <p class="hero__sub reveal">
+          Τα περισσότερα projects δεν κολλάνε στην ιδέα. Κολλάνε στην οργάνωση.
+          Εμείς βάζουμε σε σειρά τα κομμάτια — σχεδιασμό, κώδικα, ταχύτητα, SEO,
+          συνδέσεις — και τα κάνουμε ένα site που δουλεύει.
+        </p>
+        <div class="hero__cta reveal">
+          <a href="/contact" class="btn-hero-primary" data-hero-trigger>
+            Πες μας για το project σου
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </a>
+          <a href="/portfolio" class="btn-hero-secondary">
+            Δες τις δουλειές μας →
+          </a>
+        </div>
+        <p class="hero__trust reveal">Χωρίς jargon. Με μετρήσιμα αποτελέσματα.</p>
+      </div>
+
+      <div class="hero__panel" data-hero-panel>
+        <div class="hero__panel-head" aria-hidden="true">
+          <span class="hero__panel-dot" data-hero-dot></span>
+          <span class="hero__panel-title" data-hero-title>10 πράγματα που σε τρώνε</span>
+        </div>
+
+        <div class="hero__chips" data-hero-layer aria-hidden="true">
+          {heroChips.map((c) => (
+            <div class="hchip" data-hchip data-idle={c.idle} data-active={c.active}>
+              <span class="hchip__dot"></span>
+              <svg class="hchip__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" set:html={c.icon} />
+              <span class="hchip__label" data-hchip-label>{c.idle}</span>
+              <svg class="hchip__check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12.6l5 5 11-11"/></svg>
+            </div>
+          ))}
+        </div>
+
+        <!-- Το panel είναι διακοσμητικό, οι υπηρεσίες όμως όχι: τις δίνουμε ως λίστα στα screen readers. -->
+        <ul class="hero__sr-list">
+          {heroChips.map((c) => <li>{c.active}</li>)}
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- Hero panel: chaos → order. Vanilla JS, ένα rAF loop, μηδέν dependencies. -->
+  <script is:inline>
+    (() => {
+      const panel = document.querySelector('[data-hero-panel]');
+      if (!panel) return;
+      const layer = panel.querySelector('[data-hero-layer]');
+      const head = panel.querySelector('[data-hero-title]');
+      const trigger = document.querySelector('[data-hero-trigger]');
+      const nodes = [].slice.call(layer.querySelectorAll('[data-hchip]'));
+      if (nodes.length !== 10) return;
+
+      const T_IDLE = '10 πράγματα που σε τρώνε';
+      const T_ON = '10 πράγματα που αναλαμβάνουμε';
+
+      // Σταθερά, όχι τυχαία ανά load: το layout δεν «χοροπηδάει» σε resize.
+      const SX = [.05, .82, .24, .96, 0, .58, .11, .90, .34, .72];
+      const SY = [.02, .10, .22, .31, .42, .50, .62, .71, .81, .96];
+      const ROT = [-6.2, 4.8, -3.1, 7.4, -8.3, 2.6, -5.4, 8.1, -2.2, 5.9];
+      const PER = [12300, 15100, 13700, 16400, 12900, 14600, 17000, 13100, 15800, 14100];
+
+      const RM = matchMedia('(prefers-reduced-motion: reduce)').matches;
+      const HOVER = matchMedia('(hover: hover) and (pointer: fine)').matches;
+      const ROW = 32, GAP = 5, PADX = 14, PADY = 28;
+
+      const items = nodes.map((el, i) => ({
+        el: el,
+        label: el.querySelector('[data-hchip-label]'),
+        idle: el.getAttribute('data-idle'),
+        on: el.getAttribute('data-active'),
+        rot: ROT[i], per: PER[i], ph: i * 1.71,
+        x: 0, y: 0, r: ROT[i], sx: 0, sy: 0, cx: 0, cy: 0,
+        pop: 0, flick: 0, op: 1,
+      }));
+
+      layer.classList.add('is-ready');
+
+      let active = false, engaged = false, locked = false, placed = false;
+      let swapT = null, autoOn = null, autoOff = null, raf = 0;
+
+      function draw(it, jx, jy) {
+        it.el.style.transform =
+          'translate3d(' + (it.x + jx).toFixed(2) + 'px,' + (it.y + jy).toFixed(2) + 'px,0)' +
+          ' rotate(' + it.r.toFixed(2) + 'deg) scale(' + (1 + it.pop).toFixed(3) + ')';
+      }
+
+      function layout() {
+        const w = layer.clientWidth, h = layer.clientHeight;
+        const cw = Math.min(248, Math.max(196, panel.clientWidth - 40));
+        const spanX = Math.max(0, w - cw - PADX * 2);
+        const spanY = Math.max(0, h - ROW - PADY * 2);
+        const colX = Math.round((w - cw) / 2);
+        const colTop = Math.round((h - (10 * ROW + 9 * GAP)) / 2);
+
+        for (let i = 0; i < 10; i++) {
+          const it = items[i];
+          it.el.style.width = cw + 'px';
+          it.sx = Math.round(PADX + SX[i] * spanX);
+          it.sy = Math.round(PADY + SY[i] * spanY);
+          it.cx = colX;
+          it.cy = colTop + i * (ROW + GAP);
+        }
+
+        // Πρώτο πέρασμα (και reduced motion): κουμπώνει κατευθείαν, χωρίς fly-in.
+        if (!placed || RM) {
+          placed = true;
+          const ordered = RM || active;
+          for (let i = 0; i < 10; i++) {
+            const it = items[i];
+            it.x = ordered ? it.cx : it.sx;
+            it.y = ordered ? it.cy : it.sy;
+            it.r = ordered ? 0 : it.rot;
+            draw(it, 0, 0);
+          }
+        }
+      }
+
+      // Ένα κοινό timeout: γρήγορο hover in/out δεν ξεσυγχρονίζει τα labels.
+      function setLabels(on) {
+        clearTimeout(swapT);
+        layer.classList.add('is-swapping');
+        swapT = setTimeout(() => {
+          for (let i = 0; i < 10; i++) items[i].label.textContent = on ? items[i].on : items[i].idle;
+          layer.classList.remove('is-swapping');
+        }, 170);
+      }
+
+      function setState(on) {
+        if (on === active || (locked && !on)) return;
+        active = on;
+        panel.classList.toggle('is-active', on);
+        head.textContent = on ? T_ON : T_IDLE;
+        if (RM) return;
+        if (on) for (let i = 0; i < 10; i++) items[i].pop = 0.045;
+        setLabels(on);
+      }
+
+      function bind() {
+        if (!trigger) return;
+        trigger.addEventListener('mouseenter', () => { engage(); setState(true); });
+        trigger.addEventListener('focus', () => { engage(); setState(true); });
+        trigger.addEventListener('mouseleave', () => setState(false));
+        trigger.addEventListener('blur', () => setState(false));
+      }
+
+      function engage() {
+        if (engaged) return;
+        engaged = true;
+        clearTimeout(autoOn);
+        clearTimeout(autoOff);
+      }
+
+      // Reduced motion: η τελική εικόνα, χωρίς καμία κίνηση.
+      if (RM) {
+        for (let i = 0; i < 10; i++) items[i].label.textContent = items[i].on;
+        layout();
+        new ResizeObserver(layout).observe(layer);
+        bind();
+        return;
+      }
+
+      const t0 = performance.now();
+      function frame(now) {
+        const t = now - t0, k = active ? 0.16 : 0.08;
+
+        for (let i = 0; i < 10; i++) {
+          const it = items[i];
+          let tx, ty, tr;
+
+          if (active) {
+            tx = it.cx; ty = it.cy; tr = 0;
+            it.flick = 0;
+          } else {
+            const a = (t / it.per) * 6.28318 + it.ph;
+            tx = it.sx + Math.sin(a) * 6;
+            ty = it.sy + Math.cos(a * 0.78 + it.ph) * 7;
+            tr = it.rot;
+            if (it.flick > 0) it.flick--;
+            else if (Math.random() < 0.0024) it.flick = 2 + ((Math.random() * 5) | 0);
+          }
+
+          it.x += (tx - it.x) * k;
+          it.y += (ty - it.y) * k;
+          it.r += (tr - it.r) * k;
+          it.pop = it.pop > 0.0004 ? it.pop * 0.87 : 0;
+
+          let jx = 0, jy = 0;
+          const op = it.flick > 0 ? 0.16 : 1;
+          if (op < 1) { jx = Math.random() * 4 - 2; jy = Math.random() * 4 - 2; }
+          if (op !== it.op) { it.op = op; it.el.style.opacity = op; }
+
+          draw(it, jx, jy);
+        }
+        raf = requestAnimationFrame(frame);
+      }
+
+      layout();
+      new ResizeObserver(layout).observe(layer);
+      raf = requestAnimationFrame(frame);
+      bind();
+
+      document.addEventListener('visibilitychange', () => {
+        if (document.hidden) { cancelAnimationFrame(raf); raf = 0; }
+        else if (!raf) raf = requestAnimationFrame(frame);
+      });
+
+      if (HOVER) {
+        autoOn = setTimeout(() => {
+          if (engaged) return;
+          setState(true);
+          autoOff = setTimeout(() => { if (!engaged) setState(false); }, 2200);
+        }, 1500);
+      } else if ('IntersectionObserver' in window) {
+        // Χωρίς hover: τακτοποιείται μία φορά μόλις γίνει ορατό και μένει έτσι.
+        const io = new IntersectionObserver((es) => {
+          for (const e of es) {
+            if (!e.isIntersecting) continue;
+            engage();
+            setState(true);
+            locked = true;
+            io.disconnect();
+          }
+        }, { threshold: 0.5 });
+        io.observe(panel);
+      }
+    })();
+  </script>
+
+  <!-- ═══════════════════════════════════════════════
+       SERVICES + STATS
+       ═══════════════════════════════════════════════ -->
+  <section class="bento" id="services">
+    <div class="container">
+      <div class="bento__header reveal">
+        <span class="eyebrow">Υπηρεσίες</span>
+        <h2>Ό,τι χρειάζεσαι για να πουλάς online.</h2>
+      </div>
+
+      <div class="bento__grid">
+        {services.map((s) => (
+          <a href={s.href} class={`bento__card bento__card--${s.variant} reveal`}>
+            <div class="bento__card-icon">
+              <Icon name={s.icon} />
+            </div>
+            <h3>{s.title}</h3>
+            <p>{s.desc}</p>
+            <ul class="bento__tags">
+              {s.chips.map((chip) => (
+                <li>{chip}</li>
+              ))}
+            </ul>
+          </a>
+        ))}
+      </div>
+
+      <!-- Stats row -->
+      <div class="stats__row">
+        <div class="stats__item reveal">
+          <Icon name="ic:baseline-storefront" class="stats__icon" />
+          <span>10+ χρόνια στο e-commerce</span>
+        </div>
+        <div class="stats__item reveal">
+          <Icon name="ic:baseline-code" class="stats__icon" />
+          <span>Μιλάς με αυτόν που γράφει τον κώδικα</span>
+        </div>
+        <div class="stats__item reveal">
+          <Icon name="ic:baseline-receipt-long" class="stats__icon" />
+          <span>Προσφορά χωρίς κρυφά κόστη</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════════════════════════════════════════
+       PROCESS — How We Work
+       ═══════════════════════════════════════════════ -->
+  <section class="process">
+    <div class="container">
+      <div class="bento__header reveal">
+        <span class="eyebrow">Διαδικασία</span>
+        <h2>Η διαδικασία, με μια ματιά.</h2>
+      </div>
+
+      <div class="process__grid">
+        {processSteps.map((step) => (
+          <div class="process__card reveal">
+            <span class="process__num">{step.num}</span>
+            <h3>{step.title}</h3>
+            <p>{step.desc}</p>
+          </div>
+        ))}
+      </div>
+
+      <div class="process__cta reveal">
+        <a href="/how-we-work" class="btn-outline">
+          Δες αναλυτικά πώς δουλεύουμε
+          <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════════════════════════════════════════
+       PORTFOLIO — Work Showcase
+       ═══════════════════════════════════════════════ -->
+  <section class="work">
+    <div class="container">
+      <div class="bento__header reveal">
+        <span class="eyebrow">Portfolio</span>
+        <h2>Δουλειές που μιλάνε μόνες τους.</h2>
+      </div>
+
+      {heroImageExists ? (
+        <img
+          src={heroImage}
+          alt="E-shop και ιστοσελίδες κατασκευασμένα από την phpixel"
+          width="1600"
+          height="1200"
+          loading="lazy"
+          decoding="async"
+          class="work__intro-img reveal"
+        />
+      ) : null}
+
+      <div class="work__grid">
+        {projects.map((project) => {
+          const src =
+            project.image && publicImageExists(project.image)
+              ? project.image
+              : publicImageExists(project.thumb)
+                ? project.thumb
+                : null;
+          return (
+            <div class="work__card reveal">
+              <div class="work__thumb">
+                {src ? (
+                  <img
+                    src={src}
+                    alt={project.imageAlt ?? `Screenshot: ${project.name}`}
+                    width="1200"
+                    height="900"
+                    loading="lazy"
+                    decoding="async"
+                  />
+                ) : (
+                  <div class="work__placeholder">
+                    <Icon name="ic:baseline-image" class="work__placeholder-icon" />
+                  </div>
+                )}
+              </div>
+              <div class="work__info">
+                <h3>{project.name}</h3>
+                <p>{project.description}</p>
+                <div class="work__tags">
+                  {project.tags.map((tag) => (
+                    <span class="work__tag">{tag}</span>
+                  ))}
+                </div>
+              </div>
+            </div>
+          );
+        })}
+      </div>
+
+      <div class="work__cta reveal">
+        <a href="/portfolio" class="btn-outline">
+          Όλα τα projects
+          <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════════════════════════════════════════
+       TESTIMONIALS — hidden until real quotes exist
+       ═══════════════════════════════════════════════ -->
+  {SHOW_TESTIMONIALS && (
+    <section class="reviews">
+      <div class="container">
+        <div class="bento__header reveal">
+          <span class="eyebrow">Reviews</span>
+          <h2>Τι λένε οι πελάτες μας.</h2>
+        </div>
+
+        <div class="reviews__grid">
+          {testimonials.map((t) => (
+            <div class="reviews__card reveal">
+              <div class="reviews__stars">
+                {Array.from({ length: t.rating }).map(() => (
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="var(--accent-amber)"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+                ))}
+              </div>
+              <blockquote>{t.quote}</blockquote>
+              <div class="reviews__author">
+                <div class="reviews__avatar">{t.name.charAt(0)}</div>
+                <div>
+                  <strong>{t.name}</strong>
+                  <span>{t.company}</span>
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+    </section>
+  )}
+
+  <!-- ═══════════════════════════════════════════════
+       TECH STRIP
+       ═══════════════════════════════════════════════ -->
+  <section class="tech">
+    <div class="container">
+      <p class="tech__line">
+        Δουλεύουμε με WordPress, WooCommerce, CS-Cart, Astro, React και Node.js. Αλλά το εργαλείο δεν κάνει
+        τη δουλειά. Ο τρόπος που το χρησιμοποιείς, ναι. Γι' αυτό δεν διαλέγουμε τεχνολογίες από συνήθεια,
+        διαλέγουμε ό,τι ταιριάζει στο δικό σου έργο.
+      </p>
+    </div>
+  </section>
+
+  <!-- ═══════════════════════════════════════════════
+       FAQ (με FAQPage schema)
+       ═══════════════════════════════════════════════ -->
+  <FaqSection items={faqItems} label="FAQ" title="Έχεις ερωτήσεις; Έχουμε απαντήσεις." />
+
+
+
+<style>
+  /* ═══════════════════════════════════════════
+     UTILITIES
+     ═══════════════════════════════════════════ */
+
+  .eyebrow {
+    display: inline-block;
+    font-size: 0.78rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    /* Σκουρύνουμε ελαφρά το accent για επαρκές contrast (WCAG AA) στο μικρό μέγεθος */
+    color: color-mix(in srgb, var(--accent-blue) 72%, #000);
+    margin-bottom: 0.6rem;
+  }
+
+  .bento__header {
+    margin-bottom: 2.5rem;
+  }
+
+  .bento__header h2 {
+    font-size: clamp(1.75rem, 3.5vw, 2.6rem);
+    letter-spacing: -0.03em;
+    line-height: 1.15;
+    max-width: 560px;
+  }
+
+  .hide-mobile { display: inline; }
+
+  /* ═══════════════════════════════════════════
+     HERO
+     ═══════════════════════════════════════════ */
+
+  .hero {
+    /* Τοπικά tokens του hero, χαρτογραφημένα στο υπάρχον design system. */
+    --h-accent: var(--accent-violet);
+    --h-accent-ink: color-mix(in srgb, var(--accent-violet) 68%, #000);
+    --h-ok: var(--accent-emerald);
+    --h-ok-ink: color-mix(in srgb, var(--accent-emerald) 74%, #000);
+    --h-alert: var(--accent-rose);
+    --h-muted: #6b7280;
+    --h-line: var(--theme-surface-2);
+
+    padding: calc(var(--navbar-height) + 3.25rem) 0 3.5rem;
+  }
+
+  .hero__grid {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 480px;
+    gap: 40px;
+    align-items: center;
+  }
+
+  .hero__eyebrow {
+    display: block;
+    font-size: 0.72rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.16em;
+    color: var(--h-accent-ink);
+    margin-bottom: 0.9rem;
+  }
+
+  .hero__title {
+    font-size: clamp(1.94rem, 4.4vw, 2.625rem);
+    font-weight: 800;
+    letter-spacing: -0.035em;
+    line-height: 1.06;
+    color: var(--theme-on-bg);
+    margin-bottom: 0.85rem;
+  }
+
+  .hero__title em {
+    font-style: normal;
+    color: var(--h-accent);
+  }
+
+  /* Κρατάει τα κύρια keywords ψηλά στο DOM μετά το νέο h1. */
+  .hero__lead {
+    font-size: 1rem;
+    font-weight: 600;
+    line-height: 1.45;
+    color: var(--theme-on-bg);
+    margin-bottom: 0.75rem;
+  }
+
+  .hero__sub {
+    font-size: 0.9375rem;
+    line-height: 1.62;
+    color: var(--theme-on-bg);
+    opacity: 0.68;
+    margin-bottom: 1.75rem;
+    max-width: 46ch;
+  }
+
+  .hero__cta {
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+    flex-wrap: wrap;
+  }
+
+  .hero__trust {
+    margin-top: 1.1rem;
+    font-size: 11.5px;
+    font-weight: 500;
+    color: var(--h-muted);
+  }
+
+  /* ── Panel ─────────────────────────────────── */
+
+  .hero__panel {
+    position: relative;
+    height: 436px;
+    background: #fff;
+    border: 1px solid var(--h-line);
+    border-radius: 14px;
+    overflow: hidden;
+    transition: border-color 0.35s ease, box-shadow 0.35s ease;
+  }
+
+  .hero__panel.is-active {
+    border-color: color-mix(in srgb, var(--h-accent) 32%, transparent);
+    box-shadow:
+      0 0 0 4px color-mix(in srgb, var(--h-accent) 7%, transparent),
+      0 14px 44px -22px color-mix(in srgb, var(--h-accent) 70%, transparent);
+  }
+
+  .hero__panel-head {
+    position: absolute;
+    inset: 0 0 auto 0;
+    z-index: 2;
+    height: 42px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 0 14px;
+    background: #fff;
+    border-bottom: 1px solid var(--h-line);
+  }
+
+  .hero__panel-dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    flex: none;
+    background: var(--h-alert);
+    animation: hero-blink 1.5s steps(1, end) infinite;
+  }
+
+  @keyframes hero-blink {
+    0%, 49% { opacity: 1; }
+    50%, 100% { opacity: 0.18; }
+  }
+
+  .hero__panel.is-active .hero__panel-dot {
+    background: var(--h-ok);
+    opacity: 1;
+    animation: none;
+    box-shadow: 0 0 0 3px color-mix(in srgb, var(--h-ok) 24%, transparent);
+  }
+
+  .hero__panel-title {
+    font-size: 11.5px;
+    font-weight: 600;
+    color: var(--h-muted);
+    transition: color 0.35s ease;
+  }
+
+  .hero__panel.is-active .hero__panel-title {
+    color: var(--h-ok-ink);
+  }
+
+  /* ── Chips ─────────────────────────────────── */
+
+  .hero__chips {
+    position: absolute;
+    inset: 42px 0 0 0;
+    overflow: hidden;
+  }
+
+  /* Fallback χωρίς JS: στατική, τακτοποιημένη στήλη. */
+  .hero__chips:not(.is-ready) {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 5px;
+  }
+
+  .hchip {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    height: 32px;
+    padding: 0 11px;
+    border-radius: 9px;
+    background: #fff;
+    border: 1px solid var(--h-line);
+    font-size: 11.5px;
+    font-weight: 600;
+    color: var(--h-muted);
+    white-space: nowrap;
+    overflow: hidden;
+    box-sizing: border-box;
+    transition: color 0.35s ease, border-color 0.35s ease, box-shadow 0.35s ease;
+  }
+
+  .hero__chips.is-ready .hchip {
+    position: absolute;
+    top: 0;
+    left: 0;
+    will-change: transform;
+  }
+
+  .hchip__dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    flex: none;
+    background: var(--h-alert);
+    transition: background 0.35s ease;
+  }
+
+  .hchip__icon {
+    width: 15px;
+    height: 15px;
+    flex: none;
+  }
+
+  .hchip__label {
+    flex: 1 1 auto;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    transition: opacity 0.16s ease;
+  }
+
+  /* Το «σβήσιμο» είναι ακαριαίο, το fade-in 160ms. */
+  .hero__chips.is-swapping .hchip__label {
+    opacity: 0;
+    transition: none;
+  }
+
+  .hchip__check {
+    width: 14px;
+    height: 14px;
+    flex: none;
+    color: var(--h-ok);
+    opacity: 0;
+    transition: opacity 0.3s ease;
+  }
+
+  .hero__panel.is-active .hchip {
+    color: #111827;
+    border-color: color-mix(in srgb, var(--h-accent) 28%, transparent);
+    box-shadow: 0 2px 10px -6px color-mix(in srgb, var(--h-accent) 50%, transparent);
+  }
+
+  .hero__panel.is-active .hchip__dot { background: var(--h-ok); }
+  .hero__panel.is-active .hchip__check { opacity: 1; }
+
+  .hero__sr-list {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    margin: -1px;
+    padding: 0;
+    overflow: hidden;
+    clip-path: inset(50%);
+    white-space: nowrap;
+    border: 0;
+  }
+
+  .btn-hero-primary {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.85rem 1.75rem;
+    background: var(--theme-on-bg);
+    color: var(--theme-bg);
+    border-radius: 10px;
+    font-weight: 600;
+    font-size: 0.95rem;
+    transition: var(--theme-transition);
+  }
+
+  .btn-hero-primary:hover {
+    opacity: 0.85;
+    transform: translateY(-1px);
+  }
+
+  .btn-hero-primary:focus-visible {
+    outline: 2px solid var(--h-accent);
+    outline-offset: 3px;
+  }
+
+  .btn-hero-secondary {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    font-weight: 600;
+    font-size: 0.95rem;
+    color: var(--theme-on-bg);
+    opacity: 0.7;
+    text-decoration: underline;
+    text-underline-offset: 4px;
+    transition: var(--theme-transition);
+  }
+
+  .btn-hero-secondary:hover {
+    opacity: 1;
+  }
+
+  /* ═══════════════════════════════════════════
+     SERVICES GRID
+     ═══════════════════════════════════════════ */
+
+  .bento {
+    padding: 5rem 0;
+  }
+
+  .bento__grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1rem;
+  }
+
+  .bento__card {
+    border-radius: 16px;
+    padding: 1.75rem;
+    text-decoration: none;
+    color: inherit;
+    transition: transform 0.25s ease, box-shadow 0.25s ease;
+    overflow: hidden;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .bento__card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 12px 40px rgba(0,0,0,0.08);
+  }
+
+  .bento__card h3 {
+    font-size: 1.2rem;
+    font-weight: 700;
+    margin-bottom: 0.5rem;
+    letter-spacing: -0.01em;
+  }
+
+  .bento__card p {
+    font-size: 0.88rem;
+    line-height: 1.6;
+    opacity: 0.7;
+    flex: 1;
+  }
+
+  .bento__card-icon {
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 10px;
+    margin-bottom: 1rem;
+    background: rgba(255,255,255,0.5);
+  }
+
+  .bento__card-icon svg,
+  .bento__card-icon [data-icon] {
+    width: 22px;
+    height: 22px;
+  }
+
+  .bento__tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.35rem;
+    list-style: none;
+    margin-top: 0.85rem;
+    padding: 0;
+  }
+
+  .bento__tags li {
+    padding: 0.2rem 0.55rem;
+    background: rgba(255,255,255,0.45);
+    border-radius: 6px;
+    font-size: 0.72rem;
+    font-weight: 600;
+    opacity: 0.65;
+  }
+
+  /* — Card color variants — */
+  .bento__card--eshop {
+    background: linear-gradient(145deg, #ecfdf5 0%, #d1fae5 100%);
+    color: #064e3b;
+  }
+
+  .bento__card--eshop .bento__card-icon {
+    color: #059669;
+    background: rgba(5, 150, 105, 0.12);
+  }
+
+  .bento__card--website {
+    background: linear-gradient(145deg, #eff6ff 0%, #dbeafe 100%);
+    color: #1e3a5f;
+  }
+
+  .bento__card--website .bento__card-icon {
+    color: #2563eb;
+    background: rgba(37, 99, 235, 0.12);
+  }
+
+  .bento__card--seo {
+    background: linear-gradient(145deg, #f5f3ff 0%, #ede9fe 100%);
+    color: #3b1f6e;
+  }
+
+  .bento__card--seo .bento__card-icon {
+    color: #7c3aed;
+    background: rgba(124, 58, 237, 0.12);
+  }
+
+  .bento__card--email {
+    background: linear-gradient(145deg, #fffbeb 0%, #fef3c7 100%);
+    color: #78350f;
+  }
+
+  .bento__card--email .bento__card-icon {
+    color: #d97706;
+    background: rgba(217, 119, 6, 0.12);
+  }
+
+  .bento__card--ads {
+    background: linear-gradient(145deg, #fff1f2 0%, #ffe4e6 100%);
+    color: #881337;
+  }
+
+  .bento__card--ads .bento__card-icon {
+    color: #e11d48;
+    background: rgba(225, 29, 72, 0.12);
+  }
+
+  .bento__card--apps {
+    background: linear-gradient(145deg, #f0fdfa 0%, #ccfbf1 100%);
+    color: #134e4a;
+  }
+
+  .bento__card--apps .bento__card-icon {
+    color: #0d9488;
+    background: rgba(13, 148, 136, 0.12);
+  }
+
+  /* — Stats row — */
+  .stats__row {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1rem;
+    margin-top: 1rem;
+  }
+
+  .stats__item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    gap: 0.6rem;
+    padding: 1.5rem 1.25rem;
+    background: var(--theme-surface-1);
+    border-radius: 16px;
+    font-weight: 600;
+    font-size: 0.92rem;
+  }
+
+  .stats__icon {
+    width: 26px;
+    height: 26px;
+    flex-shrink: 0;
+    color: var(--accent-blue);
+  }
+
+  /* ═══════════════════════════════════════════
+     PROCESS
+     ═══════════════════════════════════════════ */
+
+  .process {
+    padding: 5rem 0;
+    background: var(--theme-surface-1);
+  }
+
+  .process__grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 1rem;
+  }
+
+  .process__card {
+    background: #fff;
+    border-radius: 16px;
+    padding: 2rem 1.5rem;
+    border: 1px solid transparent;
+    transition: var(--theme-transition);
+  }
+
+  .process__card:hover {
+    border-color: var(--accent-blue);
+  }
+
+  .process__num {
+    display: inline-block;
+    font-family: var(--font-heading);
+    font-size: 2.25rem;
+    font-weight: 800;
+    letter-spacing: -0.03em;
+    line-height: 1;
+    margin-bottom: 1rem;
+    background: linear-gradient(135deg, var(--accent-blue), var(--accent-violet));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    opacity: 0.3;
+  }
+
+  .process__card:hover .process__num {
+    opacity: 0.6;
+  }
+
+  .process__card h3 {
+    font-size: 1.05rem;
+    font-weight: 700;
+    margin-bottom: 0.5rem;
+  }
+
+  .process__card p {
+    font-size: 0.88rem;
+    opacity: 0.5;
+    line-height: 1.6;
+  }
+
+  .process__cta {
+    text-align: center;
+    margin-top: 2rem;
+  }
+
+  /* ═══════════════════════════════════════════
+     PORTFOLIO / WORK
+     ═══════════════════════════════════════════ */
+
+  .work {
+    padding: 5rem 0;
+  }
+
+  .work__intro-img {
+    width: 100%;
+    height: auto;
+    border-radius: 16px;
+    margin-bottom: 2rem;
+  }
+
+  .work__grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1rem;
+  }
+
+  .work__card {
+    background: var(--theme-surface-1);
+    border-radius: 16px;
+    overflow: hidden;
+    transition: var(--theme-transition);
+    border: 1px solid transparent;
+  }
+
+  .work__card:hover {
+    border-color: var(--theme-surface-2);
+    box-shadow: 0 8px 30px rgba(0,0,0,0.05);
+  }
+
+  .work__thumb {
+    aspect-ratio: 16 / 10;
+    overflow: hidden;
+  }
+
+  .work__thumb img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: top center;
+  }
+
+  .work__placeholder {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(135deg, var(--theme-surface-2) 0%, var(--theme-surface-1) 100%);
+  }
+
+  .work__placeholder-icon {
+    width: 36px;
+    height: 36px;
+    opacity: 0.15;
+  }
+
+  .work__info {
+    padding: 1.25rem 1.5rem;
+  }
+
+  .work__info h3 {
+    font-size: 1rem;
+    font-weight: 700;
+    margin-bottom: 0.3rem;
+  }
+
+  .work__info p {
+    font-size: 0.85rem;
+    opacity: 0.5;
+    line-height: 1.5;
+    margin-bottom: 0.65rem;
+  }
+
+  .work__tags {
+    display: flex;
+    gap: 0.35rem;
+    flex-wrap: wrap;
+  }
+
+  .work__tag {
+    padding: 0.15rem 0.5rem;
+    background: var(--theme-surface-2);
+    border-radius: 6px;
+    font-size: 0.7rem;
+    font-weight: 600;
+    opacity: 0.5;
+  }
+
+  .work__cta {
+    text-align: center;
+    margin-top: 2rem;
+  }
+
+  .btn-outline {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    padding: 0.7rem 1.5rem;
+    border: 1.5px solid var(--theme-surface-2);
+    border-radius: 10px;
+    font-weight: 600;
+    font-size: 0.9rem;
+    color: var(--theme-on-bg);
+    transition: var(--theme-transition);
+  }
+
+  .btn-outline:hover {
+    border-color: var(--theme-on-bg);
+    background: var(--theme-on-bg);
+    color: var(--theme-bg);
+  }
+
+  /* ═══════════════════════════════════════════
+     REVIEWS / TESTIMONIALS
+     ═══════════════════════════════════════════ */
+
+  .reviews {
+    padding: 5rem 0;
+    background: var(--theme-surface-1);
+  }
+
+  .reviews__grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1rem;
+  }
+
+  .reviews__card {
+    background: #fff;
+    border-radius: 16px;
+    padding: 1.75rem;
+    transition: var(--theme-transition);
+  }
+
+  .reviews__card:hover {
+    box-shadow: 0 8px 30px rgba(0,0,0,0.05);
+  }
+
+  .reviews__stars {
+    display: flex;
+    gap: 0.1rem;
+    margin-bottom: 0.85rem;
+  }
+
+  .reviews__card blockquote {
+    font-size: 0.9rem;
+    line-height: 1.65;
+    opacity: 0.6;
+    margin-bottom: 1.25rem;
+  }
+
+  .reviews__author {
+    display: flex;
+    align-items: center;
+    gap: 0.65rem;
+  }
+
+  .reviews__avatar {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    background: var(--theme-on-bg);
+    color: #fff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+    font-size: 0.85rem;
+    flex-shrink: 0;
+  }
+
+  .reviews__author strong {
+    display: block;
+    font-size: 0.85rem;
+    font-weight: 700;
+  }
+
+  .reviews__author span {
+    display: block;
+    font-size: 0.75rem;
+    opacity: 0.4;
+  }
+
+  /* ═══════════════════════════════════════════
+     TECH STRIP
+     ═══════════════════════════════════════════ */
+
+  .tech {
+    padding: 3rem 0;
+    border-top: 1px solid var(--theme-surface-2);
+  }
+
+  .tech__line {
+    max-width: 62ch;
+    margin-inline: auto;
+    text-align: center;
+    font-size: 0.85rem;
+    font-weight: 500;
+    letter-spacing: 0.02em;
+    line-height: 1.7;
+    opacity: 0.35;
+  }
+
+  /* ═══════════════════════════════════════════
+     RESPONSIVE
+     ═══════════════════════════════════════════ */
+
+  @media (max-width: 1024px) {
+    .bento__grid {
+      grid-template-columns: repeat(2, 1fr);
+    }
+
+    .process__grid {
+      grid-template-columns: repeat(2, 1fr);
+    }
+
+    .stats__row {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  /* Το hero σπάει στα 880px, ανεξάρτητα από τα υπόλοιπα breakpoints. */
+  @media (max-width: 879px) {
+    .hero__grid {
+      grid-template-columns: minmax(0, 1fr);
+      gap: 32px;
+    }
+
+    .hero__panel {
+      width: 100%;
+      max-width: 480px;
+    }
+  }
+
+  @media (max-width: 768px) {
+    .hide-mobile { display: none; }
+
+    .hero {
+      padding-top: calc(var(--navbar-height) + 2.5rem);
+      padding-bottom: 2.5rem;
+    }
+
+    .hero__cta {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 1rem;
+    }
+
+    .bento, .process, .work, .reviews {
+      padding: 3.5rem 0;
+    }
+
+    .bento__grid {
+      grid-template-columns: 1fr;
+    }
+
+    .process__grid {
+      grid-template-columns: 1fr;
+    }
+
+    .work__grid {
+      grid-template-columns: 1fr;
+    }
+
+    .reviews__grid {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  @media (max-width: 420px) {
+    .bento__card {
+      padding: 1.25rem;
+    }
+  }
+
+  /* Reduced motion: καμία κίνηση — μόνο η τελική, τακτοποιημένη εικόνα. */
+  @media (prefers-reduced-motion: reduce) {
+    .hero__panel-dot { animation: none; }
+    .hchip, .hchip__label, .hchip__check, .hero__panel,
+    .hero__panel-title, .hchip__dot {
+      transition-duration: 0.01ms;
+    }
+  }
+</style>

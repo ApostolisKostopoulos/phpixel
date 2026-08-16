@@ -1,0 +1,23 @@
+# Cloudflare Pages redirects. Σερβίρονται ως πραγματικά 301/302 από την άκρη
+# του δικτύου — γι' αυτό ζουν εδώ και όχι στο `redirects` του astro.config.mjs,
+# που σε στατικό build βγάζει μόνο <meta refresh> stubs.
+#
+# Σύνταξη: <from> <to> <status>. Η σειρά μετράει: πρώτο match κερδίζει.
+
+# --- Παλιά URLs υπηρεσιών (από την προηγούμενη δομή του site) ---
+/ecommerce                /kataskevi-eshop          301
+/istoselides-landingpage  /kataskevi-istoselidon    301
+/social-media-marketing   /diafimisi                301
+/hosting                  /services                 301
+
+# --- Blog: τα άρθρα μετακινήθηκαν από /blog/posts/* σε /blog/* ---
+/blog/posts/ab      /blog/ab      301
+/blog/posts/ux-ui   /blog/ux-ui   301
+/blog/posts/*       /blog/:splat  301
+
+# --- Sitemap: το @astrojs/sitemap v3 βγάζει sitemap-index.xml, όχι sitemap.xml.
+#     Το παλιό URL είναι δηλωμένο στο Search Console, οπότε δεν το σπάμε. ---
+/sitemap.xml   /sitemap-index.xml   301
+
+# --- Το /blog/tags χωρίς tag δεν είναι σελίδα, στέλνει στο blog ---
+/blog/tags   /blog   301

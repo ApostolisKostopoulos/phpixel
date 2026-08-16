@@ -1,0 +1,90 @@
+---
+
+---
+  <section class="error-page">
+    <div class="container error-page__inner">
+      <div class="error-content reveal">
+        <span class="error-badge">Ωπ!</span>
+        <h1 class="error-num">404.</h1>
+        <h2>Η σελίδα δεν βρέθηκε</h2>
+        <p class="error-desc">
+          Η σελίδα που ψάχνεις δεν υπάρχει ή μετακόμισε αλλού.
+        </p>
+        <img
+          src="/assets/images/error/travolta.gif"
+          alt="Ο Τζον Τραβόλτα κοιτάζει γύρω του μπερδεμένος"
+          width="498"
+          height="479"
+          class="error-gif"
+        />
+        <div class="error-actions">
+          <a href="/" class="btn btn--primary">Πίσω στην Αρχική</a>
+          <a href="/services" class="btn btn--outline">Υπηρεσίες</a>
+          <a href="/portfolio" class="btn btn--outline">Portfolio</a>
+          <a href="/contact" class="btn btn--outline">Επικοινωνία</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+
+
+<style>
+  .error-page {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding-top: var(--navbar-height);
+  }
+
+  .error-badge {
+    display: inline-block;
+    padding: 0.35rem 1rem;
+    font-size: 0.8rem;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    background: var(--theme-surface-1);
+    border-radius: 2rem;
+    margin-bottom: 1rem;
+  }
+
+  .error-num {
+    font-size: clamp(6rem, 15vw, 12rem);
+    font-weight: 900;
+    line-height: 1;
+    letter-spacing: -0.05em;
+    background: var(--gradient-accent);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    margin-bottom: 0.5rem;
+  }
+
+  .error-content h2 {
+    margin-bottom: 1rem;
+  }
+
+  .error-desc {
+    font-size: 1.1rem;
+    opacity: 0.6;
+    margin-bottom: 2rem;
+  }
+
+  .error-gif {
+    display: block;
+    width: min(300px, 70vw);
+    height: auto;
+    margin: 0 auto 2rem;
+    border-radius: 16px;
+  }
+
+  .error-actions {
+    display: flex;
+    gap: 1rem;
+    justify-content: center;
+    flex-wrap: wrap;
+  }
+</style>

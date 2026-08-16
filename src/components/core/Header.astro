@@ -1,0 +1,122 @@
+---
+/**
+ * Navbar + mobile overlay. Τα styles ζουν στο src/styles/layout.css γιατί
+ * μοιράζονται κλάσεις με τον Footer (.logo-text, .logo-accent) και με τις
+ * σελίδες (.btn).
+ */
+import { Icon } from 'astro-icon/components';
+import { nav } from '../../config/site';
+
+export interface Props {
+	/** Διάφανο navbar πάνω από σκούρο hero, μέχρι το πρώτο scroll. */
+	darkHero?: boolean;
+}
+
+const { darkHero = false } = Astro.props;
+const currentPath = Astro.url.pathname;
+---
+
+<header class:list={['navbar', { 'navbar--dark-hero': darkHero }]} id="navbar">
+	<div class="navbar__inner">
+		<a href="/" class="navbar__logo" transition:name="logo">
+			<span class="logo-text">ph<span class="logo-accent">pixel</span></span>
+		</a>
+
+		<nav class="navbar__nav" id="main-nav">
+			{nav.map((item) => (
+				<div class="nav-item">
+					<a href={item.slug} class:list={['nav-link', { active: currentPath === item.slug }]}>
+						{item.title}
+						{item.children && <Icon name="ic:baseline-keyboard-arrow-down" class="nav-chevron" />}
+					</a>
+					{item.children && (
+						<div class="nav-dropdown">
+							{item.children.map((child) => (
+								<a href={child.slug} class="nav-dropdown__link">{child.title}</a>
+							))}
+						</div>
+					)}
+				</div>
+			))}
+		</nav>
+
+		<div class="navbar__actions">
+			<a href="/contact" class="btn btn--primary btn--sm">Επικοινωνία</a>
+			<button class="mobile-toggle" id="mobile-toggle" aria-label="Menu">
+				<span></span><span></span><span></span>
+			</button>
+		</div>
+	</div>
+</header>
+
+<!-- Mobile Nav Overlay -->
+<div class="mobile-nav" id="mobile-nav">
+	<nav class="mobile-nav__inner">
+		{nav.map((item) => (
+			<div class="mobile-nav__group">
+				<a href={item.slug} class="mobile-nav__link">{item.title}</a>
+				{item.children && (
+					<div class="mobile-nav__sublinks">
+						{item.children.map((child) => (
+							<a href={child.slug} class="mobile-nav__sublink">{child.title}</a>
+						))}
+					</div>
+				)}
+			</div>
+		))}
+		<a href="/contact" class="btn btn--primary" style="margin-top: 0.5rem;">Επικοινωνία</a>
+	</nav>
+</div>
+
+<script is:inline>
+	function initNavbar() {
+		const navbar = document.getElementById('navbar');
+		if (!navbar) return;
+
+		// Reset scrolled state on page load
+		if (window.scrollY <= 50) {
+			navbar.classList.remove('navbar--scrolled');
+		} else {
+			navbar.classList.add('navbar--scrolled');
+		}
+
+		// Remove old listener to avoid duplicates
+		if (window.__navbarScrollHandler) {
+			window.removeEventListener('scroll', window.__navbarScrollHandler);
+		}
+
+		// Navbar scroll effect
+		window.__navbarScrollHandler = () => {
+			if (window.scrollY > 50) {
+				navbar.classList.add('navbar--scrolled');
+			} else {
+				navbar.classList.remove('navbar--scrolled');
+			}
+		};
+		window.addEventListener('scroll', window.__navbarScrollHandler);
+
+		// Mobile menu toggle
+		const toggle = document.getElementById('mobile-toggle');
+		const mobileNav = document.getElementById('mobile-nav');
+		if (toggle && mobileNav) {
+			const newToggle = toggle.cloneNode(true);
+			toggle.parentNode.replaceChild(newToggle, toggle);
+			newToggle.addEventListener('click', () => {
+				newToggle.classList.toggle('is-open');
+				mobileNav.classList.toggle('is-open');
+				document.body.classList.toggle('no-scroll');
+			});
+
+			// Close mobile nav on page transition
+			mobileNav.classList.remove('is-open');
+			newToggle.classList.remove('is-open');
+			document.body.classList.remove('no-scroll');
+		}
+	}
+
+	// Run on first load
+	initNavbar();
+
+	// Re-run after View Transitions
+	document.addEventListener('astro:page-load', initNavbar);
+</script>

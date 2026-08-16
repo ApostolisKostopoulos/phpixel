@@ -1,0 +1,67 @@
+# Πηγή: phpixel-case-study-questionnaire.xlsx — μόνο επιβεβαιωμένα γεγονότα.
+order: 2
+anchor: aporelli
+name: Aporelli Artworks
+tagline: 'Ανάληψη ενός αργού, ασυντήρητου e-shop: ταχύτητα, σωστό checkout και σταθερή συντήρηση.'
+description: Το e-shop της Aporelli Artworks ήταν αργό και ασυντήρητο, με καλάθι και checkout που δεν δούλευαν σωστά. Το αναλάβαμε, το κάναμε γρήγορο και λειτουργικό, και το κρατάμε έτσι με μηνιαία συντήρηση, SEO και Google Ads.
+industry: Χειροποίητη θρησκευτική τέχνη
+category: E-shop
+year: 2026
+url: https://aporelliartworks.com
+tags:
+  - E-shop
+  - WooCommerce
+  - Συντήρηση
+  - Google Ads
+stack:
+  - WordPress
+  - WooCommerce
+ongoing: Μηνιαία συντήρηση, SEO, Google Ads
+thumb: /assets/images/portfolio/aporelliartworks-thumb.jpg
+image: /images/portfolio/aporelli.webp
+imageAlt: Το e-shop της Aporelli Artworks
+hero: /assets/images/portfolio/aporelliartworks-home.jpg
+heroAlt: Η αρχική σελίδα του e-shop aporelliartworks.com
+gallery:
+  - src: /assets/images/portfolio/aporelliartworks-home.jpg
+    alt: Η αρχική σελίδα του e-shop aporelliartworks.com
+    caption: Το homepage του e-shop μετά την ανάληψη και τη βελτιστοποίηση.
+  - src: /assets/images/portfolio/aporelliartworks-product.jpg
+    alt: Σελίδα προϊόντος με χειροποίητη εικόνα Αγίου Γεωργίου
+    caption: 'Η σελίδα προϊόντος: από εδώ ξεκινά το καλάθι και το checkout που φτιάξαμε να δουλεύουν σωστά.'
+metrics: []
+accent: '#8a6a3b'
+caseStudy:
+  heroTitle: Πώς το e-shop της Aporelli Artworks ξαναβρήκε ταχύτητα και σωστό checkout
+  heroSub: Δεν χρειαζόταν καινούργιο site. Χρειαζόταν κάποιον να αναλάβει το e-shop χειροποίητων προϊόντων που υπήρχε ήδη και να το κάνει να δουλεύει.
+  metaTitle: 'Aporelli Artworks: Ανάληψη και βελτιστοποίηση e-shop | Case Study | phpixel'
+  metaDescription: 'Βελτιστοποίηση e-shop χειροποίητων προϊόντων: πήραμε ένα αργό, ασυντήρητο WooCommerce με προβληματικό checkout και το κάναμε γρήγορο και λειτουργικό.'
+  client:
+    title: Η Aporelli Artworks
+    html:
+      - Η Aporelli Artworks φτιάχνει χειροποίητα έργα θρησκευτικής τέχνης και τα πουλάει online στο aporelliartworks.com. Ήρθε σε εμάς από σύσταση.
+  challenge:
+    title: Ένα e-shop που είχε μείνει πίσω
+    html:
+      - 'Το e-shop υπήρχε ήδη, αλλά είχε μείνει χωρίς συντήρηση. Ήταν αργό, με παλιό καλάθι και checkout που δεν δούλευε σωστά: ό,τι χειρότερο για ένα κατάστημα που ζει από online παραγγελίες.'
+  goal:
+    title: Να ξαναδουλέψει, και να μείνει έτσι
+    html:
+      - 'Ταχύτητα, λειτουργικό καλάθι και checkout, και ένα e-shop που δεν θα ξαναμείνει πίσω: με σταθερή μηνιαία συντήρηση αντί για έκτακτες επιδιορθώσεις.'
+  approach:
+    title: Τι κάναμε
+    html:
+      - 'Αναλάβαμε το υπάρχον WooCommerce και δουλέψαμε πάνω σε ό,τι πονούσε: ταχύτητα, καλάθι, checkout, πληρωμές. Η ίδια δουλειά που κάνουμε στην <a href="/kataskevi-eshop">κατασκευή e-shop</a> από το μηδέν, εφαρμοσμένη σε ένα ζωντανό κατάστημα.'
+      - Δουλέψαμε επίσης το UX/UI και το email marketing. Σήμερα συνεχίζουμε με μηνιαία συντήρηση, SEO και Google Ads, ώστε το e-shop να μην ξαναμείνει ασυντήρητο.
+  deliverables:
+    - Ανάληψη και βελτιστοποίηση υπάρχοντος WooCommerce e-shop
+    - Βελτιστοποίηση ταχύτητας
+    - Διόρθωση καλαθιού και checkout
+    - UX/UI βελτιώσεις
+    - Ενσωμάτωση πληρωμών
+    - Email marketing
+  cta:
+    heading: Το e-shop σου σέρνεται ή κολλάει στο checkout;
+    text: Αναλαμβάνουμε και υπάρχοντα e-shop, όχι μόνο καινούργια. Στείλε μας το link και θα σου πούμε τίμια τι φταίει, χωρίς δέσμευση.
+    serviceHref: /kataskevi-eshop
+    serviceLabel: Κατασκευή E-shop

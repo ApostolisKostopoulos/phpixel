@@ -1,0 +1,19 @@
+# Cloudflare Pages response headers.
+#
+# Το noindex για τα preview deployments ΔΕΝ μπαίνει εδώ: το `_headers` δεν
+# ξέρει σε ποιο branch τρέχει. Μπαίνει ως <meta name="robots"> από το
+# BaseHead.astro, με βάση το CF_PAGES_BRANCH του build.
+
+/*
+  X-Content-Type-Options: nosniff
+  Referrer-Policy: strict-origin-when-cross-origin
+  X-Frame-Options: SAMEORIGIN
+  Permissions-Policy: geolocation=(), microphone=(), camera=(), interest-cohort=()
+
+# Τα hashed assets του Astro είναι immutable: το όνομα αλλάζει όταν αλλάξει το
+# περιεχόμενο, οπότε μπορούν να μείνουν στην cache για πάντα.
+/_astro/*
+  Cache-Control: public, max-age=31536000, immutable
+
+/assets/fonts/*
+  Cache-Control: public, max-age=31536000, immutable

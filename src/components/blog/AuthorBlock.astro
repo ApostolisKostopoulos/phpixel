@@ -1,19 +1,19 @@
 ---
 // Μπλοκ συγγραφέα κάτω από τον τίτλο κάθε blog post:
 // όνομα + μία γραμμή + ημερομηνίες δημοσίευσης/ενημέρωσης.
-import { site } from '../../data/site';
+import { site } from '@config/site';
 
 export interface Props {
-  publishDate?: string;
-  updatedDate?: string;
+  publishDate?: string | Date;
+  updatedDate?: string | Date;
 }
 
 const { publishDate, updatedDate } = Astro.props;
 
-const fmt = (d?: string) => {
+const fmt = (d?: string | Date) => {
   if (!d) return null;
   const parsed = new Date(d);
-  if (isNaN(parsed.getTime())) return d;
+  if (isNaN(parsed.getTime())) return String(d);
   return parsed.toLocaleDateString('el-GR', { year: 'numeric', month: 'long', day: 'numeric' });
 };
 

@@ -1,0 +1,237 @@
+---
+import { Icon } from 'astro-icon/components';
+import Differentiators from '@components/sections/Differentiators.astro';
+
+const steps = [
+  {
+    num: '01',
+    icon: 'ic:baseline-chat',
+    title: 'Γνωριμία & Ανάλυση',
+    desc: 'Ξεκινάμε με μια κουβέντα γνωριμίας, χωρίς καμία δέσμευση, για να καταλάβουμε την επιχείρησή σου, τον κλάδο σου και τους στόχους σου. Η σωστή αρχή σημαίνει σωστό αποτέλεσμα.',
+  },
+  {
+    num: '02',
+    icon: 'ic:baseline-draw',
+    title: 'Σχεδιασμός & Πρόταση',
+    desc: 'Ετοιμάζουμε αναλυτική πρόταση με wireframes, χρονοδιάγραμμα και κόστος. Τίποτα δεν ξεκινά χωρίς τη δική σου έγκριση.',
+  },
+  {
+    num: '03',
+    icon: 'ic:baseline-code',
+    title: 'Κατασκευή',
+    desc: 'Χτίζουμε το project σου με καθαρό κώδικα. Τακτικά updates, preview links και ανοιχτή επικοινωνία σε κάθε βήμα.',
+  },
+  {
+    num: '04',
+    icon: 'ic:baseline-bug-report',
+    title: 'Έλεγχος & QA',
+    desc: 'Δοκιμές σε κάθε συσκευή και browser. Έλεγχος ταχύτητας, SEO και ασφάλειας πριν βγούμε live.',
+  },
+  {
+    num: '05',
+    icon: 'ic:baseline-rocket-launch',
+    title: 'Launch',
+    desc: 'Δημοσίευση χωρίς downtime. Στήνουμε analytics και ό,τι χρειάζεται για να ξεκινήσεις δυνατά.',
+  },
+  {
+    num: '06',
+    icon: 'ic:baseline-support-agent',
+    title: 'Μετά το launch',
+    desc: 'Δεν σε αφήνουμε. Φροντίδα, ενημερώσεις, backups και βελτιώσεις. Το site σου έχει άνθρωπο.',
+  },
+];
+---
+  <!-- Hero -->
+  <section class="hww-hero">
+    <div class="hww-hero__bg"></div>
+    <div class="container hww-hero__inner">
+      <div class="hww-hero__content reveal">
+        <span class="hww-badge">Διαδικασία</span>
+        <h1>
+          Πώς δουλεύουμε<br />
+          <span class="accent-text">βήμα-βήμα.</span>
+        </h1>
+        <p class="hww-hero__sub">
+          Η επικοινωνία είναι το Α και το Ω σε μια καλή συνεργασία.
+          Δες πώς δουλεύουμε, βήμα βήμα, χωρίς εκπλήξεις.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Steps -->
+  <section class="hww-steps">
+    <div class="container">
+      <div class="steps-timeline">
+        {steps.map((step, i) => (
+          <div class="step reveal" style={`transition-delay: ${i * 0.1}s`}>
+            <div class="step__line" aria-hidden="true">
+              <div class="step__dot"></div>
+            </div>
+            <div class="step__content">
+              <div class="step__icon">
+                <Icon name={step.icon} />
+              </div>
+              <div class="step__text">
+                <span class="step__num">{step.num}</span>
+                <h3>{step.title}</h3>
+                <p>{step.desc}</p>
+              </div>
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- Values / Why Us — κοινή ενότητα με το /about -->
+  <Differentiators background="gradient" />
+
+
+
+
+<style>
+  /* Hero */
+  .hww-hero {
+    position: relative;
+    padding: calc(var(--navbar-height) + 5rem) 0 5rem;
+  }
+
+  .hww-hero__bg {
+    position: absolute;
+    inset: 0;
+    background: var(--gradient-subtle);
+  }
+
+  .hww-hero__inner { position: relative; }
+
+  .hww-badge {
+    display: inline-block;
+    padding: 0.35rem 1rem;
+    font-size: 0.8rem;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    background: var(--theme-surface-1);
+    border-radius: 2rem;
+    margin-bottom: 1.5rem;
+  }
+
+  .hww-hero__content h1 { margin-bottom: 1.5rem; }
+
+  .accent-text {
+    background: var(--gradient-accent);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  .hww-hero__sub {
+    font-size: 1.15rem;
+    line-height: 1.75;
+    opacity: 0.7;
+    max-width: 520px;
+  }
+
+  /* Steps Timeline */
+  .hww-steps {
+    padding: var(--section-padding);
+  }
+
+  .steps-timeline {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+    max-width: 720px;
+    margin: 0 auto;
+  }
+
+  .step {
+    display: flex;
+    gap: 2rem;
+    position: relative;
+  }
+
+  .step__line {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 24px;
+    flex-shrink: 0;
+    position: relative;
+  }
+
+  .step__dot {
+    width: 14px;
+    height: 14px;
+    border-radius: 50%;
+    background: var(--gradient-accent);
+    flex-shrink: 0;
+    margin-top: 1.5rem;
+    z-index: 1;
+  }
+
+  .step__line::after {
+    content: '';
+    position: absolute;
+    top: calc(1.5rem + 14px);
+    bottom: 0;
+    width: 2px;
+    background: rgba(0, 0, 0, 0.08);
+  }
+
+  .step:last-child .step__line::after {
+    display: none;
+  }
+
+  .step__content {
+    display: flex;
+    gap: 1.25rem;
+    padding: 1.5rem 0 3rem;
+    flex: 1;
+  }
+
+  .step__icon {
+    width: 52px;
+    height: 52px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 0.75rem;
+    background: var(--theme-surface-1);
+    color: var(--accent-blue);
+    flex-shrink: 0;
+  }
+
+  .step__icon svg,
+  .step__icon [data-icon] {
+    width: 26px;
+    height: 26px;
+  }
+
+  .step__num {
+    display: block;
+    font-size: 0.75rem;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    opacity: 0.4;
+    margin-bottom: 0.25rem;
+  }
+
+  .step__text h3 {
+    font-size: 1.2rem;
+    margin-bottom: 0.5rem;
+  }
+
+  .step__text p {
+    font-size: 0.95rem;
+    line-height: 1.7;
+    opacity: 0.7;
+  }
+
+  @media (max-width: 768px) {
+    .step { gap: 1rem; }
+    .step__content { gap: 1rem; }
+    .step__icon { width: 44px; height: 44px; }
+  }
+</style>

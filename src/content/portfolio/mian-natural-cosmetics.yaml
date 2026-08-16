@@ -1,0 +1,72 @@
+# Πηγή: phpixel-case-study-questionnaire.xlsx — μόνο επιβεβαιωμένα γεγονότα.
+order: 4
+anchor: mian
+name: Mian Natural Cosmetics
+tagline: Νέο e-shop φυσικών καλλυντικών από το μηδέν, με email flows και δομή για Google Ads.
+description: Η MIAN Natural Cosmetics ξεκίνησε χωρίς καμία online παρουσία. Στήσαμε πλήρες e-shop σε WooCommerce με φίλτρα προϊόντων, newsletter opt-in στο checkout, flow εγκαταλελειμμένου καλαθιού και δομή Google Ads, και συνεχίζουμε με email marketing και SEO.
+industry: Φυσικά καλλυντικά
+category: E-shop
+year: 2026
+url: https://miannaturalcosmetics.gr
+tags:
+  - E-shop
+  - WooCommerce
+  - Email Marketing
+  - Google Ads
+stack:
+  - WordPress
+  - WooCommerce
+ongoing: Email marketing, Google Ads, SEO
+thumb: /assets/images/portfolio/mian-thumb.jpg
+image: /images/portfolio/mian.webp
+imageAlt: Το e-shop της Mian Natural Cosmetics
+hero: /assets/images/portfolio/mian-home.jpg
+heroAlt: Η αρχική σελίδα του e-shop miannaturalcosmetics.gr
+gallery:
+  - src: /assets/images/portfolio/mian-home.jpg
+    alt: Η αρχική σελίδα του e-shop miannaturalcosmetics.gr
+    caption: Το homepage του νέου e-shop.
+  - src: /assets/images/portfolio/mian-shop.jpg
+    alt: Ο κατάλογος προϊόντων με φίλτρα στο miannaturalcosmetics.gr
+    caption: Ο κατάλογος με τα φίλτρα προϊόντων που στήσαμε.
+  - src: /assets/images/portfolio/mian-product.jpg
+    alt: Σελίδα προϊόντος φυσικού καλλυντικού στο miannaturalcosmetics.gr
+    caption: Η σελίδα προϊόντος, με τις ελληνικές περιγραφές που γράψαμε.
+metrics: []
+accent: '#a8b48a'
+caseStudy:
+  heroTitle: Πώς η MIAN Natural Cosmetics ξεκίνησε να πουλάει online από το μηδέν
+  heroSub: 'Κατασκευή e-shop καλλυντικών από λευκό χαρτί: κατάστημα, email flows, δομή Google Ads και πλάνο για τα επόμενα τρίμηνα.'
+  metaTitle: 'MIAN Natural Cosmetics: E-shop καλλυντικών από το μηδέν | Case Study | phpixel'
+  metaDescription: 'Κατασκευή e-shop καλλυντικών για τη MIAN: WooCommerce με φίλτρα προϊόντων, email flows, δομή Google Ads και πλάνο SEO για τα επόμενα τρίμηνα.'
+  client:
+    title: Η MIAN Natural Cosmetics
+    html:
+      - Η MIAN Natural Cosmetics είναι brand φυσικών καλλυντικών. Η συνεργασία ξεκίνησε από σύσταση, πριν καν υπάρξει το πρώτο της e-shop.
+  challenge:
+    title: Χωρίς κανάλι online πώλησης
+    html:
+      - 'Το brand δεν είχε παρουσία στο internet: ούτε e-shop, ούτε τρόπος να αγοράσει κανείς τα προϊόντα online.'
+  goal:
+    title: Εκκίνηση με πλάνο, όχι απλώς site
+    html:
+      - 'Όχι απλώς ένα e-shop, αλλά πλήρης εκκίνηση online παρουσίας: κατάστημα, SEO και πλάνο για marketing και περιεχόμενο για τα επόμενα τρία τρίμηνα.'
+  approach:
+    title: Τι στήσαμε
+    html:
+      - Πλήρης <a href="/kataskevi-eshop">κατασκευή e-shop</a> σε WordPress και WooCommerce, με φίλτρα προϊόντων και ελληνικό copywriting γραμμένο από εμάς.
+      - Στο checkout προσθέσαμε εγγραφή στο newsletter με σωστό GDPR consent και στήσαμε αυτόματο email flow για τα καλάθια που μένουν στη μέση.
+      - Δομήσαμε επίσης τα Google Ads. Σήμερα συνεχίζουμε με email marketing, Google Ads και SEO.
+  deliverables:
+    - Πλήρες e-shop σε WooCommerce
+    - Φίλτρα προϊόντων
+    - Newsletter opt-in στο checkout (GDPR)
+    - Flow εγκαταλελειμμένου καλαθιού
+    - Δομή Google Ads
+    - Ελληνικό copywriting
+    - SEO
+  cta:
+    heading: Θες κι εσύ ένα τέτοιο e-shop;
+    text: Δες πώς δουλεύουμε στην κατασκευή e-shop ή στείλε μας δυο λόγια για το δικό σου. Απαντάμε τίμια, χωρίς δέσμευση.
+    serviceHref: /kataskevi-eshop
+    serviceLabel: Κατασκευή E-shop

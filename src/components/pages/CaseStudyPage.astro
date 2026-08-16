@@ -1,0 +1,740 @@
+---
+import { Icon } from 'astro-icon/components';
+import { getProjects, type ProjectEntry } from '@utils/content';
+
+interface Props {
+  entry: ProjectEntry;
+}
+
+const { entry } = Astro.props as Props;
+const project = { slug: entry.id, ...entry.data };
+const cs = project.caseStudy;
+
+// Όλα τα projects, για την πλοήγηση προηγούμενο/επόμενο στο τέλος της σελίδας
+const projects = (await getProjects()).map((p) => ({ slug: p.id, ...p.data }));
+
+// Τα αφηγηματικά sections με τη σειρά του blueprint —
+// όποιο δεν έχει δεδομένα παραλείπεται εντελώς.
+const narrative = [
+  { eyebrow: 'Ο πελάτης', section: cs.client },
+  { eyebrow: 'Η πρόκληση', section: cs.challenge },
+  { eyebrow: 'Ο στόχος', section: cs.goal },
+  { eyebrow: 'Η προσέγγιση', section: cs.approach },
+].filter((s) => s.section && s.section.html.length > 0);
+
+// Snapshot bar — μόνο πεδία που υπάρχουν
+const snapshot = [
+  { label: 'Πελάτης', value: project.name },
+  { label: 'Τομέας', value: project.industry },
+  { label: 'Τύπος', value: project.category },
+  { label: 'Έτος', value: String(project.year) },
+  ...(project.stack.length
+    ? [{ label: 'Πλατφόρμα', value: project.stack.join(' + ') }]
+    : []),
+  ...(project.ongoing ? [{ label: 'Σήμερα', value: project.ongoing }] : []),
+];
+
+// Επόμενο / προηγούμενο project για πλοήγηση στο τέλος της σελίδας
+const idx = projects.findIndex((p) => p.slug === project.slug);
+const prev = projects[(idx - 1 + projects.length) % projects.length];
+const next = projects[(idx + 1) % projects.length];
+---
+  <!-- CreativeWork + BreadcrumbList JSON-LD παράγονται στη διαδρομή
+       (src/pages/portfolio/[slug].astro) από το Astro.site. -->
+
+  <!-- ============== HERO ============== -->
+  <section class="cs-hero" style={`--cs-accent: ${project.accent}`}>
+    <div class="cs-hero__bg">
+      <img src={project.hero} alt={project.heroAlt} class="cs-hero__img" />
+      <div class="cs-hero__veil" aria-hidden="true"></div>
+    </div>
+
+    <div class="container cs-hero__inner">
+      <a href="/portfolio" class="cs-back reveal">
+        <Icon name="ic:baseline-arrow-back" class="cs-back__icon" />
+        Πίσω στο portfolio
+      </a>
+
+      <div class="cs-hero__content reveal">
+        <span class="cs-hero__category">{project.category} | {project.year}</span>
+        <h1 class="cs-hero__title">{cs.heroTitle}</h1>
+        <p class="cs-hero__tagline">{cs.heroSub}</p>
+
+        <div class="cs-hero__actions">
+          {project.url && (
+            <a
+              href={project.url}
+              target="_blank"
+              rel="noopener noreferrer"
+              class="btn btn--primary btn--lg cs-hero__cta"
+            >
+              <Icon name="ic:baseline-launch" class="btn-icon" />
+              Δες το site live
+            </a>
+          )}
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============== SNAPSHOT BAR ============== -->
+  <section class="cs-facts" aria-label="Σύνοψη project">
+    <div class="container">
+      <div class="cs-facts__grid reveal">
+        {snapshot.map((f) => (
+          <div class="cs-fact">
+            <span class="cs-fact__label">{f.label}</span>
+            <span class="cs-fact__value">{f.value}</span>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- ============== ΑΦΗΓΗΣΗ: ΠΕΛΑΤΗΣ / ΠΡΟΚΛΗΣΗ / ΣΤΟΧΟΣ / ΠΡΟΣΕΓΓΙΣΗ ============== -->
+  {narrative.map(({ eyebrow, section }, i) => (
+    <section class:list={['cs-section', { 'cs-section--alt': i % 2 === 1 }]}>
+      <div class="container">
+        <div class="cs-twocol">
+          <div class="cs-twocol__left reveal">
+            <span class="cs-eyebrow">{eyebrow}</span>
+            <h2 class="cs-h2">{section!.title}</h2>
+          </div>
+          <div class="cs-twocol__right reveal">
+            {section!.html.map((p) => (
+              <p class="cs-para" set:html={p} />
+            ))}
+
+            {eyebrow === 'Η προσέγγιση' && cs.deliverables && cs.deliverables.length > 0 && (
+              <>
+                <h3 class="cs-block-title">Τι περιλάμβανε</h3>
+                <ul class="cs-services-list">
+                  {cs.deliverables.map((d) => (
+                    <li class="cs-service-item">{d}</li>
+                  ))}
+                </ul>
+              </>
+            )}
+
+            {eyebrow === 'Η προσέγγιση' && project.stack.length > 0 && (
+              <>
+                <h3 class="cs-block-title cs-block-title--mt">Tech Stack</h3>
+                <div class="cs-stack">
+                  {project.stack.map((t) => (
+                    <span class="cs-stack-chip">{t}</span>
+                  ))}
+                </div>
+              </>
+            )}
+          </div>
+        </div>
+      </div>
+    </section>
+  ))}
+
+  <!-- ============== RESULTS (μόνο με πραγματικά, εγκεκριμένα νούμερα) ============== -->
+  {project.metrics.length > 0 && (
+    <section class="cs-metrics">
+      <div class="container">
+        <div class="cs-metrics__grid reveal">
+          {project.metrics.map((m) => (
+            <div class="cs-metric">
+              <span class="cs-metric__num">{m.value}</span>
+              <span class="cs-metric__label">{m.label}</span>
+            </div>
+          ))}
+        </div>
+      </div>
+    </section>
+  )}
+
+  <!-- ============== TESTIMONIAL (μόνο με άδεια δημοσίευσης) ============== -->
+  {project.quote && (
+    <section class="cs-quote">
+      <div class="container">
+        <blockquote class="cs-quote__inner reveal">
+          <Icon name="ic:baseline-format-quote" class="cs-quote__mark" />
+          <p class="cs-quote__text">“{project.quote.text}”</p>
+          <footer class="cs-quote__footer">
+            <strong>{project.quote.author}</strong>
+            {project.quote.role && <span>, {project.quote.role}</span>}
+          </footer>
+        </blockquote>
+      </div>
+    </section>
+  )}
+
+  <!-- ============== GALLERY ============== -->
+  {project.gallery.length > 0 && (
+    <section class="cs-gallery">
+      <div class="container">
+        <div class="cs-gallery__head reveal">
+          <span class="cs-eyebrow">Gallery</span>
+          <h2 class="cs-h2">Δες το από κοντά.</h2>
+        </div>
+        <div class="cs-gallery__grid">
+          {project.gallery.map((g, i) => (
+            <figure class:list={['cs-shot reveal', { 'cs-shot--wide': i === 0 }]}>
+              <div class="cs-shot__media">
+                <img src={g.src} alt={g.alt} loading="lazy" decoding="async" />
+              </div>
+              {g.caption && <figcaption class="cs-shot__caption">{g.caption}</figcaption>}
+            </figure>
+          ))}
+        </div>
+      </div>
+    </section>
+  )}
+
+  <!-- ============== CTA ============== -->
+  <section class="cs-cta">
+    <div class="container">
+      <div class="cs-cta__inner reveal">
+        <h2 class="cs-cta__heading">{cs.cta.heading}</h2>
+        <p class="cs-cta__text">{cs.cta.text}</p>
+        <div class="cs-cta__actions">
+          <a href={cs.cta.serviceHref} class="btn btn--primary btn--lg">
+            {cs.cta.serviceLabel}
+            <Icon name="ic:baseline-arrow-forward" class="btn-icon" />
+          </a>
+          <a href="/contact" class="btn btn--outline btn--lg">
+            Πάμε να μιλήσουμε
+          </a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============== PREV / NEXT ============== -->
+  <section class="cs-nav">
+    <div class="container">
+      <div class="cs-nav__inner">
+        <a href={`/portfolio/${prev.slug}`} class="cs-nav__link cs-nav__link--prev">
+          <span class="cs-nav__label">
+            <Icon name="ic:baseline-arrow-back" class="cs-nav__icon" />
+            Προηγούμενο
+          </span>
+          <span class="cs-nav__name">{prev.name}</span>
+        </a>
+        <a href={`/portfolio/${next.slug}`} class="cs-nav__link cs-nav__link--next">
+          <span class="cs-nav__label">
+            Επόμενο
+            <Icon name="ic:baseline-arrow-forward" class="cs-nav__icon" />
+          </span>
+          <span class="cs-nav__name">{next.name}</span>
+        </a>
+      </div>
+    </div>
+  </section>
+
+
+
+<style>
+  /* ===== HERO ===== */
+  .cs-hero {
+    position: relative;
+    min-height: 78vh;
+    display: flex;
+    align-items: flex-end;
+    padding: calc(var(--navbar-height) + 3rem) 0 4rem;
+    overflow: hidden;
+    color: #fff;
+  }
+
+  .cs-hero__bg {
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+  }
+
+  .cs-hero__img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: top center;
+    filter: saturate(0.95);
+  }
+
+  .cs-hero__veil {
+    position: absolute;
+    inset: 0;
+    background:
+      linear-gradient(180deg, rgba(0, 0, 0, 0.55) 0%, rgba(0, 0, 0, 0.85) 100%),
+      color-mix(in srgb, var(--cs-accent, #2a2a2a) 30%, transparent);
+  }
+
+  .cs-hero__inner {
+    position: relative;
+    z-index: 1;
+    width: 100%;
+  }
+
+  .cs-back {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    color: rgba(255, 255, 255, 0.8);
+    font-size: 0.875rem;
+    font-weight: 600;
+    padding: 0.5rem 1rem;
+    border-radius: 2rem;
+    background: rgba(255, 255, 255, 0.08);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    margin-bottom: 2rem;
+    transition: var(--theme-transition);
+  }
+
+  .cs-back:hover {
+    background: rgba(255, 255, 255, 0.15);
+    color: #fff;
+    transform: translateX(-3px);
+  }
+
+  .cs-back__icon {
+    width: 16px;
+    height: 16px;
+  }
+
+  .cs-hero__content {
+    max-width: 800px;
+  }
+
+  .cs-hero__category {
+    display: inline-block;
+    padding: 0.35rem 1rem;
+    font-size: 0.78rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    background: var(--cs-accent, rgba(255, 255, 255, 0.15));
+    color: #fff;
+    border-radius: 2rem;
+    margin-bottom: 1.5rem;
+  }
+
+  .cs-hero__title {
+    margin-bottom: 1rem;
+    color: #fff;
+    font-size: clamp(2rem, 5vw, 3.5rem);
+    line-height: 1.15;
+    letter-spacing: -0.02em;
+  }
+
+  .cs-hero__tagline {
+    font-size: clamp(1.1rem, 2vw, 1.35rem);
+    line-height: 1.6;
+    opacity: 0.85;
+    max-width: 640px;
+    margin-bottom: 2rem;
+  }
+
+  .cs-hero__actions {
+    display: flex;
+    gap: 0.75rem;
+    flex-wrap: wrap;
+  }
+
+  .btn-icon {
+    width: 20px;
+    height: 20px;
+  }
+
+  /* ===== SNAPSHOT BAR ===== */
+  .cs-facts {
+    background: var(--theme-surface-1);
+    padding: 2.5rem 0;
+  }
+
+  .cs-facts__grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 2rem;
+  }
+
+  .cs-fact {
+    display: flex;
+    flex-direction: column;
+    gap: 0.35rem;
+  }
+
+  .cs-fact__label {
+    font-size: 0.72rem;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    opacity: 0.5;
+  }
+
+  .cs-fact__value {
+    font-size: 1.05rem;
+    font-weight: 700;
+  }
+
+  /* ===== SECTIONS ===== */
+  .cs-section {
+    padding: var(--section-padding);
+  }
+
+  .cs-section--alt {
+    background: var(--theme-surface-1);
+  }
+
+  .cs-twocol {
+    display: grid;
+    grid-template-columns: 1fr 1.5fr;
+    gap: 4rem;
+    align-items: start;
+  }
+
+  .cs-twocol__left,
+  .cs-twocol__right {
+    min-width: 0;
+  }
+
+  .cs-eyebrow {
+    display: inline-block;
+    font-size: 0.78rem;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    opacity: 0.55;
+    margin-bottom: 0.75rem;
+  }
+
+  .cs-h2 {
+    margin-bottom: 0;
+  }
+
+  .cs-para {
+    font-size: 1.05rem;
+    line-height: 1.8;
+    opacity: 0.85;
+    margin-bottom: 1.25rem;
+  }
+
+  .cs-para:last-of-type {
+    margin-bottom: 0;
+  }
+
+  .cs-para :global(a) {
+    color: var(--accent-blue, #4f9eff);
+    font-weight: 600;
+    text-decoration: underline;
+    text-underline-offset: 3px;
+  }
+
+  /* ===== ΛΙΣΤΑ ΠΑΡΑΔΟΤΕΩΝ / STACK (μέσα στην «Προσέγγιση») ===== */
+  .cs-block-title {
+    font-size: 0.9rem;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    opacity: 0.7;
+    margin: 2rem 0 1rem;
+  }
+
+  .cs-block-title--mt {
+    margin-top: 2rem;
+  }
+
+  .cs-services-list {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    padding: 0;
+  }
+
+  .cs-service-item {
+    position: relative;
+    padding: 0.75rem 0 0.75rem 1.75rem;
+    font-size: 1rem;
+    line-height: 1.5;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.06);
+  }
+
+  .cs-service-item::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 1.35rem;
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: var(--cs-accent, var(--accent-blue, #4f9eff));
+  }
+
+  .cs-service-item:last-child {
+    border-bottom: none;
+  }
+
+  .cs-stack {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+  }
+
+  .cs-stack-chip {
+    padding: 0.5rem 1rem;
+    background: var(--theme-bg, #fff);
+    border: 1px solid rgba(0, 0, 0, 0.12);
+    border-radius: var(--theme-shape-radius-sm, 8px);
+    font-size: 0.875rem;
+    font-weight: 600;
+  }
+
+  /* ===== METRICS ===== */
+  .cs-metrics {
+    padding: 4rem 0;
+    background: var(--gradient-subtle);
+    border-top: 1px solid rgba(0, 0, 0, 0.06);
+    border-bottom: 1px solid rgba(0, 0, 0, 0.06);
+  }
+
+  .cs-metrics__grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 2rem;
+    text-align: center;
+  }
+
+  .cs-metric {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.5rem;
+  }
+
+  .cs-metric__num {
+    font-size: clamp(2.5rem, 6vw, 3.75rem);
+    font-weight: 900;
+    line-height: 1;
+    letter-spacing: -0.03em;
+    background: var(--gradient-accent);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  .cs-metric__label {
+    font-size: 0.88rem;
+    font-weight: 500;
+    opacity: 0.7;
+    max-width: 220px;
+  }
+
+  /* ===== GALLERY ===== */
+  .cs-gallery {
+    padding: var(--section-padding);
+  }
+
+  .cs-gallery__head {
+    margin-bottom: 2.5rem;
+  }
+
+  .cs-gallery__grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1.5rem;
+  }
+
+  .cs-shot {
+    margin: 0;
+  }
+
+  .cs-shot--wide {
+    grid-column: 1 / -1;
+  }
+
+  .cs-shot__media {
+    border-radius: var(--theme-shape-radius, 16px);
+    overflow: hidden;
+    background: var(--theme-surface-1);
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.08);
+    transition: transform 0.4s ease;
+  }
+
+  .cs-shot__media:hover {
+    transform: translateY(-4px);
+  }
+
+  .cs-shot__media img {
+    width: 100%;
+    height: auto;
+    display: block;
+  }
+
+  .cs-shot__caption {
+    margin-top: 0.75rem;
+    font-size: 0.85rem;
+    opacity: 0.65;
+    line-height: 1.5;
+  }
+
+  /* ===== QUOTE ===== */
+  .cs-quote {
+    padding: var(--section-padding);
+    background: var(--gradient-subtle);
+  }
+
+  .cs-quote__inner {
+    max-width: 800px;
+    margin: 0 auto;
+    text-align: center;
+    position: relative;
+  }
+
+  .cs-quote__mark {
+    width: 48px;
+    height: 48px;
+    opacity: 0.15;
+    margin: 0 auto 1rem;
+  }
+
+  .cs-quote__text {
+    font-size: clamp(1.3rem, 2.5vw, 1.8rem);
+    line-height: 1.5;
+    font-weight: 500;
+    letter-spacing: -0.01em;
+    margin-bottom: 1.5rem;
+  }
+
+  .cs-quote__footer {
+    display: flex;
+    gap: 0.5rem;
+    justify-content: center;
+    font-size: 0.95rem;
+    opacity: 0.7;
+  }
+
+  /* ===== CTA ===== */
+  .cs-cta {
+    padding: var(--section-padding);
+    background: var(--theme-surface-1);
+  }
+
+  .cs-cta__inner {
+    max-width: 680px;
+    margin: 0 auto;
+    text-align: center;
+  }
+
+  .cs-cta__heading {
+    margin-bottom: 1rem;
+  }
+
+  .cs-cta__text {
+    font-size: 1.05rem;
+    line-height: 1.7;
+    opacity: 0.75;
+    margin-bottom: 2rem;
+  }
+
+  .cs-cta__actions {
+    display: flex;
+    gap: 0.75rem;
+    justify-content: center;
+    flex-wrap: wrap;
+  }
+
+  /* ===== PREV / NEXT NAV ===== */
+  .cs-nav {
+    padding: 2rem 0 4rem;
+    border-top: 1px solid rgba(0, 0, 0, 0.08);
+  }
+
+  .cs-nav__inner {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+  }
+
+  .cs-nav__link {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    padding: 1.5rem;
+    border-radius: var(--theme-shape-radius, 16px);
+    background: var(--theme-surface-1);
+    transition: var(--theme-transition);
+  }
+
+  .cs-nav__link:hover {
+    background: var(--theme-on-bg);
+    color: var(--theme-bg);
+    transform: translateY(-3px);
+  }
+
+  .cs-nav__link--next {
+    text-align: right;
+  }
+
+  .cs-nav__label {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    font-size: 0.78rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    opacity: 0.55;
+  }
+
+  .cs-nav__link--next .cs-nav__label {
+    justify-content: flex-end;
+  }
+
+  .cs-nav__icon {
+    width: 14px;
+    height: 14px;
+  }
+
+  .cs-nav__name {
+    font-size: 1.1rem;
+    font-weight: 800;
+    letter-spacing: -0.01em;
+  }
+
+  /* ===== RESPONSIVE ===== */
+  @media (max-width: 900px) {
+    .cs-twocol {
+      grid-template-columns: 1fr;
+      gap: 2rem;
+    }
+
+    .cs-gallery__grid {
+      grid-template-columns: 1fr;
+    }
+
+    .cs-nav__inner {
+      grid-template-columns: 1fr;
+    }
+
+    .cs-nav__link--next {
+      text-align: left;
+    }
+
+    .cs-nav__link--next .cs-nav__label {
+      justify-content: flex-start;
+    }
+  }
+
+  @media (max-width: 600px) {
+    .cs-hero {
+      min-height: 70vh;
+    }
+
+    .cs-hero__actions,
+    .cs-cta__actions {
+      flex-direction: column;
+      align-items: stretch;
+    }
+
+    .cs-hero__actions .btn,
+    .cs-cta__actions .btn {
+      justify-content: center;
+    }
+  }
+</style>

@@ -1,0 +1,172 @@
+---
+// Banner συναίνεσης cookies (Google Consent Mode v2).
+// Το GA ξεκινά με analytics_storage: 'denied' (βλ. BaseHead) — cookies
+// μπαίνουν ΜΟΝΟ αν ο επισκέπτης πατήσει «Αποδοχή». Η επιλογή κρατιέται
+// 12 μήνες σε localStorage· «Ρυθμίσεις cookies» στο footer την ξανανοίγει.
+---
+
+<div class="cookie-consent" id="cookie-consent" role="dialog" aria-live="polite" aria-label="Ρυθμίσεις cookies" hidden>
+  <p class="cookie-consent__text">
+    Χρησιμοποιούμε cookies μόνο για στατιστικά επισκεψιμότητας (Google Analytics),
+    για να καταλαβαίνουμε τι δουλεύει στο site και τι όχι. Αν προτιμάς, πες όχι. Το
+    site δουλεύει το ίδιο. <a href="/legal">Μάθε περισσότερα</a>
+  </p>
+  <div class="cookie-consent__actions">
+    <button type="button" class="cookie-consent__btn cookie-consent__btn--accept" data-consent-accept>
+      Αποδοχή
+    </button>
+    <button type="button" class="cookie-consent__btn cookie-consent__btn--decline" data-consent-decline>
+      Απόρριψη
+    </button>
+  </div>
+</div>
+
+<script is:inline data-astro-rerun>
+  (function () {
+    var KEY = 'phpixel-consent';
+    var YEAR_MS = 365 * 24 * 60 * 60 * 1000;
+
+    function readChoice() {
+      try {
+        var c = JSON.parse(localStorage.getItem(KEY) || 'null');
+        if (c && c.v && Date.now() - c.t < YEAR_MS) return c.v;
+      } catch (e) {}
+      return null;
+    }
+
+    function saveChoice(v) {
+      try { localStorage.setItem(KEY, JSON.stringify({ v: v, t: Date.now() })); } catch (e) {}
+    }
+
+    function applyConsent(v) {
+      if (typeof gtag === 'function') {
+        gtag('consent', 'update', { analytics_storage: v === 'granted' ? 'granted' : 'denied' });
+      }
+    }
+
+    // Καθαρίζει _ga* cookies που τυχόν μπήκαν πριν υπάρξει το banner
+    function clearGaCookies() {
+      document.cookie.split(';').forEach(function (c) {
+        var name = c.trim().split('=')[0];
+        if (name.indexOf('_ga') === 0) {
+          document.cookie = name + '=; Max-Age=0; path=/';
+          document.cookie = name + '=; Max-Age=0; path=/; domain=' + location.hostname;
+          document.cookie = name + '=; Max-Age=0; path=/; domain=.' + location.hostname;
+        }
+      });
+    }
+
+    function initBanner() {
+      var banner = document.getElementById('cookie-consent');
+      if (!banner || banner.dataset.bound) return;
+      banner.dataset.bound = '1';
+
+      if (readChoice() === null) banner.removeAttribute('hidden');
+
+      banner.querySelector('[data-consent-accept]').addEventListener('click', function () {
+        saveChoice('granted');
+        applyConsent('granted');
+        banner.setAttribute('hidden', '');
+      });
+      banner.querySelector('[data-consent-decline]').addEventListener('click', function () {
+        saveChoice('denied');
+        applyConsent('denied');
+        clearGaCookies();
+        banner.setAttribute('hidden', '');
+      });
+    }
+
+    // «Ρυθμίσεις cookies» (footer) — ένας global listener, επιβιώνει στα view transitions
+    if (!window.__phpixelCookieSettingsBound) {
+      window.__phpixelCookieSettingsBound = true;
+      document.addEventListener('click', function (e) {
+        var trigger = e.target.closest('[data-cookie-settings]');
+        if (!trigger) return;
+        e.preventDefault();
+        var banner = document.getElementById('cookie-consent');
+        if (banner) banner.removeAttribute('hidden');
+      });
+    }
+
+    initBanner();
+    document.addEventListener('astro:page-load', initBanner);
+  })();
+</script>
+
+<style>
+  .cookie-consent {
+    position: fixed;
+    bottom: 1rem;
+    left: 1rem;
+    z-index: 1100;
+    max-width: 420px;
+    padding: 1.25rem 1.5rem;
+    background: var(--theme-bg, #fff);
+    border: 1px solid var(--theme-surface-2);
+    border-radius: 16px;
+    box-shadow: 0 12px 40px rgba(0, 0, 0, 0.14);
+  }
+
+  .cookie-consent[hidden] {
+    display: none;
+  }
+
+  .cookie-consent__text {
+    font-size: 0.88rem;
+    line-height: 1.6;
+    opacity: 0.85;
+    margin-bottom: 1rem;
+  }
+
+  .cookie-consent__text a {
+    color: var(--accent-blue);
+    font-weight: 600;
+    text-decoration: underline;
+    text-underline-offset: 2px;
+  }
+
+  .cookie-consent__actions {
+    display: flex;
+    gap: 0.6rem;
+  }
+
+  /* Ίση βαρύτητα στα δύο κουμπιά (απαίτηση ΑΠΔΠΧ: η απόρριψη εξίσου εύκολη) */
+  .cookie-consent__btn {
+    flex: 1;
+    padding: 0.6rem 1rem;
+    border-radius: 10px;
+    font-family: var(--font-body);
+    font-size: 0.88rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: var(--theme-transition);
+    border: 1.5px solid var(--theme-on-bg);
+  }
+
+  .cookie-consent__btn--accept {
+    background: var(--theme-on-bg);
+    color: var(--theme-bg);
+  }
+
+  .cookie-consent__btn--accept:hover {
+    opacity: 0.85;
+  }
+
+  .cookie-consent__btn--decline {
+    background: transparent;
+    color: var(--theme-on-bg);
+  }
+
+  .cookie-consent__btn--decline:hover {
+    background: var(--theme-surface-1);
+  }
+
+  @media (max-width: 600px) {
+    .cookie-consent {
+      left: 0.75rem;
+      right: 0.75rem;
+      bottom: 0.75rem;
+      max-width: none;
+    }
+  }
+</style>

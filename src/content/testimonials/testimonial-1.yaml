@@ -1,0 +1,8 @@
+# ΠΡΟΣΟΧΗ: placeholder — ΔΕΝ είναι αληθινό testimonial.
+# Εμφανίζεται μόνο όταν SHOW_TESTIMONIALS = true (src/config/site.ts).
+order: 1
+quote: Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+name: Όνομα Πελάτη
+company: Επιχείρηση
+rating: 5
+placeholder: true

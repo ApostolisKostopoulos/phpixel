@@ -1,0 +1,214 @@
+---
+import SectionHeader from '@components/sections/SectionHeader.astro';
+import GlassCard from '@components/cards/GlassCard.astro';
+import FaqSection from '@components/sections/FaqSection.astro';
+import RelatedLinks from '@components/sections/RelatedLinks.astro';
+
+const features = [
+  {
+    icon: 'ic:baseline-remove-shopping-cart',
+    title: 'Εγκαταλελειμμένα καλάθια',
+    desc: 'Τα περισσότερα καλάθια μένουν στη μέση. Ένα σωστό αυτόματο email φέρνει πίσω ένα σημαντικό μέρος τους, διακριτικά, όχι εκβιαστικά.',
+    accent: 'var(--accent-blue)',
+  },
+  {
+    icon: 'ic:baseline-waving-hand',
+    title: 'Welcome series',
+    desc: 'Ο νέος εγγεγραμμένος είναι ο πιο «ζεστός» σου επισκέπτης. Μια σειρά 2–3 email τον συστήνει στο brand σου και τον οδηγεί στην πρώτη αγορά.',
+    accent: 'var(--accent-emerald)',
+  },
+  {
+    icon: 'ic:baseline-mail',
+    title: 'Newsletters',
+    desc: 'Όχι spam, περιεχόμενο που ανοίγεται. Newsletters με λόγο ύπαρξης: νέα προϊόντα, προσφορές, ιστορίες.',
+    accent: 'var(--accent-violet)',
+  },
+  {
+    icon: 'ic:baseline-replay',
+    title: 'Win-back & follow-ups',
+    desc: 'Πελάτες που έχουν καιρό να αγοράσουν, αίτημα για κριτική μετά την παραγγελία, προτάσεις για την επόμενη αγορά. Όλα αυτόματα.',
+    accent: 'var(--accent-amber)',
+  },
+  {
+    icon: 'ic:baseline-settings',
+    title: 'Τεχνική βάση',
+    desc: 'Deliverability, λίστες, segmentation, σύνδεση με το e-shop σου. Τα emails σου φτάνουν στα εισερχόμενα, όχι στα spam.',
+    accent: 'var(--accent-rose)',
+  },
+  {
+    icon: 'ic:baseline-verified-user',
+    title: 'GDPR: σωστά και νόμιμα',
+    desc: 'Συναίνεση, εύκολη διαγραφή, καθαρές λίστες. Προστατεύεις τους πελάτες σου και το brand σου.',
+    accent: 'var(--accent-blue)',
+  },
+];
+
+const faqItems = [
+  {
+    q: 'Χρειάζομαι μεγάλη λίστα για να αξίζει;',
+    a: 'Όχι. Οι αυτοματισμοί (καλάθι, welcome, follow-up) δουλεύουν από τον πρώτο εγγεγραμμένο, γιατί στέλνουν στη σωστή στιγμή, όχι σε πλήθος. Μια μικρή λίστα από πραγματικούς πελάτες αξίζει περισσότερο από χιλιάδες αγορασμένες διευθύνσεις, τις οποίες παρεμπιπτόντως δεν αγγίζουμε ποτέ.',
+  },
+  {
+    q: 'Με ποια εργαλεία δουλεύετε;',
+    a: 'Με όποιο ταιριάζει στο μέγεθος και το budget σου. Έχουμε στήσει flows σε διάφορες πλατφόρμες, από απλές έως πιο προχωρημένες. Αν έχεις ήδη εργαλείο, συνεχίζουμε εκεί. Αν όχι, θα σου προτείνουμε κάτι που δεν πληρώνεις άδικα.',
+  },
+  {
+    q: 'Ποιος γράφει τα κείμενα των email;',
+    a: 'Εμείς, μαζί σου. Εσύ ξέρεις τους πελάτες σου και τα προϊόντα σου. Εμείς ξέρουμε τι δουλεύει σε ένα email. Θα τα δεις και θα τα εγκρίνεις πριν φύγει οτιδήποτε.',
+  },
+];
+---
+
+  <!-- Hero -->
+  <section class="em-hero">
+    <div class="em-hero__bg"></div>
+    <div class="container em-hero__inner">
+      <div class="em-hero__content reveal">
+        <span class="em-badge">Email Marketing</span>
+        <h1>
+          Email Marketing που<br />
+          <span class="accent-text">φέρνει πελάτες πίσω</span>
+        </h1>
+        <p class="em-hero__sub">
+          Το email είναι το πιο υποτιμημένο κανάλι του e-commerce, και συνήθως αυτό
+          με την καλύτερη απόδοση ανά ευρώ. Στήνουμε αυτοματισμούς που δουλεύουν στο
+          παρασκήνιο: υπενθυμίζουν το ξεχασμένο καλάθι, καλωσορίζουν τον νέο πελάτη,
+          ξαναφέρνουν τον παλιό.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Features Grid -->
+  <section class="em-features">
+    <div class="container">
+      <div class="reveal">
+        <SectionHeader title="Τι περιλαμβάνει" subtitle="Email Marketing">
+          Από την τεχνική βάση μέχρι τα κείμενα: αυτοματισμοί που στήνονται μία φορά και δουλεύουν κάθε μέρα.
+        </SectionHeader>
+      </div>
+
+      <div class="features-grid">
+        {features.map((f, i) => (
+          <div class="reveal" style={`transition-delay: ${i * 0.05}s`}>
+            <GlassCard
+              icon={f.icon}
+              title={f.title}
+              description={f.desc}
+              accent={f.accent}
+            />
+          </div>
+        ))}
+      </div>
+
+      <p class="em-proof reveal">
+        Τρέχουν ήδη σε e-shops που έχουμε φτιάξει. Δες τη
+        <a href="/portfolio/mian-natural-cosmetics">Mian Natural Cosmetics</a> και την
+        <a href="/portfolio/aporelli-artworks">Aporelli Artworks</a> στο portfolio.
+      </p>
+    </div>
+  </section>
+
+  <!-- Εσωτερικά links (topic cluster) -->
+  <RelatedLinks
+    services={[
+      { label: 'Κατασκευή E-shop', href: '/kataskevi-eshop' },
+      { label: 'Google Ads & Social', href: '/diafimisi' },
+      { label: 'SEO & AEO', href: '/seo' },
+    ]}
+    articles={[
+      { label: 'A/B testing και CRO', href: '/blog/posts/ab' },
+    ]}
+  />
+
+  <!-- FAQ -->
+  <FaqSection items={faqItems} title="Συχνές ερωτήσεις για το email marketing" />
+
+
+
+
+<style>
+  /* Hero */
+  .em-hero {
+    position: relative;
+    padding: calc(var(--navbar-height) + 4rem) 0 4rem;
+  }
+
+  .em-hero__bg {
+    position: absolute;
+    inset: 0;
+    background: var(--gradient-subtle);
+  }
+
+  .em-hero__inner {
+    position: relative;
+  }
+
+  .em-hero__content {
+    max-width: 640px;
+  }
+
+  .em-badge {
+    display: inline-block;
+    padding: 0.35rem 1rem;
+    font-size: 0.8rem;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    background: var(--theme-surface-1);
+    border-radius: 2rem;
+    margin-bottom: 1.5rem;
+  }
+
+  .em-hero__content h1 { margin-bottom: 1.5rem; }
+
+  .accent-text {
+    background: var(--gradient-accent);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  .em-hero__sub {
+    font-size: 1.1rem;
+    line-height: 1.75;
+    opacity: 0.7;
+    max-width: 560px;
+  }
+
+  /* Features */
+  .em-features {
+    padding: var(--section-padding);
+    background: var(--theme-surface-1);
+  }
+
+  .features-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: var(--theme-grid-gap);
+  }
+
+  .em-proof {
+    margin-top: 2.5rem;
+    text-align: center;
+    font-size: 0.95rem;
+    opacity: 0.7;
+  }
+
+  .em-proof a {
+    color: var(--accent-blue);
+    font-weight: 600;
+  }
+
+  .em-proof a:hover {
+    text-decoration: underline;
+  }
+
+  @media (max-width: 1024px) {
+    .features-grid { grid-template-columns: repeat(2, 1fr); }
+  }
+
+  @media (max-width: 768px) {
+    .features-grid { grid-template-columns: 1fr; }
+  }
+</style>

@@ -1,11 +1,9 @@
 {
-	"name": "odyssey-theme",
+	"name": "phpixel",
 	"version": "3.1.0",
-	"private": false,
-	"repository": {
-		"type": "git",
-		"url": "git@github.com:treefarmstudio/odyssey-theme"
-	},
+	"private": true,
+	"description": "Marketing website for phpixel — κατασκευή e-shop, ιστοσελίδων, SEO και digital marketing.",
+	"license": "UNLICENSED",
 	"scripts": {
 		"dev": "astro dev",
 		"start": "astro dev",
@@ -14,22 +12,12 @@
 		"format": "npx prettier -w ."
 	},
 	"devDependencies": {
-		"@astrojs/lit": "^4.0.1",
 		"@astrojs/mdx": "^4.3.13",
-		"@astrojs/sitemap": "^0.1.0",
+		"@astrojs/sitemap": "^3.7.3",
 		"@iconify-json/ic": "^1.1.17",
 		"@iconify-json/mdi": "^1.1.64",
-		"@webcomponents/template-shadowroot": "^0.2.1",
 		"astro": "^5.16.5",
 		"astro-icon": "^1.1.0",
-		"date-fns": "^2.28.0",
-		"lit": "^3.1.2",
 		"prettier-plugin-astro": "^0.0.12"
-	},
-	"dependencies": {
-		"@astrojs/vercel": "^8.0.4",
-		"@rollup/rollup-linux-x64-gnu": "^4.60.1",
-		"nodemailer": "^7.0.11",
-		"querystring": "^0.2.1"
 	}
 }

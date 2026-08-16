@@ -1,0 +1,44 @@
+---
+import type { GetStaticPaths } from 'astro';
+import Layout from '@layouts/Page.astro';
+import BlogPostPage from '@components/pages/BlogPostPage.astro';
+import { getPosts, type PostEntry } from '@utils/content';
+import { articleSchema } from '@utils/schema';
+
+export const getStaticPaths = (async () => {
+	const posts = await getPosts();
+	return posts.map((post) => ({ params: { slug: post.id }, props: { post } }));
+}) satisfies GetStaticPaths;
+
+interface Props {
+	post: PostEntry;
+}
+
+const { post } = Astro.props as Props;
+const d = post.data;
+
+// metaTitle (προαιρετικό frontmatter): σύντομος title tag όταν ο τίτλος του
+// άρθρου είναι πολύ μακρύς για τα αποτελέσματα αναζήτησης.
+const pageSeo = {
+	title: d.metaTitle || `${d.title} | Blog phpixel`,
+	description: d.description,
+	image: d.featuredImage,
+	canonicalURL: d.canonicalURL,
+	type: 'article',
+	breadcrumbs: [{ name: 'Blog', path: '/blog' }, { name: d.title }],
+	schema: [
+		articleSchema(Astro.site, {
+			headline: d.title,
+			description: d.description,
+			datePublished: d.publishDate,
+			dateModified: d.updatedDate,
+			image: d.featuredImage,
+			path: `/blog/${post.id}`,
+		}),
+	],
+};
+---
+
+<Layout seo={pageSeo}>
+	<BlogPostPage post={post} />
+</Layout>

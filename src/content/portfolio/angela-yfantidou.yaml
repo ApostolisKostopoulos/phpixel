@@ -1,0 +1,67 @@
+# Πηγή: phpixel-case-study-questionnaire.xlsx — μόνο επιβεβαιωμένα γεγονότα.
+order: 1
+anchor: angelayfantidou
+name: Angela Yfantidou
+tagline: Από τα social και τα γεμάτα DMs σε δικό της δίγλωσσο site με ξεκάθαρα πακέτα.
+description: Η Angela Yfantidou είχε μόνο social media και επικοινωνία μέσα από DMs. Φτιάξαμε δίγλωσσο site σε WordPress με premium UI, technical SEO και local SEO, και συνεχίζουμε με SEO και περιεχόμενο για Ελλάδα και Ιταλία.
+industry: Γάμοι & εκδηλώσεις
+category: Website
+year: 2026
+url: https://angelayfantidou.com
+tags:
+  - Website
+  - SEO
+  - Δίγλωσσο GR/EN
+stack:
+  - WordPress
+ongoing: SEO και δημιουργία περιεχομένου για Ελλάδα και Ιταλία
+thumb: /assets/images/portfolio/angelayfantidou-thumb.jpg
+image: /images/portfolio/angelayfantidou.webp
+imageAlt: Η ιστοσελίδα της Angela Yfantidou
+hero: /assets/images/portfolio/angelayfantidou-home.jpg
+heroAlt: Η αρχική σελίδα της ιστοσελίδας angelayfantidou.com
+gallery:
+  - src: /assets/images/portfolio/angelayfantidou-home.jpg
+    alt: Η αρχική σελίδα της ιστοσελίδας angelayfantidou.com
+    caption: 'Το homepage: premium UI, mobile-first, με τη δουλειά της μπροστά.'
+  - src: /assets/images/portfolio/angelayfantidou-contact.jpg
+    alt: Η σελίδα επικοινωνίας της ιστοσελίδας angelayfantidou.com
+    caption: 'Η σελίδα επικοινωνίας: οι επαφές έρχονται πια μέσα από το site, όχι από τα DMs.'
+metrics: []
+accent: '#b78c87'
+caseStudy:
+  heroTitle: Πώς η Angela Yfantidou πέρασε από τα γεμάτα DMs σε δικό της δίγλωσσο site
+  heroSub: 'Κατασκευή ιστοσελίδας για επαγγελματία του γάμου: δίγλωσσο portfolio, ξεκάθαρα πακέτα και επικοινωνία χωρίς το χάος των DMs.'
+  metaTitle: 'Angela Yfantidou: Δίγλωσσο site αντί για χαμένα DMs | Case Study | phpixel'
+  metaDescription: 'Κατασκευή ιστοσελίδας για την Angela Yfantidou: δίγλωσσο site (GR/EN) που δείχνει τη δουλειά της και φέρνει τις επαφές μέσα από το site, όχι από τα DMs.'
+  client:
+    title: Η Angela Yfantidou
+    html:
+      - 'Η Angela Yfantidou δουλεύει στον χώρο του γάμου και των εκδηλώσεων. Μας βρήκε όπως σχεδόν όλοι οι πελάτες μας: από σύσταση.'
+  challenge:
+    title: Όλη η δουλειά περνούσε από τα social
+    html:
+      - Μέχρι τότε η παρουσία της ήταν μόνο στα social media. Η δουλειά της ζούσε σκόρπια σε posts και η επικοινωνία με υποψήφιους πελάτες γινόταν αποκλειστικά στα DMs, ανάμεσα σε spam και άσχετα μηνύματα.
+      - 'Το κόστος ήταν χρόνος: χανόταν πολύς σε αναζήτηση πελατών, μέσα από ένα κανάλι που δεν φτιάχτηκε γι αυτή τη δουλειά.'
+  goal:
+    title: Ξεκάθαρα πακέτα, ήσυχα DMs
+    html:
+      - Ένα σημείο που δείχνει καθαρά τα πακέτα και τη δουλειά της, και επικοινωνία που περνάει μέσα από το site αντί για τα DMs.
+  approach:
+    title: Τι φτιάξαμε
+    html:
+      - 'Σχεδιάσαμε και στήσαμε το site από το μηδέν σε WordPress: <a href="/kataskevi-istoselidon">κατασκευή ιστοσελίδας</a> με premium UI, mobile-first στήσιμο και δίγλωσσο περιεχόμενο σε ελληνικά και αγγλικά.'
+      - 'Από κάτω τρέχει η τεχνική βάση που δεν φαίνεται αλλά μετράει: technical SEO, schema markup, local SEO, caching και CDN.'
+      - 'Η συνεργασία δεν σταμάτησε στο launch: συνεχίζουμε με SEO και δημιουργία περιεχομένου, με στόχευση σε Ελλάδα και Ιταλία.'
+  deliverables:
+    - Σχεδιασμός και ανάπτυξη από το μηδέν
+    - SEO και technical SEO
+    - Caching και CDN setup
+    - Premium UI, mobile-first
+    - Schema markup και local SEO
+    - Δίγλωσσο περιεχόμενο (GR/EN)
+  cta:
+    heading: Θες κι εσύ ένα site που δουλεύει για σένα;
+    text: Πες μας τι κάνεις και πού θες να φτάσεις. Θα σου πούμε τίμια τι χρειάζεται, χωρίς δέσμευση.
+    serviceHref: /kataskevi-istoselidon
+    serviceLabel: Κατασκευή Ιστοσελίδων

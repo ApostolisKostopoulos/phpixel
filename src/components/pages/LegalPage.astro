@@ -1,0 +1,66 @@
+---
+import { getLegalDoc } from '@utils/content';
+import { render } from 'astro:content';
+
+export interface Props {
+  /** Ποιο νομικό κείμενο θα εμφανιστεί. */
+  doc?: 'privacy' | 'terms';
+}
+
+const { doc = 'privacy' } = Astro.props as Props;
+const entry = await getLegalDoc(doc);
+if (!entry) throw new Error(`Δεν βρέθηκε νομικό κείμενο: ${doc}`);
+const { Content } = await render(entry);
+---
+  <section class="legal-page">
+    <div class="container">
+      <div class="legal-content reveal">
+        <h1>{entry.data.title}</h1>
+        <p class="legal-updated">Τελευταία ενημέρωση: {entry.data.updated}</p>
+
+        <Content />
+      </div>
+    </div>
+  </section>
+
+<!-- is:global: το σώμα του κειμένου έρχεται από markdown (<Content />), οπότε τα
+     h2/p/a του δεν παίρνουν την κλάση scoping του Astro. Όλοι οι selectors είναι
+     ήδη κάτω από .legal-page / .legal-content, οπότε δεν διαρρέουν αλλού. -->
+<style is:global>
+  .legal-page {
+    padding: calc(var(--navbar-height) + 4rem) 0 6rem;
+  }
+
+  .legal-content {
+    max-width: 720px;
+    margin: 0 auto;
+  }
+
+  .legal-content h1 {
+    margin-bottom: 0.5rem;
+  }
+
+  .legal-updated {
+    font-size: 0.85rem;
+    opacity: 0.5;
+    margin-bottom: 3rem;
+  }
+
+  .legal-content h2 {
+    font-size: 1.3rem;
+    margin-top: 2.5rem;
+    margin-bottom: 0.75rem;
+  }
+
+  .legal-content p {
+    font-size: 1.05rem;
+    line-height: 1.8;
+    opacity: 0.75;
+    margin-bottom: 1rem;
+  }
+
+  .legal-content a {
+    color: var(--accent-blue);
+    text-decoration: underline;
+  }
+</style>

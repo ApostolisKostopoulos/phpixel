@@ -1,0 +1,255 @@
+---
+import SectionHeader from '@components/sections/SectionHeader.astro';
+import GlassCard from '@components/cards/GlassCard.astro';
+import FaqSection from '@components/sections/FaqSection.astro';
+import RelatedLinks from '@components/sections/RelatedLinks.astro';
+
+const features = [
+  {
+    icon: 'ic:baseline-search',
+    title: 'Google Search Ads',
+    desc: 'Εμφανίζεσαι όταν κάποιος ψάχνει ακριβώς αυτό που πουλάς. Πληρώνεις για πρόθεση, όχι για τυχαία μάτια.',
+    accent: 'var(--accent-blue)',
+  },
+  {
+    icon: 'ic:baseline-shopping-bag',
+    title: 'Google Shopping',
+    desc: 'Τα προϊόντα σου με φωτογραφία και τιμή, πάνω πάνω στα αποτελέσματα. Απαραίτητο για κάθε e-shop.',
+    accent: 'var(--accent-emerald)',
+  },
+  {
+    icon: 'ic:baseline-ads-click',
+    title: 'Meta Ads',
+    desc: 'Facebook και Instagram για να σε ανακαλύψουν νέοι πελάτες, και remarketing για να ξαναδούν όσοι δεν αγόρασαν την πρώτη φορά.',
+    accent: 'var(--accent-violet)',
+  },
+  {
+    icon: 'ic:baseline-photo-library',
+    title: 'Οργανικό περιεχόμενο',
+    desc: 'Παρουσία στα social που δείχνει ότι η επιχείρηση ζει: σωστό περιεχόμενο, σταθερός ρυθμός, χωρίς άσκοπα posts.',
+    accent: 'var(--accent-amber)',
+  },
+  {
+    icon: 'ic:baseline-track-changes',
+    title: 'Στήσιμο μετρήσεων',
+    desc: 'Conversion tracking πριν ξεκινήσει η πρώτη καμπάνια. Αν δεν μετριέται, δεν το τρέχουμε.',
+    accent: 'var(--accent-rose)',
+  },
+  {
+    icon: 'ic:baseline-analytics',
+    title: 'Μηνιαίο reporting',
+    desc: 'Τι ξοδεύτηκε, τι έφερε, τι αλλάζουμε τον επόμενο μήνα. Σε γλώσσα επιχείρησης, όχι σε ορολογία.',
+    accent: 'var(--accent-blue)',
+  },
+];
+
+const channels = [
+  {
+    name: 'Google Ads',
+    desc: 'Search και Shopping καμπάνιες για ανθρώπους που ήδη ψάχνουν αυτό που προσφέρεις.',
+  },
+  {
+    name: 'Meta (Facebook & Instagram)',
+    desc: 'Στοχευμένες διαφημίσεις και remarketing εκεί όπου περνούν χρόνο οι πελάτες σου.',
+  },
+  {
+    name: 'Οργανικό περιεχόμενο',
+    desc: 'Σταθερή, καθαρή παρουσία στα κανάλια σου: υποστηρίζει τη διαφήμιση, δεν την αντικαθιστά.',
+  },
+];
+
+const faqItems = [
+  {
+    q: 'Πόσο budget χρειάζομαι για διαφήμιση;',
+    a: 'Εξαρτάται από τον κλάδο και τον ανταγωνισμό, αλλά δεν χρειάζεσαι τεράστια ποσά για να ξεκινήσεις. Ξεκινάμε με λογικό δοκιμαστικό budget, βλέπουμε τι αποδίδει και κλιμακώνουμε αυτό που δουλεύει. Θα σου πούμε ειλικρινά αν το budget που σκέφτεσαι δεν φτάνει για τον στόχο σου.',
+  },
+  {
+    q: 'Σε πόσο καιρό θα δω αποτελέσματα;',
+    a: 'Οι καμπάνιες φέρνουν κίνηση από την πρώτη μέρα, αλλά θέλουν 4–8 εβδομάδες βελτιστοποίησης για να αποδώσουν σωστά. Ο πρώτος μήνας είναι κυρίως μάθηση: ποιο κοινό, ποιο μήνυμα, ποιο προϊόν τραβάει.',
+  },
+  {
+    q: 'Τι κάνετε κάθε μήνα στη διαχείριση;',
+    a: 'Παρακολουθούμε και προσαρμόζουμε τις καμπάνιες, δοκιμάζουμε νέα κείμενα και κοινά, κόβουμε ό,τι δεν αποδίδει και μεταφέρουμε budget σε ό,τι αποδίδει. Στο τέλος του μήνα παίρνεις αναφορά με το τι έγινε και γιατί.',
+  },
+];
+---
+
+  <!-- Hero -->
+  <section class="smm-hero">
+    <div class="smm-hero__bg"></div>
+    <div class="container smm-hero__inner">
+      <div class="smm-hero__content reveal">
+        <span class="smm-badge">Διαφήμιση</span>
+        <h1>
+          Google Ads<br />
+          <span class="accent-text">& Social</span>
+        </h1>
+        <p class="smm-hero__sub">
+          Δεν υποσχόμαστε «viral». Υποσχόμαστε να ξέρεις πάντα τι ξοδεύεις και τι σου
+          φέρνει πίσω. Αναλαμβάνουμε τη διαχείριση Google Ads και Meta καμπανιών,
+          και τις φροντίζουμε κάθε μήνα, όχι μόνο στο στήσιμο.
+        </p>
+      </div>
+
+      <!-- Channels -->
+      <div class="smm-hero__platforms reveal" style="transition-delay: 0.2s">
+        {channels.map((p) => (
+          <div class="platform-card">
+            <h3 class="platform-card__title">{p.name}</h3>
+            <p>{p.desc}</p>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- Features Grid -->
+  <section class="smm-features">
+    <div class="container">
+      <div class="reveal">
+        <SectionHeader title="Τι περιλαμβάνει" subtitle="Google Ads & Social">
+          Διαφήμιση με σχέδιο και μέτρηση: από το στήσιμο μέχρι τη συνεχή φροντίδα των καμπανιών.
+        </SectionHeader>
+      </div>
+
+      <div class="features-grid">
+        {features.map((f, i) => (
+          <div class="reveal" style={`transition-delay: ${i * 0.05}s`}>
+            <GlassCard
+              icon={f.icon}
+              title={f.title}
+              description={f.desc}
+              accent={f.accent}
+            />
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- Εσωτερικά links (topic cluster) -->
+  <RelatedLinks
+    services={[
+      { label: 'Κατασκευή E-shop', href: '/kataskevi-eshop' },
+      { label: 'SEO & AEO', href: '/seo' },
+      { label: 'Email Marketing', href: '/email-marketing' },
+    ]}
+    cases={[
+      { label: 'Mian Natural Cosmetics', href: '/portfolio/mian-natural-cosmetics' },
+      { label: 'Aporelli Artworks', href: '/portfolio/aporelli-artworks' },
+    ]}
+    articles={[
+      { label: 'A/B testing και CRO', href: '/blog/posts/ab' },
+    ]}
+  />
+
+  <!-- FAQ -->
+  <FaqSection items={faqItems} title="Συχνές ερωτήσεις για τη διαφήμιση" />
+
+
+
+
+<style>
+  /* Hero */
+  .smm-hero {
+    position: relative;
+    padding: calc(var(--navbar-height) + 4rem) 0 4rem;
+  }
+
+  .smm-hero__bg {
+    position: absolute;
+    inset: 0;
+    background: var(--gradient-subtle);
+  }
+
+  .smm-hero__inner {
+    position: relative;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 4rem;
+    align-items: center;
+  }
+
+  .smm-badge {
+    display: inline-block;
+    padding: 0.35rem 1rem;
+    font-size: 0.8rem;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    background: var(--theme-surface-1);
+    border-radius: 2rem;
+    margin-bottom: 1.5rem;
+  }
+
+  .smm-hero__content h1 { margin-bottom: 1.5rem; }
+
+  .accent-text {
+    background: var(--gradient-accent);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  .smm-hero__sub {
+    font-size: 1.1rem;
+    line-height: 1.75;
+    opacity: 0.7;
+    max-width: 460px;
+  }
+
+  .smm-hero__platforms {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+  }
+
+  .platform-card {
+    padding: 1.5rem 2rem;
+    background: var(--glass-bg);
+    backdrop-filter: var(--glass-blur);
+    border: 1px solid var(--glass-border);
+    border-radius: var(--theme-shape-radius);
+    transition: var(--theme-transition);
+  }
+
+  .platform-card:hover {
+    transform: translateX(8px);
+    border-color: var(--accent-blue);
+  }
+
+  .platform-card__title {
+    font-family: var(--font-heading);
+    font-weight: 800;
+    line-height: 1.15;
+    font-size: 1.1rem;
+    margin-bottom: 0.25rem;
+    opacity: 1;
+  }
+
+  .platform-card p {
+    font-size: 0.9rem;
+    opacity: 0.6;
+  }
+
+  /* Features */
+  .smm-features {
+    padding: var(--section-padding);
+    background: var(--theme-surface-1);
+  }
+
+  .features-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: var(--theme-grid-gap);
+  }
+
+  @media (max-width: 1024px) {
+    .features-grid { grid-template-columns: repeat(2, 1fr); }
+  }
+
+  @media (max-width: 768px) {
+    .smm-hero__inner { grid-template-columns: 1fr; gap: 2rem; }
+    .features-grid { grid-template-columns: 1fr; }
+  }
+</style>

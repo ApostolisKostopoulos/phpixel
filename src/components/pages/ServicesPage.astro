@@ -1,0 +1,408 @@
+---
+import { Icon } from 'astro-icon/components';
+
+const services = [
+  {
+    num: '01',
+    title: 'Κατασκευή E-shop',
+    tags: ['WooCommerce', 'Custom', 'CS-Cart'],
+    desc: 'Ηλεκτρονικά καταστήματα που μετατρέπουν επισκέπτες σε πελάτες: WooCommerce, custom ή CS-Cart, ανάλογα με το προϊόν και τον όγκο σου.',
+    features: ['Επιλογή πλατφόρμας χωρίς δεσμεύσεις', 'Συνδέσεις με ERP, courier & Skroutz', 'Checkout στημένο για λιγότερα παρατημένα καλάθια'],
+    href: '/kataskevi-eshop',
+    accent: 'var(--accent-emerald)',
+  },
+  {
+    num: '02',
+    title: 'Ιστοσελίδες & Landing Pages',
+    tags: ['Ταχύτητα', 'SEO-ready', 'Custom design'],
+    desc: 'Γρήγορες, καθαρές σελίδες που εξηγούν τι κάνεις και οδηγούν τον επισκέπτη σε επικοινωνία, ραντεβού ή αγορά.',
+    features: ['Custom σχεδιασμός πάνω στο brand σου', 'Ταχύτητα και SEO από την πρώτη γραμμή κώδικα', 'Μετρήσεις conversions από το launch'],
+    href: '/kataskevi-istoselidon',
+    accent: 'var(--accent-blue)',
+  },
+  {
+    num: '03',
+    title: 'SEO & AEO',
+    tags: ['On-page', 'Technical', 'AEO/GEO'],
+    desc: 'Να σε βρίσκουν στην Google και στα AI εργαλεία που πλέον προτείνουν επιχειρήσεις. Χωρίς υποσχέσεις για «πρώτες θέσεις», με μετρήσιμη πρόοδο κάθε μήνα.',
+    features: ['On-page & technical SEO', 'Περιεχόμενο που απαντά σε πραγματικές ερωτήσεις', 'AEO/GEO για τις AI αναζητήσεις'],
+    href: '/seo',
+    accent: 'var(--accent-violet)',
+  },
+  {
+    num: '04',
+    title: 'Email Marketing',
+    tags: ['Flows', 'Καλάθια', 'Newsletters'],
+    desc: 'Αυτόματα emails που φέρνουν πελάτες πίσω: εγκαταλελειμμένα καλάθια, welcome series, newsletters. Στήνονται μία φορά, δουλεύουν κάθε μέρα.',
+    features: ['Εγκαταλελειμμένα καλάθια & win-back', 'Newsletters που ανοίγονται', 'GDPR: σωστά και νόμιμα'],
+    href: '/email-marketing',
+    accent: 'var(--accent-amber)',
+  },
+  {
+    num: '05',
+    title: 'Google Ads & Social',
+    tags: ['Google Ads', 'Meta', 'Reporting'],
+    desc: 'Διαφήμιση με μετρήσιμο αποτέλεσμα σε Google και Meta. Ξέρεις πάντα τι ξοδεύεις και τι σου φέρνει πίσω.',
+    features: ['Search & Shopping καμπάνιες', 'Meta ads & remarketing', 'Μηνιαίο reporting σε γλώσσα επιχείρησης'],
+    href: '/diafimisi',
+    accent: 'var(--accent-rose)',
+  },
+  {
+    num: '06',
+    title: 'Custom Εφαρμογές',
+    tags: ['Αυτοματισμοί', 'API', 'Dashboards'],
+    desc: 'Αυτοματισμοί, dashboards και συνδέσεις συστημάτων, όταν τα έτοιμα εργαλεία δεν φτάνουν.',
+    features: ['Κόβουμε τη χειροκίνητη δουλειά που τρώει ώρες', 'Συνδέουμε συστήματα που δεν μιλάνε μεταξύ τους', 'Ο κώδικας μένει δικός σου'],
+    href: '/software-development',
+    accent: 'var(--accent-violet)',
+  },
+];
+---
+  <!-- ── HERO ── -->
+  <section class="svc-hero">
+    <div class="svc-hero__bg"></div>
+    <div class="container svc-hero__inner">
+      <div class="svc-hero__content reveal">
+        <span class="svc-hero__badge">Υπηρεσίες</span>
+        <h1 class="svc-hero__title">
+          Όλα όσα χρειάζεται<br />
+          <span class="svc-hero__accent">η online παρουσία σου.</span>
+        </h1>
+        <p class="svc-hero__sub">
+          Από την κατασκευή μέχρι την προώθηση και τη φροντίδα. Διάλεξε αυτό που
+          χρειάζεσαι τώρα. Τα υπόλοιπα μπορούν να περιμένουν.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── SERVICES ACCORDION ── -->
+  <section class="svc-list" aria-label="Υπηρεσίες">
+    <div class="container">
+      {services.map((s) => (
+        <details class="svc-row reveal" id={s.title.toLowerCase().replace(/\s+/g, '-')}>
+          <summary class="svc-row__head">
+            <span class="svc-row__num">{s.num}</span>
+            <span class="svc-row__title">{s.title}</span>
+            <span class="svc-row__tags">
+              {s.tags.map(t => <span class="svc-tag">{t}</span>)}
+            </span>
+            <span class="svc-row__arrow" aria-hidden="true">
+              <Icon name="ic:baseline-keyboard-arrow-down" />
+            </span>
+          </summary>
+
+          <div class="svc-row__body">
+            <p class="svc-row__desc">{s.desc}</p>
+            <ul class="svc-row__feats">
+              {s.features.map(f => (
+                <li class="svc-row__feat">
+                  <Icon name="ic:baseline-check-circle" class="feat-icon" style={`color: ${s.accent}`} />
+                  {f}
+                </li>
+              ))}
+            </ul>
+            <a href={s.href} class="svc-row__link">
+              Μάθε περισσότερα
+              <Icon name="ic:baseline-arrow-forward" class="link-arrow" />
+            </a>
+          </div>
+        </details>
+      ))}
+    </div>
+  </section>
+
+  <!-- ── AFTER LAUNCH — hosting/maintenance ζει εδώ (πρώην /hosting) ── -->
+  <section class="svc-care" id="hosting">
+    <div class="container svc-care__inner reveal">
+      <h2>Και μετά το launch;</h2>
+      <p>
+        Δεν εξαφανιζόμαστε. Πακέτα φροντίδας με ενημερώσεις, backups, ασφάλεια
+        και φιλοξενία, ώστε το site σου να έχει πάντα έναν άνθρωπο που το
+        προσέχει και σου απαντά μέσα σε μία εργάσιμη.
+      </p>
+    </div>
+  </section>
+
+  <!-- ── STATS ── -->
+  <section class="svc-stats reveal">
+    <div class="container svc-stats__inner">
+      <div class="svc-stat">
+        <span class="svc-stat__label-big">10+ χρόνια στο e-commerce</span>
+      </div>
+      <div class="svc-stats__divider" aria-hidden="true"></div>
+      <div class="svc-stat">
+        <span class="svc-stat__label-big">Μιλάς με αυτόν που γράφει τον κώδικα</span>
+      </div>
+      <div class="svc-stats__divider" aria-hidden="true"></div>
+      <div class="svc-stat">
+        <span class="svc-stat__label-big">Απάντηση εντός μίας εργάσιμης</span>
+      </div>
+    </div>
+  </section>
+
+
+
+
+<style>
+  /* HERO */
+  .svc-hero {
+    position: relative;
+    padding: calc(var(--navbar-height) + 4rem) 0 4rem;
+    overflow: hidden;
+  }
+
+  .svc-hero__bg {
+    position: absolute;
+    inset: 0;
+    background: var(--gradient-subtle);
+    z-index: 0;
+  }
+
+  .svc-hero__inner {
+    position: relative;
+    z-index: 1;
+  }
+
+  .svc-hero__content {
+    max-width: 640px;
+  }
+
+  .svc-hero__badge {
+    display: inline-block;
+    padding: 0.35rem 1rem;
+    font-size: 0.8rem;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    background: var(--theme-surface-1);
+    border-radius: 2rem;
+    margin-bottom: 1.5rem;
+  }
+
+  .svc-hero__title {
+    margin-bottom: 1.5rem;
+  }
+
+  .svc-hero__accent {
+    background: var(--gradient-accent);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  .svc-hero__sub {
+    font-size: 1.1rem;
+    line-height: 1.75;
+    opacity: 0.65;
+    max-width: 480px;
+    margin-bottom: 2rem;
+  }
+
+  /* ACCORDION */
+  .svc-list {
+    padding: var(--section-padding);
+    border-top: 1px solid rgba(0, 0, 0, 0.08);
+  }
+
+  .svc-row {
+    border-bottom: 1px solid rgba(0, 0, 0, 0.08);
+  }
+
+  .svc-row__head {
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+    padding: 1.75rem 0;
+    cursor: pointer;
+    list-style: none;
+    user-select: none;
+    transition: var(--theme-transition);
+  }
+
+  .svc-row__head::-webkit-details-marker { display: none; }
+
+  .svc-row__num {
+    font-size: 0.8rem;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    opacity: 0.35;
+    flex: 0 0 2.5rem;
+    transition: var(--theme-transition);
+  }
+
+  .svc-row:hover .svc-row__num,
+  .svc-row[open] .svc-row__num {
+    opacity: 0.8;
+    background: var(--gradient-accent);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  .svc-row__title {
+    flex: 1;
+    font-size: clamp(1.3rem, 3vw, 2rem);
+    font-weight: 800;
+    letter-spacing: -0.02em;
+    transition: var(--theme-transition);
+  }
+
+  .svc-row__tags {
+    display: flex;
+    gap: 0.4rem;
+    flex-wrap: wrap;
+  }
+
+  .svc-tag {
+    font-size: 0.7rem;
+    font-weight: 600;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    padding: 0.25rem 0.65rem;
+    border: 1px solid rgba(0, 0, 0, 0.15);
+    border-radius: var(--theme-shape-radius-sm);
+    opacity: 0.5;
+    transition: var(--theme-transition);
+  }
+
+  .svc-row:hover .svc-tag,
+  .svc-row[open] .svc-tag {
+    opacity: 1;
+    border-color: var(--accent-blue);
+    color: var(--accent-blue);
+  }
+
+  .svc-row__arrow {
+    flex: 0 0 auto;
+    opacity: 0.4;
+    transition: transform 0.3s ease, opacity 0.2s ease;
+  }
+
+  .svc-row__arrow svg,
+  .svc-row__arrow [data-icon] {
+    width: 22px;
+    height: 22px;
+  }
+
+  .svc-row[open] .svc-row__arrow {
+    transform: rotate(180deg);
+    opacity: 0.8;
+  }
+
+  .svc-row__body {
+    padding: 0 0 2rem calc(2.5rem + 1.5rem);
+    max-width: 640px;
+  }
+
+  .svc-row__desc {
+    font-size: 1rem;
+    line-height: 1.75;
+    opacity: 0.7;
+    margin-bottom: 1rem;
+  }
+
+  .svc-row__feats {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    margin-bottom: 1.5rem;
+  }
+
+  .svc-row__feat {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.9rem;
+    font-weight: 500;
+  }
+
+  .feat-icon {
+    width: 18px;
+    height: 18px;
+    flex-shrink: 0;
+  }
+
+  .svc-row__link {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-weight: 700;
+    font-size: 0.9rem;
+    transition: var(--theme-transition);
+  }
+
+  .svc-row__link:hover {
+    gap: 0.75rem;
+  }
+
+  .link-arrow {
+    width: 16px;
+    height: 16px;
+  }
+
+  /* HOSTING & CARE */
+  .svc-care {
+    padding: var(--section-padding);
+  }
+
+  .svc-care__inner {
+    max-width: 680px;
+    margin: 0 auto;
+    text-align: center;
+  }
+
+  .svc-care__inner h2 {
+    margin-bottom: 1rem;
+  }
+
+  .svc-care__inner p {
+    font-size: 1.05rem;
+    line-height: 1.8;
+    opacity: 0.7;
+  }
+
+  /* STATS */
+  .svc-stats {
+    background: var(--theme-surface-1);
+    padding: 3.5rem 0;
+  }
+
+  .svc-stats__inner {
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+    flex-wrap: wrap;
+    gap: 2rem;
+  }
+
+  .svc-stat {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.35rem;
+    text-align: center;
+  }
+
+  .svc-stat__label-big {
+    font-size: 1.05rem;
+    font-weight: 700;
+    letter-spacing: -0.01em;
+  }
+
+  .svc-stats__divider {
+    width: 1px;
+    height: 3rem;
+    background: currentColor;
+    opacity: 0.1;
+  }
+
+  @media (max-width: 768px) {
+    .svc-row__tags { display: none; }
+    .svc-row__body { padding-left: 0; }
+    .svc-stats__divider { display: none; }
+    .svc-stats__inner { justify-content: flex-start; gap: 1.5rem 3rem; }
+    .svc-stat { align-items: flex-start; text-align: left; }
+  }
+</style>

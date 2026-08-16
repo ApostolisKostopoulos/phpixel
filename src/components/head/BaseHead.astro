@@ -1,0 +1,154 @@
+---
+/**
+ * Ό,τι μπαίνει στο <head>: meta, canonical, OG/Twitter, fonts, structured data
+ * και το Google Analytics υπό Consent Mode v2.
+ *
+ * Το Organization / ProfessionalService / WebSite / BreadcrumbList μπαίνουν
+ * αυτόματα σε κάθε σελίδα. Οι σελίδες προσθέτουν τα δικά τους nodes (Service,
+ * Article, CreativeWork) μέσω του `schema` prop.
+ */
+import { site, crumbLabels } from '../../config/site';
+import {
+	breadcrumbItems,
+	breadcrumbSchema,
+	graph,
+	organizationSchema,
+	professionalServiceSchema,
+	websiteSchema,
+} from '../../utils/schema';
+import '../../styles/index.css';
+
+export interface Props {
+	title?: string;
+	description?: string;
+	image?: string;
+	canonicalURL?: URL | string;
+	type?: string;
+	/**
+	 * Ρητά breadcrumbs, όταν η λογική ιεραρχία δεν ταυτίζεται με το URL
+	 * (π.χ. /kataskevi-eshop που ανήκει κάτω από τις «Υπηρεσίες»).
+	 * Χωρίς αυτό, τα breadcrumbs παράγονται από το path.
+	 */
+	breadcrumbs?: { name: string; path?: string }[];
+	/** JSON-LD nodes της σελίδας. Org/Business/WebSite/breadcrumbs μπαίνουν αυτόματα. */
+	schema?: Record<string, unknown>[];
+}
+
+const {
+	title = `${site.name} | ${site.tagline}`,
+	description = site.description,
+	image = '/social.png',
+	type = 'website',
+	breadcrumbs,
+	schema: pageSchema = [],
+} = Astro.props;
+
+/**
+ * Με `build.format: 'file'` το Astro.url.pathname στο build είναι το όνομα του
+ * αρχείου («/about.html»), όχι το URL που σερβίρει το Cloudflare Pages
+ * («/about»). Χωρίς αυτή τη μετατροπή, κάθε canonical και κάθε breadcrumb θα
+ * έδειχνε σε διεύθυνση που δεν υπάρχει.
+ */
+const cleanPath = Astro.url.pathname
+	.replace(/index\.html$/, '')
+	.replace(/\.html$/, '')
+	.replace(/(.+)\/$/, '$1');
+
+const canonicalURL = Astro.props.canonicalURL || new URL(cleanPath || '/', Astro.site);
+const ogImage = new URL(image, Astro.site);
+
+/**
+ * Preview deployments δεν πρέπει να μπαίνουν στο index: το ίδιο περιεχόμενο σε
+ * δεύτερο host το βλέπει η Google ως duplicate. Στο Cloudflare Pages το
+ * CF_PAGES_BRANCH είναι ο κλάδος του build — ό,τι δεν είναι `main` είναι preview.
+ * (Αντικαθιστά τον host-based κανόνα X-Robots-Tag που υπήρχε στο vercel.json.)
+ */
+const branch = import.meta.env.CF_PAGES_BRANCH;
+const isPreview = Boolean(branch) && branch !== 'main';
+
+const jsonLd = graph([
+	organizationSchema(Astro.site),
+	professionalServiceSchema(Astro.site),
+	websiteSchema(Astro.site),
+	breadcrumbs
+		? breadcrumbItems(Astro.site, breadcrumbs)
+		: breadcrumbSchema(Astro.site, cleanPath, crumbLabels, title),
+	...pageSchema,
+]);
+---
+
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link rel="icon" type="image/png" href="/favicon.png" />
+
+<!-- Primary Meta Tags -->
+<title>{title}</title>
+<meta name="title" content={title} />
+<meta name="description" content={description} />
+<link rel="canonical" href={canonicalURL} />
+<meta name="generator" content={Astro.generator} />
+{isPreview && <meta name="robots" content="noindex, nofollow" />}
+
+<!-- Open Graph -->
+<meta property="og:type" content={type} />
+<meta property="og:site_name" content={site.name} />
+<meta property="og:locale" content={site.locale} />
+<meta property="og:url" content={canonicalURL} />
+<meta property="og:title" content={title} />
+<meta property="og:description" content={description} />
+<meta property="og:image" content={ogImage} />
+
+<!-- Twitter -->
+<meta property="twitter:card" content="summary_large_image" />
+<meta property="twitter:url" content={canonicalURL} />
+<meta property="twitter:title" content={title} />
+<meta property="twitter:description" content={description} />
+<meta property="twitter:image" content={ogImage} />
+
+<!-- Fonts — μη μπλοκάρον φόρτωμα: το κείμενο εμφανίζεται αμέσως με fallback font -->
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link
+	href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap"
+	rel="stylesheet"
+	media="print"
+	onload="this.media='all'"
+/>
+<noscript>
+	<link
+		href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap"
+		rel="stylesheet"
+	/>
+</noscript>
+
+<!-- Structured data -->
+<script type="application/ld+json" set:html={jsonLd} is:inline />
+
+<!-- Google Analytics — Consent Mode v2: όλα denied μέχρι να συναινέσει ο
+     επισκέπτης (βλ. CookieConsent.astro). Χωρίς αποδοχή δεν μπαίνει cookie. -->
+<script is:inline define:vars={{ gaId: site.analytics.gaId }}>
+	window.dataLayer = window.dataLayer || [];
+	function gtag() {
+		dataLayer.push(arguments);
+	}
+	gtag('consent', 'default', {
+		analytics_storage: 'denied',
+		ad_storage: 'denied',
+		ad_user_data: 'denied',
+		ad_personalization: 'denied',
+		wait_for_update: 500,
+	});
+	try {
+		var phpixelConsent = JSON.parse(localStorage.getItem('phpixel-consent') || 'null');
+		if (
+			phpixelConsent &&
+			phpixelConsent.v === 'granted' &&
+			Date.now() - phpixelConsent.t < 31536000000
+		) {
+			gtag('consent', 'update', { analytics_storage: 'granted' });
+		}
+	} catch (e) {}
+	gtag('js', new Date());
+	gtag('config', gaId);
+</script>
+<script async src={`https://www.googletagmanager.com/gtag/js?id=${site.analytics.gaId}`}></script>

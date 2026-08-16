@@ -1,0 +1,326 @@
+---
+import SectionHeader from '@components/sections/SectionHeader.astro';
+import GlassCard from '@components/cards/GlassCard.astro';
+import FaqSection from '@components/sections/FaqSection.astro';
+import RelatedLinks from '@components/sections/RelatedLinks.astro';
+
+const features = [
+  {
+    icon: 'ic:baseline-search',
+    title: 'Έρευνα λέξεων-κλειδιών',
+    desc: 'Βρίσκουμε τι πραγματικά ψάχνουν οι πελάτες σου, και ποιες αναζητήσεις δείχνουν πρόθεση αγοράς, όχι απλή περιέργεια.',
+    accent: 'var(--accent-blue)',
+  },
+  {
+    icon: 'ic:baseline-speed',
+    title: 'Technical SEO',
+    desc: 'Ταχύτητα, Core Web Vitals, sitemaps, δομημένα δεδομένα. Το site σου στημένο ώστε η Google να το διαβάζει χωρίς εμπόδια.',
+    accent: 'var(--accent-violet)',
+  },
+  {
+    icon: 'ic:baseline-article',
+    title: 'Περιεχόμενο με σχέδιο',
+    desc: 'Σελίδες που απαντούν στις πραγματικές ερωτήσεις του κοινού σου. Γράφουμε για ανθρώπους και η Google ακολουθεί.',
+    accent: 'var(--accent-emerald)',
+  },
+  {
+    icon: 'ic:baseline-link',
+    title: 'Χτίσιμο αξιοπιστίας',
+    desc: 'Αναφορές και links από σχετικές, αξιόπιστες πηγές. Χωρίς τεχνάσματα που αύριο θα σου κοστίσουν.',
+    accent: 'var(--accent-amber)',
+  },
+  {
+    icon: 'ic:baseline-location-on',
+    title: 'Τοπικό SEO',
+    desc: 'Google Business Profile, τοπικές αναφορές και αξιολογήσεις, για να σε βρίσκουν όσοι ψάχνουν στην περιοχή σου.',
+    accent: 'var(--accent-rose)',
+  },
+  {
+    icon: 'ic:baseline-analytics',
+    title: 'Αναφορές που καταλαβαίνεις',
+    desc: 'Κάθε μήνα βλέπεις τι έγινε, τι άλλαξε και τι ακολουθεί, σε γλώσσα επιχείρησης, όχι σε ορολογία.',
+    accent: 'var(--accent-blue)',
+  },
+  {
+    icon: 'ic:baseline-smartphone',
+    title: 'Mobile πρώτα',
+    desc: 'Η Google κρίνει το site σου από την έκδοση του κινητού. Εκεί εστιάζουμε πρώτα.',
+    accent: 'var(--accent-violet)',
+  },
+  {
+    icon: 'ic:baseline-trending-up',
+    title: 'Ανάλυση ανταγωνισμού',
+    desc: 'Βλέπουμε πού κατατάσσονται οι ανταγωνιστές σου και πού υπάρχει χώρος για σένα. Στρατηγική με δεδομένα, όχι υποθέσεις.',
+    accent: 'var(--accent-emerald)',
+  },
+];
+
+const approaches = [
+  {
+    name: 'On-Page SEO',
+    desc: 'Τίτλοι, περιγραφές, δομή περιεχομένου και εσωτερικά links: κάθε σελίδα στοχεύει με ακρίβεια τις σωστές αναζητήσεις.',
+  },
+  {
+    name: 'Technical SEO',
+    desc: 'Ταχύτητα, Core Web Vitals, δομημένα δεδομένα και σωστή αρχιτεκτονική: τα θεμέλια πριν από οτιδήποτε άλλο.',
+  },
+  {
+    name: 'AEO / GEO',
+    desc: 'Βελτιστοποίηση για τις AI μηχανές αναζήτησης: δομημένες απαντήσεις και δεδομένα που τα AI εργαλεία καταλαβαίνουν και προτείνουν.',
+  },
+];
+
+const faqItems = [
+  {
+    q: 'Πότε θα δω αποτελέσματα από το SEO;',
+    a: 'Το SEO θέλει χρόνο, συνήθως 3–6 μήνες για ορατή κίνηση, ανάλογα με τον ανταγωνισμό του κλάδου σου. Όποιος σου υπόσχεται αποτελέσματα σε δύο εβδομάδες, δεν σου λέει την αλήθεια. Θα βλέπεις όμως την πρόοδο κάθε μήνα, με καθαρές αναφορές.',
+  },
+  {
+    q: 'Εγγυάστε πρώτη θέση στην Google;',
+    a: 'Όχι, και κανείς δεν μπορεί να το εγγυηθεί ειλικρινά, γιατί την κατάταξη την αποφασίζει η Google. Αυτό που εγγυόμαστε είναι σωστή δουλειά: τεχνική βάση, περιεχόμενο που απαντάει σε πραγματικές ερωτήσεις και πλήρης διαφάνεια στο τι κάνουμε και γιατί.',
+  },
+  {
+    q: 'Τι είναι το AEO και γιατί να με νοιάζει;',
+    a: 'AEO (Answer Engine Optimization) σημαίνει να είναι το περιεχόμενό σου δομημένο έτσι ώστε να το καταλαβαίνουν και να το προτείνουν τα AI εργαλεία (ChatGPT, Gemini και οι AI απαντήσεις της Google). Όλο και περισσότεροι πελάτες ρωτούν πρώτα ένα AI πριν αγοράσουν. Αν το site σου δεν διαβάζεται σωστά από αυτά, χάνεις πελάτες που δεν θα μάθεις ποτέ ότι σε έψαχναν.',
+  },
+];
+---
+
+  <!-- Hero -->
+  <section class="seo-hero">
+    <div class="seo-hero__bg"></div>
+    <div class="container seo-hero__inner">
+      <div class="seo-hero__content reveal">
+        <span class="seo-badge">SEO & AEO</span>
+        <h1>
+          SEO &<br />
+          <span class="accent-text">AEO</span>
+        </h1>
+        <p class="seo-hero__sub">
+          Προώθηση ιστοσελίδων με έναν απλό στόχο: να σε βρίσκουν όσοι σε ψάχνουν,
+          στην Google και στα AI εργαλεία που πλέον προτείνουν προϊόντα και επιχειρήσεις.
+          Δουλεύουμε σε e-shop και εταιρικά sites, με μετρήσιμη πρόοδο κάθε μήνα.
+          Χωρίς υποσχέσεις για «πρώτες θέσεις», με δουλειά που χτίζει σταθερά.
+        </p>
+      </div>
+
+      <!-- Approaches -->
+      <div class="seo-hero__platforms reveal" style="transition-delay: 0.2s">
+        {approaches.map((p) => (
+          <div class="platform-card">
+            <h3 class="platform-card__title">{p.name}</h3>
+            <p>{p.desc}</p>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- AEO Section -->
+  <section class="aeo">
+    <div class="container aeo__inner reveal">
+      <h2>SEO & AEO: να σε βρίσκουν παντού</h2>
+      <p>
+        Το SEO δεν είναι πια μόνο η Google. Όλο και περισσότεροι ρωτούν το ChatGPT,
+        το Gemini ή άλλα AI εργαλεία «πού να φτιάξω e-shop» ή «ποιο προϊόν να πάρω»,
+        και τα εργαλεία αυτά απαντούν διαβάζοντας sites σαν το δικό σου. Το AEO/GEO
+        φροντίζει το περιεχόμενό σου να είναι δομημένο έτσι ώστε να το καταλαβαίνουν
+        και να το προτείνουν: καθαρές απαντήσεις, σωστά δεδομένα (schema), σελίδες που
+        απαντούν σε πραγματικές ερωτήσεις. Δεν αντικαθιστά το κλασικό SEO. Το ενισχύει,
+        και τα στήνουμε μαζί.
+      </p>
+    </div>
+  </section>
+
+  <!-- SEO για e-shop -->
+  <section class="aeo aeo--eshop">
+    <div class="container aeo__inner reveal">
+      <h2>SEO για e-shop</h2>
+      <p>
+        Το e-shop έχει τα δικά του θέματα SEO: σελίδες κατηγοριών που πρέπει να τραβούν
+        τις σωστές αναζητήσεις, περιγραφές προϊόντων που δεν είναι copy-paste από τον
+        προμηθευτή, φίλτρα που δεν μπερδεύουν την Google. Εκεί εστιάζουμε: δομή
+        κατηγοριών με βάση το τι ψάχνει πραγματικά ο κόσμος, σωστά δεδομένα προϊόντων
+        (τιμές, διαθεσιμότητα, αξιολογήσεις) και ταχύτητα που δεν διώχνει αγοραστές.
+        Κι αν έχεις ήδη e-shop που δεν φέρνει οργανική κίνηση, ξεκινάμε με έναν έλεγχο
+        και σου λέμε τι φταίει, στα ίσια.
+      </p>
+    </div>
+  </section>
+
+  <!-- Features Grid -->
+  <section class="seo-features">
+    <div class="container">
+      <div class="reveal">
+        <SectionHeader title="Προώθηση ιστοσελίδων και e-shop με μετρήσιμη πρόοδο" subtitle="Τι περιλαμβάνει">
+          Δεν εφαρμόζουμε τυποποιημένα πακέτα. Η δουλειά προσαρμόζεται στον κλάδο σου, στον ανταγωνισμό σου και στο τι πραγματικά θα σου φέρει πελάτες.
+        </SectionHeader>
+      </div>
+
+      <div class="features-grid">
+        {features.map((f, i) => (
+          <div class="reveal" style={`transition-delay: ${i * 0.05}s`}>
+            <GlassCard
+              icon={f.icon}
+              title={f.title}
+              description={f.desc}
+              accent={f.accent}
+            />
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- Εσωτερικά links (topic cluster) -->
+  <RelatedLinks
+    services={[
+      { label: 'Ιστοσελίδες & Landing Pages', href: '/kataskevi-istoselidon' },
+      { label: 'Κατασκευή E-shop', href: '/kataskevi-eshop' },
+      { label: 'Google Ads & Social', href: '/diafimisi' },
+    ]}
+    cases={[
+      { label: 'Angela Yfantidou', href: '/portfolio/angela-yfantidou' },
+      { label: 'Vithopoulos Outdoor', href: '/portfolio/vithopoulos-outdoor' },
+    ]}
+    articles={[
+      { label: 'A/B testing και CRO', href: '/blog/posts/ab' },
+    ]}
+  />
+
+  <!-- FAQ -->
+  <FaqSection items={faqItems} title="Συχνές ερωτήσεις για το SEO" />
+
+
+
+
+<style>
+  /* Hero */
+  .seo-hero {
+    position: relative;
+    padding: calc(var(--navbar-height) + 4rem) 0 4rem;
+  }
+
+  .seo-hero__bg {
+    position: absolute;
+    inset: 0;
+    background: var(--gradient-subtle);
+  }
+
+  .seo-hero__inner {
+    position: relative;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 4rem;
+    align-items: center;
+  }
+
+  .seo-badge {
+    display: inline-block;
+    padding: 0.35rem 1rem;
+    font-size: 0.8rem;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    background: var(--theme-surface-1);
+    border-radius: 2rem;
+    margin-bottom: 1.5rem;
+  }
+
+  .seo-hero__content h1 { margin-bottom: 1.5rem; }
+
+  .accent-text {
+    background: var(--gradient-accent);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  .seo-hero__sub {
+    font-size: 1.1rem;
+    line-height: 1.75;
+    opacity: 0.7;
+    max-width: 460px;
+  }
+
+  .seo-hero__platforms {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+  }
+
+  .platform-card {
+    padding: 1.5rem 2rem;
+    background: var(--glass-bg);
+    backdrop-filter: var(--glass-blur);
+    border: 1px solid var(--glass-border);
+    border-radius: var(--theme-shape-radius);
+    transition: var(--theme-transition);
+  }
+
+  .platform-card:hover {
+    transform: translateX(8px);
+    border-color: var(--accent-blue);
+  }
+
+  .platform-card__title {
+    font-family: var(--font-heading);
+    font-weight: 800;
+    line-height: 1.15;
+    font-size: 1.1rem;
+    margin-bottom: 0.25rem;
+    opacity: 1;
+  }
+
+  .platform-card p {
+    font-size: 0.9rem;
+    opacity: 0.6;
+  }
+
+  /* AEO section */
+  .aeo {
+    padding: var(--section-padding);
+  }
+
+  .aeo__inner {
+    max-width: 760px;
+    margin: 0 auto;
+    text-align: center;
+  }
+
+  .aeo--eshop {
+    padding-top: 0;
+  }
+
+  .aeo__inner h2 {
+    margin-bottom: 1.25rem;
+  }
+
+  .aeo__inner p {
+    font-size: 1.05rem;
+    line-height: 1.8;
+    opacity: 0.7;
+    text-align: left;
+  }
+
+  /* Features */
+  .seo-features {
+    padding: var(--section-padding);
+    background: var(--theme-surface-1);
+  }
+
+  .features-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: var(--theme-grid-gap);
+  }
+
+  @media (max-width: 1024px) {
+    .features-grid { grid-template-columns: repeat(2, 1fr); }
+  }
+
+  @media (max-width: 768px) {
+    .seo-hero__inner { grid-template-columns: 1fr; gap: 2rem; }
+    .features-grid { grid-template-columns: 1fr; }
+  }
+</style>

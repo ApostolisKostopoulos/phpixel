@@ -1,0 +1,70 @@
+# Πηγή: phpixel-case-study-questionnaire.xlsx — μόνο επιβεβαιωμένα γεγονότα.
+order: 5
+anchor: vithopoulos
+name: Vithopoulos Outdoor
+tagline: 'Η επιχείρηση εξοπλισμού βουνού μπήκε online: e-shop με προσεγμένο UX κατηγοριών και SEO.'
+description: Η Vithopoulos Outdoor (εξοπλισμός πεζοπορίας και ορειβασίας) δεν είχε online παρουσία. Φτιάξαμε e-shop σε WooCommerce με προσεγμένο UX κατηγοριών και συνεχίζουμε με SEO και email marketing.
+industry: Outdoor / αθλητικός εξοπλισμός
+category: E-shop
+year: 2024
+url: https://vithopoulosoutdoor.gr
+tags:
+  - E-shop
+  - WooCommerce
+  - SEO
+  - Email Marketing
+stack:
+  - WordPress
+  - WooCommerce
+ongoing: SEO, email marketing
+thumb: /assets/images/portfolio/vithopoulos-thumb.jpg
+image: /images/portfolio/vithopoulos.webp
+imageAlt: Το e-shop της Vithopoulos Outdoor
+hero: /assets/images/portfolio/vithopoulos-home.jpg
+heroAlt: Η αρχική σελίδα του e-shop vithopoulosoutdoor.gr
+gallery:
+  - src: /assets/images/portfolio/vithopoulos-home.jpg
+    alt: Η αρχική σελίδα του e-shop vithopoulosoutdoor.gr
+    caption: Το homepage του e-shop που στήσαμε.
+  - src: /assets/images/portfolio/vithopoulos-category.jpg
+    alt: Σελίδα κατηγορίας για πεζοπορία στο vithopoulosoutdoor.gr
+    caption: 'Το UX κατηγοριών σε δράση: ο επισκέπτης φτάνει γρήγορα στο είδος που ψάχνει.'
+  - src: /assets/images/portfolio/vithopoulos-shop.jpg
+    alt: Ο κατάλογος σακιδίων στο e-shop vithopoulosoutdoor.gr
+    caption: 'Σελίδα καταλόγου: καθαρή λίστα προϊόντων ανά κατηγορία.'
+  - src: /assets/images/portfolio/vithopoulos-product.jpg
+    alt: Σελίδα προϊόντος σακιδίου στο e-shop vithopoulosoutdoor.gr
+    caption: 'Η σελίδα προϊόντος: καθαρή παρουσίαση με επιλογές παραλλαγών.'
+metrics: []
+accent: '#2f6b4a'
+caseStudy:
+  heroTitle: Πώς η Vithopoulos Outdoor μπήκε στο online εμπόριο με δικό της e-shop
+  heroSub: 'Κατασκευή e-shop για εξοπλισμό πεζοπορίας και ορειβασίας: από μηδενική online παρουσία σε δικό της κατάστημα.'
+  metaTitle: 'Vithopoulos Outdoor: E-shop για εξοπλισμό βουνού | Case Study | phpixel'
+  metaDescription: 'Κατασκευή e-shop για είδη outdoor: η Vithopoulos Outdoor πέρασε από μηδενική online παρουσία σε WooCommerce κατάστημα με καθαρές κατηγορίες και SEO.'
+  client:
+    title: Η Vithopoulos Outdoor
+    html:
+      - Η Vithopoulos Outdoor πουλάει εξοπλισμό πεζοπορίας και ορειβασίας. Η συνεργασία ξεκίνησε από σύσταση.
+  challenge:
+    title: Κατάστημα χωρίς online παρουσία
+    html:
+      - Η επιχείρηση δεν είχε παρουσία στο internet. Όποιος έψαχνε εξοπλισμό online, απλώς δεν την έβρισκε.
+  goal:
+    title: Δικό της e-shop και ορατότητα στο Google
+    html:
+      - Δικό της e-shop, ορατότητα στο Google και email marketing προς τους πελάτες της.
+  approach:
+    title: Τι φτιάξαμε
+    html:
+      - '<a href="/kataskevi-eshop">Κατασκευή e-shop</a> σε WordPress και WooCommerce, με ιδιαίτερη δουλειά στο UX των κατηγοριών: σε ένα κατάστημα εξοπλισμού, το να βρίσκεις γρήγορα το σωστό προϊόν είναι η μισή πώληση.'
+      - Από το launch και μετά συνεχίζουμε με SEO και email marketing.
+  deliverables:
+    - Κατασκευή e-shop σε WooCommerce
+    - Category UX
+    - SEO
+  cta:
+    heading: Θες κι εσύ ένα τέτοιο e-shop;
+    text: Δες πώς δουλεύουμε στην κατασκευή e-shop ή στείλε μας δυο λόγια για το δικό σου. Απαντάμε τίμια, χωρίς δέσμευση.
+    serviceHref: /kataskevi-eshop
+    serviceLabel: Κατασκευή E-shop

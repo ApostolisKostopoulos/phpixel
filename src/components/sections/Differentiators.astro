@@ -1,0 +1,87 @@
+---
+/**
+ * «Τι μας διαφοροποιεί» — μία ενότητα, μία πηγή αλήθειας.
+ *
+ * Υπήρχε δύο φορές στο site με διαφορετική διατύπωση: «Τι Μας Ξεχωρίζει» στο
+ * /about και «Τι μας διαφοροποιεί» στο /how-we-work. Κρατήθηκε η δεύτερη, και
+ * τώρα και οι δύο σελίδες εμφανίζουν το ίδιο component, οπότε δεν μπορούν να
+ * ξαναπούν διαφορετικά πράγματα.
+ */
+import SectionHeader from './SectionHeader.astro';
+import GlassCard from '../cards/GlassCard.astro';
+
+export interface Props {
+	/** Φόντο ενότητας. Το /how-we-work χρησιμοποιεί το διακριτικό gradient. */
+	background?: 'gradient' | 'surface';
+}
+
+const { background = 'gradient' } = Astro.props;
+
+const values = [
+	{
+		icon: 'ic:baseline-psychology',
+		title: 'Στρατηγική, όχι μόνο κώδικας',
+		desc: 'Δεν «παραδίδουμε» απλώς μια ιστοσελίδα. Μελετάμε το κοινό σου και χτίζουμε ένα εργαλείο που φέρνει αποτελέσματα, όχι απλώς clicks.',
+		accent: 'var(--accent-violet)',
+	},
+	{
+		icon: 'ic:baseline-handshake',
+		title: 'Ειλικρίνεια πάνω από όλα',
+		desc: 'Αν κάτι δεν πρόκειται να λειτουργήσει για την επιχείρησή σου, θα σου το πούμε. Προτιμάμε μια ειλικρινή συμβουλή από μια εύκολη πώληση.',
+		accent: 'var(--accent-emerald)',
+	},
+	{
+		icon: 'ic:baseline-speed',
+		title: 'Πρώτα η ταχύτητα',
+		desc: 'Σε έναν κόσμο που βιάζεται, κάθε δευτερόλεπτο μετράει. Φτιάχνουμε sites που «πετάνε», βελτιστοποιημένα για ταχύτητα και SEO από την πρώτη γραμμή κώδικα.',
+		accent: 'var(--accent-blue)',
+	},
+	{
+		icon: 'ic:baseline-trending-up',
+		title: 'Συνεχής εξέλιξη',
+		desc: 'Η τεχνολογία αλλάζει κάθε μέρα. Εμείς μένουμε μπροστά από τις εξελίξεις, για να μη μένεις εσύ πίσω από τον ανταγωνισμό.',
+		accent: 'var(--accent-amber)',
+	},
+];
+---
+
+<section class:list={['differentiators', `differentiators--${background}`]}>
+	<div class="container">
+		<SectionHeader subtitle="Γιατί εμείς" title="Τι μας διαφοροποιεί" align="center" />
+		<div class="values-grid">
+			{values.map((v, i) => (
+				<div class="reveal" style={`transition-delay: ${i * 0.1}s`}>
+					<GlassCard icon={v.icon} title={v.title} description={v.desc} accent={v.accent} />
+				</div>
+			))}
+		</div>
+	</div>
+</section>
+
+<style>
+	.differentiators {
+		padding: var(--section-padding);
+	}
+
+	.differentiators--gradient {
+		background: var(--gradient-subtle);
+	}
+
+	.differentiators--surface {
+		background: var(--theme-surface-1);
+	}
+
+	.values-grid {
+		display: grid;
+		grid-template-columns: repeat(2, 1fr);
+		gap: var(--theme-grid-gap, 1.5rem);
+		max-width: 960px;
+		margin: 3rem auto 0;
+	}
+
+	@media (max-width: 768px) {
+		.values-grid {
+			grid-template-columns: 1fr;
+		}
+	}
+</style>
