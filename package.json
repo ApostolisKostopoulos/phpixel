@@ -4,6 +4,9 @@
 	"private": true,
 	"description": "Marketing website for phpixel — κατασκευή e-shop, ιστοσελίδων, SEO και digital marketing.",
 	"license": "UNLICENSED",
+	"engines": {
+		"node": ">=20.3.0"
+	},
 	"scripts": {
 		"dev": "astro dev",
 		"start": "astro dev",
