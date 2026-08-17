@@ -58,6 +58,18 @@ Pages το σερβίρει απευθείας. Το μόνο κομμάτι π�
    subdomain. Το πραγματικό token δεν μπαίνει ποτέ στο git.
 4. Βάλε το ίδιο token ως `MAILER_TOKEN` και το URL ως `MAILER_URL` στα
    environment variables του Pages, και κάνε redeploy.
+5. cPanel → **MultiPHP Manager**: το `mailer.phpixel.gr` πρέπει να τρέχει
+   **PHP 7.0 ή νεότερη**. Σε παλιότερη, το `send.php` δεν κάνει parse και ο
+   server γυρίζει 500 με άδειο body — η φόρμα πάει πάντα στο `/fail`, χωρίς
+   άλλη ένδειξη. Αυτό έγινε στο πρώτο στήσιμο· είναι ο πρώτος έλεγχος αν η
+   φόρμα σταματήσει να δουλεύει «από μόνη της».
+
+Το AutoSSL πρέπει επίσης να έχει βγάλει πιστοποιητικό για το `mailer.phpixel.gr`
+(cPanel → SSL/TLS Status). Το `fetch` των Workers ελέγχει αυστηρά το
+πιστοποιητικό: με self-signed, η κλήση πετάει exception και η φόρμα πάει στο
+`/fail`. Μόνο το `mailer` χρειάζεται πιστοποιητικό από τον cPanel — τα
+`phpixel.gr` και `*.phpixel.gr` δείχνουν στο Cloudflare και το AutoSSL δεν
+μπορεί να τα επαληθεύσει.
 
 Ο φάκελος `server/` δεν συμμετέχει στο build του Astro — υπάρχει στο repo μόνο
 ως πηγή αλήθειας για ό,τι ζει στον cPanel.

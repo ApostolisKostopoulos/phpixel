@@ -10,6 +10,12 @@
  * το μήνυμα δεν βγαίνει ποτέ στο internet, οπότε δεν το αγγίζει SPF/DKIM/spam
  * filtering κανενός τρίτου.
  *
+ * ΠΡΟΣΟΧΗ — έκδοση PHP: το subdomain πρέπει να τρέχει PHP 7.0 ή νεότερη
+ * (cPanel → MultiPHP Manager). Σε παλιότερη, το αρχείο δεν κάνει καν parse: ο
+ * server γυρίζει 500 με άδειο body, η function το εκλαμβάνει ως αποτυχία και η
+ * φόρμα καταλήγει πάντα στο /fail. Έχει ξανασυμβεί· αν η φόρμα «χάλασε από
+ * μόνη της», αυτό είναι το πρώτο πράγμα που ελέγχουμε.
+ *
  * Εγκατάσταση:
  *   1. Άλλαξε το MAILER_TOKEN σε μια μεγάλη τυχαία συμβολοσειρά.
  *   2. Ανέβασέ το στον cPanel, π.χ. στο document root του mailer.phpixel.gr.
@@ -31,11 +37,17 @@ header('Content-Type: application/json; charset=utf-8');
 header('X-Content-Type-Options: nosniff');
 
 /** Απάντηση σε JSON και τέλος. */
-function reply(int $status, array $body): void
+function reply(int $status, array $body)
 {
 	http_response_code($status);
 	echo json_encode($body, JSON_UNESCAPED_UNICODE);
 	exit;
+}
+
+/** HTML escaping για τα πεδία που μπαίνουν στο μήνυμα. */
+function e(string $value): string
+{
+	return htmlspecialchars($value, ENT_QUOTES, 'UTF-8');
 }
 
 /** Κόβει CR/LF ώστε να μη γίνεται header injection μέσα από τα πεδία. */
@@ -76,15 +88,13 @@ if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
 	reply(400, ['error' => 'invalid email']);
 }
 
-$e = static fn (string $s): string => htmlspecialchars($s, ENT_QUOTES, 'UTF-8');
-
 $html = '<h2>Νέο μήνυμα από το phpixel.gr</h2>'
-	. '<p><strong>Όνομα:</strong> ' . $e($name) . '</p>'
-	. '<p><strong>Email:</strong> ' . $e($email) . '</p>'
-	. ($phone !== '' ? '<p><strong>Τηλέφωνο:</strong> ' . $e($phone) . '</p>' : '')
+	. '<p><strong>Όνομα:</strong> ' . e($name) . '</p>'
+	. '<p><strong>Email:</strong> ' . e($email) . '</p>'
+	. ($phone !== '' ? '<p><strong>Τηλέφωνο:</strong> ' . e($phone) . '</p>' : '')
 	. '<hr>'
 	. '<p><strong>Μήνυμα:</strong></p>'
-	. '<p>' . nl2br($e($message)) . '</p>';
+	. '<p>' . nl2br(e($message)) . '</p>';
 
 // Τα ελληνικά στο subject θέλουν MIME encoding, αλλιώς φτάνουν σπασμένα.
 $subject = '=?UTF-8?B?' . base64_encode('[Νέα επικοινωνία] Μήνυμα από ' . $name) . '?=';

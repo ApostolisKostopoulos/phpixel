@@ -45,6 +45,13 @@ export const onRequestPost = async ({ request, env }: Context): Promise<Response
 	const phone = get('Phone');
 	const message = get('Message');
 
+	// Honeypot (βλ. ContactForm.astro): άνθρωπος δεν το βλέπει, άρα δεν το γεμίζει.
+	// Απαντάμε σαν να πέτυχε — το bot δεν μαθαίνει ότι το πιάσαμε και δεν ξαναδοκιμάζει.
+	if (get('Website')) {
+		console.log('contact: honeypot, η υποβολή αγνοήθηκε');
+		return redirect('/success', [cookie('form_status', 'sent'), cookie('form_name', name)]);
+	}
+
 	if (!name || !email || !message) {
 		return new Response(JSON.stringify({ message: 'Missing required fields' }), {
 			status: 400,

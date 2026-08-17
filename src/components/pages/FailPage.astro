@@ -15,10 +15,14 @@ import { site } from '@config/site';
           <Icon name="ic:baseline-error" />
         </div>
         <h1>Κάτι πήγε στραβά</h1>
+        <!--email_off-->
         <p>Δεν μπορέσαμε να στείλουμε το μήνυμά σου. Δοκίμασε ξανά ή στείλε μας email στο {site.contact.email}.</p>
+        <!--/email_off-->
         <div class="status-actions">
           <a href="/contact" class="btn btn--primary">Δοκίμασε ξανά</a>
+          <!--email_off-->
           <a href={`mailto:${site.contact.email}`} class="btn btn--outline">Στείλε μας email</a>
+          <!--/email_off-->
         </div>
       </div>
     </div>

@@ -13,6 +13,17 @@ import { Button, FormInput, FormSelect, FormTextarea, Form_Input_checkbox } from
 
   <Form_Input_checkbox label="Συμφωνώ να αποθηκευτούν τα στοιχεία μου ώστε να επικοινωνήσει μαζί μου η phpixel." name="policy" placeholder="" required />
 
+  {/*
+    Honeypot: αόρατο για ανθρώπους, ελκυστικό για bots που συμπληρώνουν ό,τι
+    input βρουν. Το `/api/contact` το ελέγχει και πετάει σιωπηλά όποια υποβολή
+    το έχει γεμάτο. Κρύβεται εκτός οθόνης και όχι με display:none, που τα
+    πιο προσεγμένα bots το αναγνωρίζουν.
+  */}
+  <div class="hp" aria-hidden="true">
+    <label for="Website">Άφησε αυτό το πεδίο κενό</label>
+    <input type="text" id="Website" name="Website" tabindex="-1" autocomplete="off" />
+  </div>
+
   <Button type="submit" big_button>Στείλε το μήνυμα</Button>
 </form>
 
@@ -21,5 +32,14 @@ import { Button, FormInput, FormSelect, FormTextarea, Form_Input_checkbox } from
     display: grid;
     grid-template-columns: 1fr;
     gap: 1rem;
+  }
+
+  .hp {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip: rect(0 0 0 0);
+    white-space: nowrap;
   }
 </style>

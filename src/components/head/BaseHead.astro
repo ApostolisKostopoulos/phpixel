@@ -147,8 +147,12 @@ const jsonLd = graph([
 	/>
 </noscript>
 
-<!-- Structured data -->
+<!-- Structured data. Το email_off κρατάει το Email Address Obfuscation του
+     Cloudflare μακριά από το JSON-LD: αλλιώς η διεύθυνση φτάνει στους crawlers
+     ως "[email protected]" και το structured data λέει ψέματα. -->
+<!--email_off-->
 <script type="application/ld+json" set:html={jsonLd} is:inline />
+<!--/email_off-->
 
 <!-- Google Analytics — Consent Mode v2: όλα denied μέχρι να συναινέσει ο
      επισκέπτης (βλ. CookieConsent.astro). Χωρίς αποδοχή δεν μπαίνει cookie. -->
