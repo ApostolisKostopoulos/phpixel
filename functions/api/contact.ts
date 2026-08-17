@@ -5,20 +5,20 @@
  * τρέχει server-side, γι' αυτό ζει εδώ και όχι ως Astro endpoint: έτσι το Astro
  * χτίζει χωρίς adapter και το Pages σερβίρει καθαρά static assets.
  *
- * Γιατί όχι nodemailer/SMTP όπως πριν: το Workers runtime δεν είναι Node, και
- * η αποστολή SMTP μέσω raw sockets δεν είναι αξιόπιστη εκεί. Στέλνουμε μέσω
- * HTTP API (Resend), που είναι απλό fetch.
+ * Γιατί δεν στέλνουμε mail από εδώ: το Workers runtime δεν είναι Node, η θύρα 25
+ * είναι κλειστή και δεν υπάρχει αξιόπιστος SMTP client γι' αυτό. Οπότε η function
+ * κάνει μόνο ένα HTTPS request σε ένα PHP script πάνω στον cPanel server
+ * (`server/mailer/send.php`), και εκείνο στέλνει το mail. Επειδή ο παραλήπτης
+ * ζει στον ίδιο server, η παράδοση είναι τοπική.
  *
  * Απαιτούμενα environment variables στο Cloudflare Pages project:
- *   RESEND_API_KEY  — το API key (Secret, όχι plain text)
- *   CONTACT_TO      — πού φτάνει το μήνυμα, π.χ. info@phpixel.gr
- *   CONTACT_FROM    — ο αποστολέας, σε επιβεβαιωμένο domain, π.χ. "phpixel <site@phpixel.gr>"
+ *   MAILER_URL    — το πλήρες URL του relay, π.χ. https://mailer.phpixel.gr/send.php
+ *   MAILER_TOKEN  — το κοινό μυστικό (Secret), ίδιο με το MAILER_TOKEN του send.php
  */
 
 interface Env {
-	RESEND_API_KEY: string;
-	CONTACT_TO: string;
-	CONTACT_FROM: string;
+	MAILER_URL: string;
+	MAILER_TOKEN: string;
 }
 
 interface Context {
@@ -29,9 +29,6 @@ interface Context {
 /** Ένα ώρας cookie, αναγνώσιμο από JS ώστε οι στατικές /success και /fail να το δουν. */
 const cookie = (name: string, value: string) =>
 	`${name}=${encodeURIComponent(value)}; Path=/; Max-Age=3600; SameSite=Lax; Secure`;
-
-const escapeHtml = (s: string) =>
-	s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
 
 function redirect(to: string, cookies: string[]): Response {
 	const headers = new Headers({ Location: to });
@@ -57,37 +54,25 @@ export const onRequestPost = async ({ request, env }: Context): Promise<Response
 
 	const failCookies = [cookie('form_status', 'error'), cookie('form_name', name)];
 
-	if (!env.RESEND_API_KEY || !env.CONTACT_TO || !env.CONTACT_FROM) {
-		console.error('contact: λείπουν environment variables (RESEND_API_KEY / CONTACT_TO / CONTACT_FROM)');
+	if (!env.MAILER_URL || !env.MAILER_TOKEN) {
+		console.error('contact: λείπουν environment variables (MAILER_URL / MAILER_TOKEN)');
 		return redirect('/fail', failCookies);
 	}
 
 	try {
-		const res = await fetch('https://api.resend.com/emails', {
+		const res = await fetch(env.MAILER_URL, {
 			method: 'POST',
 			headers: {
-				Authorization: `Bearer ${env.RESEND_API_KEY}`,
 				'Content-Type': 'application/json',
+				'X-Mailer-Token': env.MAILER_TOKEN,
 			},
-			body: JSON.stringify({
-				from: env.CONTACT_FROM,
-				to: [env.CONTACT_TO],
-				reply_to: email,
-				subject: `[Νέα επικοινωνία] Μήνυμα από ${name}`,
-				html: `
-					<h2>Νέο μήνυμα από το phpixel.gr</h2>
-					<p><strong>Όνομα:</strong> ${escapeHtml(name)}</p>
-					<p><strong>Email:</strong> ${escapeHtml(email)}</p>
-					${phone ? `<p><strong>Τηλέφωνο:</strong> ${escapeHtml(phone)}</p>` : ''}
-					<hr>
-					<p><strong>Μήνυμα:</strong></p>
-					<p>${escapeHtml(message).replace(/\n/g, '<br>')}</p>
-				`,
-			}),
+			body: JSON.stringify({ name, email, phone, message }),
+			// Ο cPanel server μπορεί να κολλήσει· μη κρατάμε τον χρήστη να περιμένει.
+			signal: AbortSignal.timeout(10_000),
 		});
 
 		if (!res.ok) {
-			console.error('contact: το Resend απάντησε', res.status, await res.text());
+			console.error('contact: το relay απάντησε', res.status, await res.text());
 			return redirect('/fail', failCookies);
 		}
 

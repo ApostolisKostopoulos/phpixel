@@ -179,7 +179,7 @@ img {
 }
 
 .navbar__logo-img {
-  height: 52px;
+  height: 60px;
 }
 
 /* Πάνω από σκούρο hero και μέχρι το πρώτο scroll παίζει η λευκή εκδοχή· το
@@ -526,7 +526,7 @@ img {
   }
 
   .navbar__logo-img {
-    height: 42px;
+    height: 48px;
   }
 
   .footer__logo {

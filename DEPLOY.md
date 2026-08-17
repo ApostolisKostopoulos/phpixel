@@ -23,24 +23,56 @@ Pages το σερβίρει απευθείας. Το μόνο κομμάτι π�
 
 | Μεταβλητή | Τύπος | Τι είναι |
 | --- | --- | --- |
-| `RESEND_API_KEY` | Secret | API key του [Resend](https://resend.com), για την αποστολή της φόρμας |
-| `CONTACT_TO` | Plain text | Πού φτάνει το μήνυμα, π.χ. `info@phpixel.gr` |
-| `CONTACT_FROM` | Plain text | Ο αποστολέας, σε domain επιβεβαιωμένο στο Resend, π.χ. `phpixel <site@phpixel.gr>` |
+| `MAILER_URL` | Plain text | Το URL του PHP relay στον cPanel, π.χ. `https://mailer.phpixel.gr/send.php` |
+| `MAILER_TOKEN` | Secret | Το κοινό μυστικό· ίδιο με το `MAILER_TOKEN` μέσα στο `send.php` |
 | `NODE_VERSION` | Plain text | `20` |
 | `PUBLIC_SITE_URL` | Plain text (προαιρετικό) | Παρακάμπτει το origin του build. Χρειάζεται μόνο αν το site σερβιριστεί από άλλο domain. |
 
-Χωρίς τις τρεις πρώτες, η φόρμα δεν σπάει τη σελίδα: κάνει redirect στο `/fail`
+Χωρίς τις δύο πρώτες, η φόρμα δεν σπάει τη σελίδα: κάνει redirect στο `/fail`
 και γράφει το λάθος στα logs της function.
 
-### Γιατί Resend και όχι SMTP
+## Η φόρμα επικοινωνίας
 
-Η παλιά υλοποίηση έστελνε με `nodemailer` πάνω από SMTP, σε Vercel serverless
-function (Node runtime). Το Cloudflare Workers runtime δεν είναι Node και η
-αποστολή SMTP μέσω raw sockets δεν είναι αξιόπιστη εκεί, οπότε η αποστολή
-γίνεται πλέον με ένα απλό `fetch` σε HTTP API.
+Το mail δεν φεύγει από το Cloudflare. Το Workers runtime δεν είναι Node, η θύρα
+25 είναι κλειστή και δεν υπάρχει αξιόπιστος SMTP client γι' αυτό — γι' αυτό
+έφυγε και η παλιά υλοποίηση με `nodemailer` σε Vercel.
 
-Αν προτιμηθεί άλλος πάροχος (Brevo, Postmark, Mailgun), αλλάζει μόνο το
-`fetch` μέσα στο `functions/api/contact.ts`.
+Η αλυσίδα είναι:
+
+```
+φόρμα → /api/contact (Pages Function) → https://mailer.phpixel.gr/send.php → info@phpixel.gr
+```
+
+Η function κάνει μόνο ένα `fetch` με JSON και το `X-Mailer-Token` header. Το
+`send.php` ελέγχει το token, καθαρίζει τα πεδία και καλεί την `mail()`. Επειδή
+το `info@phpixel.gr` φιλοξενείται στον ίδιο cPanel server, η παράδοση είναι
+τοπική: το μήνυμα δεν βγαίνει ποτέ στο internet, οπότε δεν το αγγίζει SPF/DKIM
+ή spam filtering τρίτου.
+
+### Εγκατάσταση του relay
+
+1. Στον cPanel, φτιάξε subdomain `mailer.phpixel.gr` (Domains → Create A New Domain).
+2. Στο Cloudflare DNS: `A mailer → 93.174.123.195`, **DNS only**.
+3. Άλλαξε το `MAILER_TOKEN` μέσα στο [`server/mailer/send.php`](server/mailer/send.php)
+   σε μια μεγάλη τυχαία συμβολοσειρά και ανέβασε το αρχείο στο document root του
+   subdomain. Το πραγματικό token δεν μπαίνει ποτέ στο git.
+4. Βάλε το ίδιο token ως `MAILER_TOKEN` και το URL ως `MAILER_URL` στα
+   environment variables του Pages, και κάνε redeploy.
+
+Ο φάκελος `server/` δεν συμμετέχει στο build του Astro — υπάρχει στο repo μόνο
+ως πηγή αλήθειας για ό,τι ζει στον cPanel.
+
+### Έλεγχος
+
+```bash
+curl -i -X POST https://mailer.phpixel.gr/send.php \
+  -H 'Content-Type: application/json' \
+  -H 'X-Mailer-Token: TO_TOKEN_SOU' \
+  -d '{"name":"Δοκιμή","email":"test@example.com","message":"δοκιμαστικό"}'
+```
+
+`200 {"ok":true}` σημαίνει ότι το relay δουλεύει. `401` = λάθος token, `502` =
+η `mail()` απέτυχε (δες τα mail logs του cPanel).
 
 ## Custom domain
 

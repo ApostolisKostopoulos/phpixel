@@ -65,6 +65,6 @@
 ## Εκκρεμότητες του deploy
 
 - Το project στο Vercel πρέπει να απενεργοποιηθεί μετά τη μετάβαση, αλλιώς το ίδιο περιεχόμενο σερβίρεται από δύο hosts.
-- Χρειάζονται τα `RESEND_API_KEY`, `CONTACT_TO`, `CONTACT_FROM` στο Cloudflare Pages, αλλιώς η φόρμα πάει πάντα στο `/fail` (βλ. `DEPLOY.md`).
+- Χρειάζονται τα `MAILER_URL`, `MAILER_TOKEN` στο Cloudflare Pages, αλλιώς η φόρμα πάει πάντα στο `/fail` (βλ. `DEPLOY.md`).
 - Το παλιό `sitemap.xml` πρέπει να αντικατασταθεί με `sitemap-index.xml` στο Search Console (το redirect υπάρχει ήδη).
 - Υπολείμματα στο repo: `public/loaderio-*.txt`, `.github/FUNDING.yml`, `.idx/dev.nix`.
