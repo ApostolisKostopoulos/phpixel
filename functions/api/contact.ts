@@ -52,7 +52,7 @@ export const onRequestPost = async ({ request, env }: Context): Promise<Response
 		return redirect('/success', [cookie('form_status', 'sent'), cookie('form_name', name)]);
 	}
 
-	if (!name || !email || !message) {
+	if (!name || !email || !phone) {
 		return new Response(JSON.stringify({ message: 'Missing required fields' }), {
 			status: 400,
 			headers: { 'Content-Type': 'application/json' },

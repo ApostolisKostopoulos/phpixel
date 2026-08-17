@@ -80,7 +80,7 @@ $email   = singleLine((string) ($payload['email'] ?? ''));
 $phone   = singleLine((string) ($payload['phone'] ?? ''));
 $message = trim((string) ($payload['message'] ?? ''));
 
-if ($name === '' || $email === '' || $message === '') {
+if ($name === '' || $email === '' || $phone === '') {
 	reply(400, ['error' => 'missing required fields']);
 }
 
@@ -91,10 +91,10 @@ if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
 $html = '<h2>Νέο μήνυμα από το phpixel.gr</h2>'
 	. '<p><strong>Όνομα:</strong> ' . e($name) . '</p>'
 	. '<p><strong>Email:</strong> ' . e($email) . '</p>'
-	. ($phone !== '' ? '<p><strong>Τηλέφωνο:</strong> ' . e($phone) . '</p>' : '')
-	. '<hr>'
-	. '<p><strong>Μήνυμα:</strong></p>'
-	. '<p>' . nl2br(e($message)) . '</p>';
+	. '<p><strong>Τηλέφωνο:</strong> ' . e($phone) . '</p>'
+	. ($message !== ''
+		? '<hr><p><strong>Μήνυμα:</strong></p><p>' . nl2br(e($message)) . '</p>'
+		: '<hr><p><em>Δεν άφησε μήνυμα.</em></p>');
 
 // Τα ελληνικά στο subject θέλουν MIME encoding, αλλιώς φτάνουν σπασμένα.
 $subject = '=?UTF-8?B?' . base64_encode('[Νέα επικοινωνία] Μήνυμα από ' . $name) . '?=';
