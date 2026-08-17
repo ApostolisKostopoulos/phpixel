@@ -6,11 +6,13 @@ const Tag = href ? 'a' : 'button';
 ---
 
 <Tag
-  class={`btn 
-  ${unelevated && `btn--unelevated`} 
-  ${outlined && `btn--outlined`} 
-  ${onPrimary && `btn--on-primary`}
-  ${big_button && 'btn--full'}`}
+  class:list={[
+    'btn',
+    { 'btn--unelevated': unelevated },
+    { 'btn--outlined': outlined },
+    { 'btn--on-primary': onPrimary },
+    { 'btn--full': big_button },
+  ]}
   href={href}
   target={`${newTab ? '_blank': ``}`}
   rel={`${newTab ? 'noopener noreferrer' : ``}`}
@@ -33,10 +35,13 @@ const Tag = href ? 'a' : 'button';
     display: flex;
     align-items: center;
     justify-content: center;
-    background-color: var(--button_color);
-    color: var(--theme-on-primary);
+    /* Ήταν --button_color και --theme-button-border-radius: κανένα από τα δύο
+       δεν ορίζεται στο theme.css, οπότε το κουμπί έβγαινε χωρίς φόντο —
+       λευκά γράμματα σε λευκό, δηλαδή αόρατο submit στη φόρμα επικοινωνίας. */
+    background-color: var(--button-color);
+    color: var(--button-text);
     border: none;
-    border-radius: var(--theme-button-border-radius);
+    border-radius: var(--button-border-radius);
     font-weight: 500;
     gap: 10px;
   }
@@ -44,7 +49,7 @@ const Tag = href ? 'a' : 'button';
     width: 100%;
   }
   .btn:hover {
-    background-color: var(--theme-primary-hover);
+    background-color: var(--button-color-hover);
   }
   .btn--unelevated {
     background-color: transparent;
@@ -52,7 +57,7 @@ const Tag = href ? 'a' : 'button';
   }
   .btn--unelevated:hover {
     background-color: transparent;
-    opacity: var(--theme-primary-hover);
+    color: var(--theme-primary);
   }
   .btn--outlined {
     color: var(--theme-primary);

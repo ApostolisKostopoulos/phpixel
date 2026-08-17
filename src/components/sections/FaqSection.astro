@@ -74,8 +74,8 @@ const faqSchema = {
     font-weight: 600;
     text-transform: uppercase;
     letter-spacing: 0.12em;
-    /* Σκουρύνουμε ελαφρά το accent για επαρκές contrast (WCAG AA) στο μικρό μέγεθος */
-    color: color-mix(in srgb, var(--accent-blue) 72%, #000);
+    /* Το --accent-blue περνά ήδη AA σε λευκό (6.99:1) — βλ. .eyebrow στο HomePage. */
+    color: var(--accent-blue);
     margin-bottom: 0.6rem;
   }
 
@@ -95,7 +95,7 @@ const faqSchema = {
 
   .faq__left p {
     font-size: 0.92rem;
-    opacity: 0.45;
+    opacity: 0.72;
     line-height: 1.6;
   }
 
@@ -146,7 +146,7 @@ const faqSchema = {
     padding: 0 0 1.1rem;
     font-size: 0.88rem;
     line-height: 1.65;
-    opacity: 0.5;
+    opacity: 0.72;
   }
 
   @media (max-width: 1024px) {

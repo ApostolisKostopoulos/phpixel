@@ -85,7 +85,7 @@ const allTagsData = tags && tags.length > 0 ? generateTagData(tags) : [];
     display: inline-block;
     font-size: 0.85rem;
     font-weight: 600;
-    opacity: 0.6;
+    opacity: 0.72;
     margin-bottom: 1.5rem;
     transition: var(--theme-transition);
   }
@@ -103,7 +103,7 @@ const allTagsData = tags && tags.length > 0 ? generateTagData(tags) : [];
   .post-header__date {
     display: block;
     font-size: 0.9rem;
-    opacity: 0.5;
+    opacity: 0.72;
     font-weight: 500;
   }
 
@@ -211,9 +211,10 @@ const allTagsData = tags && tags.length > 0 ? generateTagData(tags) : [];
     font-size: 0.9em;
   }
 
+  /* Τα code blocks θέλουν ουδέτερο μελάνι, όχι το χρώμα της μάρκας. */
   .post-content pre {
-    background: var(--theme-primary);
-    color: var(--theme-on-primary);
+    background: var(--theme-dark);
+    color: var(--theme-on-dark);
     padding: 1.25rem 1.5rem;
     border-radius: var(--theme-shape-radius-sm);
     overflow-x: auto;
@@ -254,6 +255,6 @@ const allTagsData = tags && tags.length > 0 ? generateTagData(tags) : [];
   .post-tags-footer__label {
     font-size: 0.85rem;
     font-weight: 600;
-    opacity: 0.5;
+    opacity: 0.72;
   }
 </style>

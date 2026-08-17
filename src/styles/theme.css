@@ -1,44 +1,109 @@
 :root {
   /* ========================================
-     PHPIXEL DESIGN SYSTEM v2.0
+     PHPIXEL DESIGN SYSTEM v3.0
 
+     Οι τρεις ράμπες παράγονται από τα ίδια τα assets της μάρκας:
+       purple-500 = #797BB4  → το wordmark του λογοτύπου (η παραλλαγή
+                               του PHP purple #777BB4)
+       ink-800    = #2B2F38  → το μελάνι του λογοτύπου (ο ελέφαντας)
+       blue-400   = #5EBBE3  → οι φωτισμένες έδρες στο og/phpixel-social.png
+       blue-700   = #065B87  → οι σκιασμένες έδρες στην ίδια εικόνα
+
+     Ρόλοι: το μωβ ηγείται (ταυτότητα, ενέργειες), το μπλε υποστηρίζει
+     (σύνδεσμοι, highlights), το ink είναι κάθε σκούρα επιφάνεια — ποτέ
+     ξανά καθαρό μαύρο.
      ======================================== */
 
-  /* === Brand Colors === */
-  --theme-primary: #0a0a0a;
-  --theme-primary-hover: #1a1a2e;
+  /* === Brand ramp: purple (hue 238) === */
+  --purple-50: #f4f4fb;
+  --purple-100: #eaeaf6;
+  --purple-200: #d2d3ea;
+  --purple-300: #b5b6d9;
+  --purple-400: #9697c5;
+  --purple-500: #797bb4;
+  --purple-600: #5c5f9d;
+  --purple-700: #4b4c7c;
+  --purple-800: #393a5b;
+  --purple-900: #2a2b41;
+
+  /* === Support ramp: blue (hue 199) === */
+  --blue-50: #edf7fc;
+  --blue-100: #d8eef8;
+  --blue-200: #b2ddf0;
+  --blue-300: #83c7e7;
+  --blue-400: #5ebbe3;
+  --blue-500: #209cd5;
+  --blue-600: #0f7bae;
+  --blue-700: #065b87;
+  --blue-800: #044b6c;
+  --blue-900: #04364e;
+
+  /* === Neutral ramp: ink (hue 222) === */
+  --ink-50: #f9f9fb;
+  --ink-100: #f0f1f4;
+  --ink-200: #e2e4e9;
+  --ink-300: #c6cad2;
+  --ink-400: #939aa9;
+  --ink-500: #687082;
+  --ink-600: #4c5361;
+  --ink-700: #373c48;
+  --ink-800: #2b2f38;
+  --ink-900: #1a1d23;
+
+  /* === Brand Colors ===
+     --theme-brand είναι το ακριβές μωβ του λογοτύπου. Έχει 3.96:1 σε λευκό,
+     άρα ΔΕΝ περνά AA για κείμενο — μόνο για γεμίσματα, περιγράμματα και
+     διακοσμητικά. Για κείμενο και κουμπιά χρησιμοποίησε --theme-primary. */
+  --theme-brand: var(--purple-500);
+  --theme-brand-soft: var(--purple-100);
+  --theme-brand-strong: var(--purple-700);
+
+  --theme-primary: var(--purple-600);
+  --theme-primary-hover: var(--purple-700);
   --theme-on-primary: #ffffff;
 
   --theme-bg: #fafafa;
-  --theme-on-bg: #0a0a0a;
+  --theme-on-bg: var(--ink-800);
+  --theme-on-bg-muted: var(--ink-600);
 
-  --theme-surface-1: #f0f0f5;
-  --theme-on-surface-1: #0a0a0a;
+  --theme-surface-1: var(--ink-100);
+  --theme-on-surface-1: var(--ink-800);
 
-  --theme-surface-2: #e8e8f0;
-  --theme-on-surface-2: #0a0a0a;
+  --theme-surface-2: var(--ink-200);
+  --theme-on-surface-2: var(--ink-800);
 
-  /* === Accent Palette === */
-  --accent-emerald: #10b981;
-  /* blue-600: περνά WCAG AA contrast (~5:1) για κείμενο συνδέσμων σε ανοιχτό φόντο,
-     σε αντίθεση με το παλιό blue-500 #3b82f6 (~3.5:1). */
-  --accent-blue: #2563eb;
-  --accent-violet: #8b5cf6;
-  --accent-amber: #f59e0b;
-  --accent-rose: #f43f5e;
+  /* Σκούρες επιφάνειες: footer, cookie bar, skip link, dark bands. */
+  --theme-dark: var(--ink-800);
+  --theme-on-dark: #ffffff;
+  --theme-on-dark-muted: var(--ink-300);
+
+  /* === Accent Palette ===
+     Ίδια ονόματα με πριν ώστε να μη σπάσει καμία σελίδα, αλλά
+     ξαναχρωματισμένα στον τόνο της μάρκας: χαμηλότερος κορεσμός, κοινό
+     προφίλ φωτεινότητας. Όλα περνούν AA σε λευκό φόντο.
+     Σε σκούρα επιφάνεια κάνε override το --accent-blue σε --blue-300. */
+  --accent-blue: var(--blue-700);
+  --accent-violet: var(--purple-500);
+  --accent-emerald: #2f8d7c;
+  --accent-amber: #8d6834;
+  --accent-rose: #8d3448;
+
+  /* Παραλλαγές για σκούρο φόντο (7:1+ πάνω στο --theme-dark). */
+  --accent-blue-on-dark: var(--blue-300);
+  --accent-violet-on-dark: var(--purple-300);
 
   /* === Glassmorphism === */
   --glass-bg: rgba(255, 255, 255, 0.75);
-  --glass-border: rgba(0, 0, 0, 0.06);
-  --glass-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+  --glass-border: rgba(43, 47, 56, 0.08);
+  --glass-shadow: 0 1px 3px rgba(43, 47, 56, 0.05);
   --glass-blur: blur(16px);
-  --glass-bg-dark: rgba(10, 10, 10, 0.7);
-  --glass-border-dark: rgba(255, 255, 255, 0.08);
+  --glass-bg-dark: rgba(43, 47, 56, 0.72);
+  --glass-border-dark: rgba(255, 255, 255, 0.1);
 
   /* === Buttons === */
-  --button-color: #0a0a0a;
-  --button-color-hover: #1a1a2e;
-  --button-text: #ffffff;
+  --button-color: var(--theme-primary);
+  --button-color-hover: var(--theme-primary-hover);
+  --button-text: var(--theme-on-primary);
   --button-border-radius: 0.5rem;
 
   /* === Shapes & Radius === */
@@ -68,20 +133,35 @@
   --theme-font-family-sans: var(--font-body);
 
   /* === Gradients === */
-  --gradient-hero: linear-gradient(135deg, #0a0a0a 0%, #1a1a2e 50%, #16213e 100%);
-  --gradient-subtle: linear-gradient(135deg, rgba(59, 130, 246, 0.05) 0%, rgba(139, 92, 246, 0.05) 100%);
-  --gradient-accent: linear-gradient(135deg, var(--accent-blue) 0%, var(--accent-violet) 100%);
+  --gradient-hero: linear-gradient(135deg, var(--ink-900) 0%, var(--purple-900) 55%, var(--blue-900) 100%);
+  --gradient-subtle: linear-gradient(135deg, rgba(121, 123, 180, 0.07) 0%, rgba(94, 187, 227, 0.07) 100%);
+  --gradient-accent: linear-gradient(135deg, var(--purple-600) 0%, var(--blue-600) 100%);
+}
+
+/* Σε σκούρες ζώνες τα accent χρώματα πρέπει να ανοίγουν, αλλιώς
+   το --accent-blue (#065B87) πέφτει στο 1.9:1 πάνω στο ink. */
+.on-dark,
+.footer,
+[data-surface='dark'] {
+  --accent-blue: var(--accent-blue-on-dark);
+  --accent-violet: var(--accent-violet-on-dark);
 }
 
 /* Dark mode support (future-ready) */
-[data-theme="dark"] {
-  --theme-bg: #0a0a0a;
-  --theme-on-bg: #f0f0f5;
-  --theme-surface-1: #141420;
-  --theme-on-surface-1: #e0e0e8;
-  --theme-surface-2: #1a1a2e;
-  --theme-on-surface-2: #e0e0e8;
-  --glass-bg: rgba(20, 20, 32, 0.7);
-  --glass-border: rgba(255, 255, 255, 0.08);
-  --glass-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+[data-theme='dark'] {
+  --theme-bg: var(--ink-900);
+  --theme-on-bg: var(--ink-100);
+  --theme-on-bg-muted: var(--ink-300);
+  --theme-surface-1: var(--ink-800);
+  --theme-on-surface-1: var(--ink-100);
+  --theme-surface-2: var(--ink-700);
+  --theme-on-surface-2: var(--ink-100);
+  --theme-primary: var(--purple-400);
+  --theme-primary-hover: var(--purple-300);
+  --theme-on-primary: var(--ink-900);
+  --accent-blue: var(--blue-300);
+  --accent-violet: var(--purple-300);
+  --glass-bg: rgba(43, 47, 56, 0.72);
+  --glass-border: rgba(255, 255, 255, 0.1);
+  --glass-shadow: 0 8px 32px rgba(10, 12, 16, 0.35);
 }

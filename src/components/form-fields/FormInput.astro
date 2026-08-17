@@ -15,12 +15,12 @@ const {type = "text", label, name, placeholder, required} = Astro.props;
   .form-field__container input[type="tel"] {
     width: 100%;
     padding: 0.5rem;
-    border: 2px solid var(--form-field-border-color, #ccc);
-    color: var(--form-field-input-color, #000000);
+    border: 2px solid var(--form-field-border-color, var(--ink-300));
+    color: var(--form-field-input-color, var(--theme-on-bg));
     border-radius: var(--form-field-border-radius, 0.25rem);
     outline-style: none;
   }
   .form-field__container input:focus {
-    border: 2px solid var(--form-field-border-focus-color, #000);
+    border: 2px solid var(--form-field-border-focus-color, var(--theme-primary));
   }
 </style>

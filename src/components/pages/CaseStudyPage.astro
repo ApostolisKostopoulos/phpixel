@@ -259,8 +259,8 @@ const next = projects[(idx + 1) % projects.length];
     position: absolute;
     inset: 0;
     background:
-      linear-gradient(180deg, rgba(0, 0, 0, 0.55) 0%, rgba(0, 0, 0, 0.85) 100%),
-      color-mix(in srgb, var(--cs-accent, #2a2a2a) 30%, transparent);
+      linear-gradient(180deg, rgba(26, 29, 35, 0.55) 0%, rgba(26, 29, 35, 0.88) 100%),
+      color-mix(in srgb, var(--cs-accent, var(--ink-800)) 30%, transparent);
   }
 
   .cs-hero__inner {
@@ -364,7 +364,7 @@ const next = projects[(idx + 1) % projects.length];
     font-weight: 600;
     letter-spacing: 0.08em;
     text-transform: uppercase;
-    opacity: 0.5;
+    opacity: 0.72;
   }
 
   .cs-fact__value {
@@ -399,7 +399,7 @@ const next = projects[(idx + 1) % projects.length];
     font-weight: 700;
     letter-spacing: 0.12em;
     text-transform: uppercase;
-    opacity: 0.55;
+    opacity: 0.72;
     margin-bottom: 0.75rem;
   }
 
@@ -419,7 +419,7 @@ const next = projects[(idx + 1) % projects.length];
   }
 
   .cs-para :global(a) {
-    color: var(--accent-blue, #4f9eff);
+    color: var(--accent-blue);
     font-weight: 600;
     text-decoration: underline;
     text-underline-offset: 3px;
@@ -431,7 +431,7 @@ const next = projects[(idx + 1) % projects.length];
     font-weight: 700;
     letter-spacing: 0.06em;
     text-transform: uppercase;
-    opacity: 0.7;
+    opacity: 0.72;
     margin: 2rem 0 1rem;
   }
 
@@ -463,7 +463,7 @@ const next = projects[(idx + 1) % projects.length];
     width: 8px;
     height: 8px;
     border-radius: 50%;
-    background: var(--cs-accent, var(--accent-blue, #4f9eff));
+    background: var(--cs-accent, var(--accent-blue));
   }
 
   .cs-service-item:last-child {
@@ -521,7 +521,7 @@ const next = projects[(idx + 1) % projects.length];
   .cs-metric__label {
     font-size: 0.88rem;
     font-weight: 500;
-    opacity: 0.7;
+    opacity: 0.72;
     max-width: 220px;
   }
 
@@ -569,7 +569,7 @@ const next = projects[(idx + 1) % projects.length];
   .cs-shot__caption {
     margin-top: 0.75rem;
     font-size: 0.85rem;
-    opacity: 0.65;
+    opacity: 0.72;
     line-height: 1.5;
   }
 
@@ -606,7 +606,7 @@ const next = projects[(idx + 1) % projects.length];
     gap: 0.5rem;
     justify-content: center;
     font-size: 0.95rem;
-    opacity: 0.7;
+    opacity: 0.72;
   }
 
   /* ===== CTA ===== */
@@ -679,7 +679,7 @@ const next = projects[(idx + 1) % projects.length];
     font-weight: 700;
     letter-spacing: 0.08em;
     text-transform: uppercase;
-    opacity: 0.55;
+    opacity: 0.72;
   }
 
   .cs-nav__link--next .cs-nav__label {

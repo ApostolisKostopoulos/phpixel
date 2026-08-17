@@ -95,18 +95,18 @@ img {
   background: var(--button-color-hover);
   border-color: var(--button-color-hover);
   transform: translateY(-2px);
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+  box-shadow: 0 6px 20px rgba(92, 95, 157, 0.28);
 }
 
 .btn--outline {
   background: transparent;
-  color: var(--theme-on-bg);
-  border-color: var(--theme-on-bg);
+  color: var(--theme-primary);
+  border-color: var(--theme-primary);
 }
 
 .btn--outline:hover {
-  background: var(--theme-on-bg);
-  color: var(--theme-bg);
+  background: var(--theme-primary);
+  color: var(--theme-on-primary);
   transform: translateY(-2px);
 }
 
@@ -374,16 +374,18 @@ img {
 .mobile-nav__sublink {
   font-size: 0.95rem;
   font-weight: 500;
-  opacity: 0.65;
+  opacity: 0.72;
 }
 
 /* ========================================
    FOOTER
    ======================================== */
 
+/* Το μελάνι του λογοτύπου, όχι μαύρο — το light λογότυπο του footer
+   σχεδιάστηκε πάνω σε αυτόν τον τόνο. */
 .footer {
-  background: var(--theme-primary);
-  color: var(--theme-on-primary);
+  background: var(--theme-dark);
+  color: var(--theme-on-dark);
   padding: 4rem 0 2rem;
   margin-top: var(--section-margin);
 }
@@ -451,7 +453,7 @@ img {
   font-size: 0.85rem;
   text-transform: uppercase;
   letter-spacing: 0.08em;
-  opacity: 0.5;
+  opacity: 0.72;
   margin-bottom: 1rem;
   font-weight: 600;
 }
@@ -480,7 +482,7 @@ img {
   border-top: 1px solid rgba(255, 255, 255, 0.1);
   text-align: center;
   font-size: 0.85rem;
-  opacity: 0.5;
+  opacity: 0.72;
 }
 
 .footer__bottom-sep {
