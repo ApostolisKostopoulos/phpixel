@@ -185,7 +185,7 @@ export const seo: Record<string, PageSeo> = {
 	contact: {
 		title: 'Επικοινωνία | phpixel',
 		description:
-			'Πες μας για το project σου: ιδέα, πρόβλημα ή site που δεν αποδίδει. Απαντάμε μέσα σε μία εργάσιμη, χωρίς δεσμεύσεις.',
+			'Πες μας για το project σου: ιδέα, πρόβλημα ή site που δεν αποδίδει. Απαντάμε άμεσα, χωρίς δεσμεύσεις.',
 	},
 	legal: {
 		title: 'Πολιτική Απορρήτου | phpixel',
