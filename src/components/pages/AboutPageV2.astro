@@ -1,0 +1,512 @@
+---
+/**
+ * /about-v2 — εναλλακτική εκδοχή του «Σχετικά», δεν είναι ακόμα linked από το
+ * nav. Φτιάχτηκε για σύγκριση με το /about: ίδια στοιχεία (χρόνια, ongoing
+ * ratio, values από το κοινό <Differentiators />), διαφορετική αφήγηση —
+ * hero με στατιστικά αντί για μεγάλο lead, πριν/μετά αντί για prose ιστορία,
+ * timeline αντί για παραγράφους, fit-check δύο στηλών αντί για λίστα.
+ */
+import { Icon } from 'astro-icon/components';
+import SectionHeader from '@components/sections/SectionHeader.astro';
+import Differentiators from '@components/sections/Differentiators.astro';
+import { getProjects } from '@utils/content';
+
+const projects = await getProjects();
+const projectCount = projects.length;
+const ongoingCount = projects.filter((p) => p.data.ongoing).length;
+
+const stats = [
+  { value: '10+', label: 'χρόνια μέσα στο e-commerce' },
+  { value: `${ongoingCount}/${projectCount}`, label: 'projects συνεχίζουν μαζί μας μετά το launch' },
+  { value: '0', label: 'ενδιάμεσοι ανάμεσα σε σένα και σε όποιον χτίζει το project' },
+];
+
+const before = [
+  'Μιλάς με sales, μετά με άλλον άνθρωπο για την υλοποίηση.',
+  'Το πρώτο μήνυμα μετά το launch είναι λογαριασμός ανανέωσης.',
+  'Κανείς δεν σου εξηγεί γιατί το site δεν πουλάει, απλώς «δουλεύει».',
+];
+
+const after = [
+  'Μιλάς με όποιον χτίζει το project, από την πρώτη κουβέντα μέχρι μετά.',
+  'Το launch είναι η αρχή της σχέσης, όχι το τέλος της.',
+  'Σου δείχνουμε ακριβώς πού χάνεις πωλήσεις, με νούμερα, όχι εντυπώσεις.',
+];
+
+const origin = [
+  {
+    icon: 'ic:baseline-code',
+    title: 'Ξεκίνησε από τον κώδικα',
+    text: 'Χρόνια μέσα σε μεγάλα ηλεκτρονικά καταστήματα, βλέποντας από κοντά πού χάνονται οι πωλήσεις στην πράξη.',
+  },
+  {
+    icon: 'ic:baseline-visibility-off',
+    title: 'Είδε το ίδιο πρόβλημα παντού',
+    text: 'Ελληνικές επιχειρήσεις να πληρώνουν για sites που κανείς δεν τους εξήγησε, χαμένες την επόμενη μέρα του launch.',
+  },
+  {
+    icon: 'ic:baseline-groups',
+    title: 'Έμεινε επίτηδες μικρή',
+    text: 'Αρκετά μικρή ώστε να ξέρει κάθε project απέξω, αρκετά έμπειρη ώστε να μη μαθαίνει πάνω σου.',
+  },
+];
+
+const fitYes = [
+  'Θέλεις να ξέρεις γιατί κάνουμε κάτι, όχι μόνο ότι το κάνουμε.',
+  'Σε ενδιαφέρει το μετά το launch όσο και το πριν.',
+  'Προτιμάς την αλήθεια από μια ωραία παρουσίαση.',
+];
+
+const fitNo = [
+  'Ψάχνεις εγγυημένη πρώτη θέση στη Google.',
+  'Θες το φθηνότερο πακέτο της αγοράς.',
+  'Προτιμάς να μιλάς με διαφορετικό άτομο κάθε φορά.',
+];
+---
+
+  <!-- ============== HERO ============== -->
+  <section class="ab2-hero">
+    <div class="ab2-hero__bg" aria-hidden="true"></div>
+    <div class="container ab2-hero__inner">
+      <span class="ab2-badge reveal">Σχετικά</span>
+      <h1 class="reveal">
+        Δέκα χρόνια e-commerce.<br />
+        <span class="accent-text">Μηδέν εκπλήξεις.</span>
+      </h1>
+      <p class="ab2-hero__lead reveal" style="transition-delay: 0.1s">
+        Η phpixel είναι λίγοι άνθρωποι που δουλεύουν μαζί σε κάθε project. Όχι
+        agency με ορόφους, όχι λογαριασμός email.
+      </p>
+
+      <ul class="ab2-stats reveal" style="transition-delay: 0.2s">
+        {stats.map((s) => (
+          <li class="ab2-stat">
+            <strong>{s.value}</strong>
+            <span>{s.label}</span>
+          </li>
+        ))}
+      </ul>
+    </div>
+  </section>
+
+  <!-- ============== ΠΡΙΝ / ΜΕΤΑ ============== -->
+  <section class="ab2-shift">
+    <div class="container">
+      <div class="reveal">
+        <SectionHeader
+          title="Τι συνήθως αλλάζει όταν δουλεύεις μαζί μας"
+          subtitle="Πριν / Μετά"
+        />
+      </div>
+      <div class="ab2-shift__grid">
+        <div class="ab2-shift__col ab2-shift__col--before reveal">
+          <h3><Icon name="ic:baseline-close" /> Η συνηθισμένη εμπειρία</h3>
+          <ul>
+            {before.map((item) => <li>{item}</li>)}
+          </ul>
+        </div>
+        <div class="ab2-shift__col ab2-shift__col--after reveal" style="transition-delay: 0.1s">
+          <h3><Icon name="ic:baseline-check" /> Με την phpixel</h3>
+          <ul>
+            {after.map((item) => <li>{item}</li>)}
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============== ΠΩΣ ΦΤΙΑΧΤΗΚΕ (timeline) ============== -->
+  <section class="ab2-origin">
+    <div class="container">
+      <div class="reveal">
+        <SectionHeader title="Πώς φτιάχτηκε η phpixel" subtitle="Η αφορμή" />
+      </div>
+      <ol class="ab2-origin__list">
+        {origin.map((step, i) => (
+          <li class="ab2-origin__item reveal" style={`transition-delay: ${i * 0.1}s`}>
+            <span class="ab2-origin__icon"><Icon name={step.icon} /></span>
+            <div>
+              <h3>{step.title}</h3>
+              <p>{step.text}</p>
+            </div>
+          </li>
+        ))}
+      </ol>
+    </div>
+  </section>
+
+  <!-- ============== ΤΙ ΜΑΣ ΔΙΑΦΟΡΟΠΟΙΕΙ (κοινό με /about, /how-we-work) ============== -->
+  <Differentiators background="surface" />
+
+  <!-- ============== FIT CHECK ============== -->
+  <section class="ab2-fit">
+    <div class="container">
+      <div class="reveal">
+        <SectionHeader title="Ταιριάζουμε;" subtitle="Πριν μιλήσουμε" />
+      </div>
+      <div class="ab2-fit__grid">
+        <div class="ab2-fit__col ab2-fit__col--yes reveal">
+          <h3>Ταιριάζουμε αν...</h3>
+          <ul>
+            {fitYes.map((item) => (
+              <li><Icon name="ic:baseline-check" /> {item}</li>
+            ))}
+          </ul>
+        </div>
+        <div class="ab2-fit__col ab2-fit__col--no reveal" style="transition-delay: 0.1s">
+          <h3>Δεν ταιριάζουμε αν...</h3>
+          <ul>
+            {fitNo.map((item) => (
+              <li><Icon name="ic:baseline-close" /> {item}</li>
+            ))}
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============== ΑΠΟΔΕΙΞΗ ============== -->
+  <section class="ab2-proof">
+    <div class="container">
+      <div class="ab2-proof__card reveal">
+        <div class="ab2-proof__text">
+          <h2>Τα λόγια είναι εύκολα. Οι δουλειές είναι live.</h2>
+          <p>
+            Κάθε project στο portfolio έχει όνομα, διεύθυνση και case study με το
+            τι υπήρχε πριν, τι φτιάξαμε και τι τρέχει σήμερα.
+          </p>
+        </div>
+        <div class="ab2-proof__actions">
+          <a href="/portfolio" class="btn btn--primary">Δες τα case studies</a>
+          <a href="/contact" class="btn btn--outline">Μίλα μαζί μας</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+<style>
+  /* ============== HERO ============== */
+  .ab2-hero {
+    position: relative;
+    padding: calc(var(--navbar-height) + 5rem) 0 4rem;
+    text-align: center;
+  }
+
+  .ab2-hero__bg {
+    position: absolute;
+    inset: 0;
+    background: var(--gradient-subtle);
+  }
+
+  .ab2-hero__inner {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .ab2-badge {
+    display: inline-block;
+    padding: 0.35rem 1rem;
+    font-size: 0.8rem;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    background: var(--theme-surface-1);
+    border-radius: 2rem;
+    margin-bottom: 1.5rem;
+  }
+
+  .ab2-hero__inner h1 {
+    margin-bottom: 1.25rem;
+    max-width: 720px;
+  }
+
+  .accent-text {
+    background: var(--gradient-accent);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  .ab2-hero__lead {
+    font-size: 1.15rem;
+    line-height: 1.75;
+    opacity: 0.72;
+    max-width: 560px;
+    margin-bottom: 2.5rem;
+  }
+
+  .ab2-stats {
+    list-style: none;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 1rem;
+    margin: 0;
+    padding: 0;
+    max-width: 900px;
+  }
+
+  .ab2-stat {
+    flex: 1 1 220px;
+    padding: 1.5rem;
+    background: var(--glass-bg);
+    backdrop-filter: var(--glass-blur);
+    -webkit-backdrop-filter: var(--glass-blur);
+    border: 1px solid var(--glass-border);
+    border-radius: var(--theme-shape-radius);
+  }
+
+  .ab2-stat strong {
+    display: block;
+    font-size: 2rem;
+    font-weight: 800;
+    letter-spacing: -0.02em;
+    margin-bottom: 0.35rem;
+  }
+
+  .ab2-stat span {
+    font-size: 0.88rem;
+    line-height: 1.5;
+    opacity: 0.72;
+  }
+
+  /* ============== ΠΡΙΝ / ΜΕΤΑ ============== */
+  .ab2-shift {
+    padding: var(--section-padding);
+  }
+
+  .ab2-shift__grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1.5rem;
+  }
+
+  .ab2-shift__col {
+    padding: 2rem;
+    border-radius: var(--theme-shape-radius);
+    border: 1px solid var(--glass-border);
+  }
+
+  .ab2-shift__col h3 {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    font-size: 1.05rem;
+    margin-bottom: 1.25rem;
+  }
+
+  .ab2-shift__col--before {
+    background: color-mix(in srgb, var(--accent-rose) 6%, transparent);
+  }
+
+  .ab2-shift__col--before h3 {
+    color: var(--accent-rose);
+  }
+
+  .ab2-shift__col--after {
+    background: color-mix(in srgb, var(--accent-emerald) 8%, transparent);
+  }
+
+  .ab2-shift__col--after h3 {
+    color: var(--accent-emerald);
+  }
+
+  .ab2-shift__col ul {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 0.9rem;
+    margin: 0;
+    padding: 0;
+  }
+
+  .ab2-shift__col li {
+    font-size: 0.95rem;
+    line-height: 1.65;
+    opacity: 0.8;
+    padding-left: 1rem;
+    border-left: 2px solid var(--theme-surface-2);
+  }
+
+  /* ============== ORIGIN TIMELINE ============== */
+  .ab2-origin {
+    padding: var(--section-padding);
+  }
+
+  .ab2-origin__list {
+    list-style: none;
+    display: grid;
+    gap: 1.5rem;
+    max-width: 720px;
+    margin: 0 auto;
+    padding: 0;
+  }
+
+  .ab2-origin__item {
+    display: flex;
+    align-items: flex-start;
+    gap: 1.25rem;
+    padding: 1.5rem;
+    background: var(--glass-bg);
+    backdrop-filter: var(--glass-blur);
+    -webkit-backdrop-filter: var(--glass-blur);
+    border: 1px solid var(--glass-border);
+    border-radius: var(--theme-shape-radius);
+  }
+
+  .ab2-origin__icon {
+    width: 44px;
+    height: 44px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 0.75rem;
+    background: color-mix(in srgb, var(--accent-violet) 12%, transparent);
+    color: var(--accent-violet);
+    flex-shrink: 0;
+  }
+
+  .ab2-origin__icon svg,
+  .ab2-origin__icon [data-icon] {
+    width: 22px;
+    height: 22px;
+  }
+
+  .ab2-origin__item h3 {
+    font-size: 1rem;
+    margin-bottom: 0.35rem;
+  }
+
+  .ab2-origin__item p {
+    font-size: 0.92rem;
+    line-height: 1.65;
+    opacity: 0.72;
+  }
+
+  /* ============== FIT CHECK ============== */
+  .ab2-fit {
+    padding: var(--section-padding);
+  }
+
+  .ab2-fit__grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1.5rem;
+  }
+
+  .ab2-fit__col {
+    padding: 2rem;
+    border-radius: var(--theme-shape-radius);
+    background: var(--glass-bg);
+    backdrop-filter: var(--glass-blur);
+    -webkit-backdrop-filter: var(--glass-blur);
+    border: 1px solid var(--glass-border);
+  }
+
+  .ab2-fit__col h3 {
+    font-size: 1.05rem;
+    margin-bottom: 1.25rem;
+  }
+
+  .ab2-fit__col ul {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 0.9rem;
+    margin: 0;
+    padding: 0;
+  }
+
+  .ab2-fit__col li {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.6rem;
+    font-size: 0.95rem;
+    line-height: 1.6;
+    opacity: 0.85;
+  }
+
+  .ab2-fit__col--yes :global(svg) {
+    color: var(--accent-emerald);
+    flex-shrink: 0;
+    margin-top: 0.2rem;
+  }
+
+  .ab2-fit__col--no :global(svg) {
+    color: var(--accent-rose);
+    flex-shrink: 0;
+    margin-top: 0.2rem;
+  }
+
+  /* ============== ΑΠΟΔΕΙΞΗ ============== */
+  .ab2-proof {
+    padding: 0 0 var(--section-margin);
+  }
+
+  .ab2-proof__card {
+    display: grid;
+    grid-template-columns: 1.5fr auto;
+    gap: 3rem;
+    align-items: center;
+    padding: 3rem;
+    background: var(--theme-primary);
+    color: var(--theme-on-primary);
+    border-radius: var(--theme-shape-radius-lg);
+  }
+
+  .ab2-proof__text h2 {
+    font-size: clamp(1.5rem, 3vw, 2.1rem);
+    margin-bottom: 1rem;
+  }
+
+  .ab2-proof__text p {
+    font-size: 1rem;
+    line-height: 1.75;
+    opacity: 0.88;
+    max-width: 560px;
+  }
+
+  .ab2-proof__actions {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+  }
+
+  .ab2-proof__actions .btn--primary {
+    background: #fff;
+    color: var(--theme-primary);
+    border-color: #fff;
+  }
+
+  .ab2-proof__actions .btn--primary:hover {
+    background: var(--theme-surface-1);
+    border-color: var(--theme-surface-1);
+  }
+
+  .ab2-proof__actions .btn--outline {
+    color: #fff;
+    border-color: rgba(255, 255, 255, 0.35);
+  }
+
+  .ab2-proof__actions .btn--outline:hover {
+    background: #fff;
+    color: var(--theme-primary);
+    border-color: #fff;
+  }
+
+  /* ============== RESPONSIVE ============== */
+  @media (max-width: 900px) {
+    .ab2-shift__grid,
+    .ab2-fit__grid {
+      grid-template-columns: 1fr;
+    }
+
+    .ab2-proof__card {
+      grid-template-columns: 1fr;
+      gap: 2rem;
+      padding: 2rem;
+    }
+  }
+</style>
