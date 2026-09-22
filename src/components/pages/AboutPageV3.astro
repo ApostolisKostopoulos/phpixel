@@ -1,0 +1,628 @@
+---
+/**
+ * /about-v3 — ίδια δομή με το /about (hero+ρόλοι, ιστορία+στατιστικά,
+ * πώς δουλεύουμε, differentiators, τι δεν κάνουμε, απόδειξη), με νέο copy
+ * για hero/ρόλους/ιστορία/στατιστικά. Οι υπόλοιπες ενότητες μένουν ίδιες με
+ * το /about. Όχι ακόμα linked από το nav, noindex όσο είναι υπό σύγκριση.
+ */
+import { Icon } from 'astro-icon/components';
+import SectionHeader from '@components/sections/SectionHeader.astro';
+import Differentiators from '@components/sections/Differentiators.astro';
+import { getProjects } from '@utils/content';
+
+const projects = await getProjects();
+const projectCount = projects.length;
+const ongoingCount = projects.filter((p) => p.data.ongoing).length;
+
+const roles = [
+  {
+    icon: 'ic:baseline-code',
+    title: 'Development',
+    text: 'Custom κώδικας για e-shop και ιστοσελίδες, με ακριβώς ό,τι χρειάζεσαι.',
+  },
+  {
+    icon: 'ic:baseline-brush',
+    title: 'Design & UX',
+    text: 'Σχεδιασμός εστιασμένος στη χρηστικότητα από το κινητό και την εύκολη ολοκλήρωση αγοράς.',
+  },
+  {
+    icon: 'ic:baseline-edit-note',
+    title: 'Περιεχόμενο',
+    text: 'Κείμενα που αντικατοπτρίζουν το είδος και το ύφος της επιχείρησής σου.',
+  },
+  {
+    icon: 'ic:baseline-campaign',
+    title: 'SEO & Διαφήμιση',
+    text: 'Τεχνικός σχεδιασμός για να σε βρίσκουν οργανικά μέσω Google, αλλά και υποστήριξη με διαφημίσεις.',
+  },
+];
+
+const howWeWork = [
+  {
+    icon: 'ic:baseline-record-voice-over',
+    title: 'Μιλάς με ανθρώπους, όχι με λογαριασμό email',
+    desc: 'Οι ίδιοι άνθρωποι από την πρώτη κουβέντα μέχρι το launch και μετά. Χωρίς ενδιάμεσους, χωρίς tickets, χωρίς να εξηγείς το project σου από την αρχή σε κάθε νέο πρόσωπο.',
+  },
+  {
+    icon: 'ic:baseline-groups',
+    title: 'Ομάδα ανά project, όχι οργανόγραμμα',
+    desc: 'Όταν η δουλειά χρειάζεται designer, κειμενογράφο ή marketer, μπαίνουν συνεργάτες που έχουμε δουλέψει ξανά μαζί τους. Πληρώνεις για δουλειά, όχι για γραφεία.',
+  },
+  {
+    icon: 'ic:baseline-visibility',
+    title: 'Βλέπεις τι γίνεται, όσο γίνεται',
+    desc: 'Preview links από νωρίς, ρεαλιστικό χρονοδιάγραμμα από την αρχή και ενημέρωση όταν κάτι αλλάζει. Καμία έκπληξη στο τέλος.',
+  },
+];
+
+const notForYou = [
+  'Δεν αναλαμβάνουμε projects που δεν πιστεύουμε ότι θα αποδώσουν. Θα σου πούμε γιατί, και τι θα κάναμε στη θέση σου.',
+  'Δεν υποσχόμαστε θέσεις στη Google ούτε ποσοστά πωλήσεων. Το SEO και η διαφήμιση δουλεύονται, δεν αγοράζονται σε πακέτο.',
+  'Δεν εξαφανιζόμαστε μετά το launch. Αυτό είναι το σημείο όπου ξεκινάει η δουλειά, όχι όπου τελειώνει.',
+];
+
+const facts = [
+  { icon: 'ic:baseline-schedule', label: '10+ χρόνια', text: 'Εμπειρία στο e-commerce, από μεγάλα καταστήματα έως ατομικές επιχειρήσεις.' },
+  { icon: 'ic:baseline-autorenew', label: `${ongoingCount} στα ${projectCount} projects`, text: 'Συνεχίζουν μαζί μας μετά το launch για τεχνική υποστήριξη, SEO, διαφήμιση και email marketing.' },
+  { icon: 'ic:baseline-construction', label: 'Από το μηδέν ή ανασχεδιασμός', text: 'Αναλαμβάνουμε νέες ιδέες από το μηδέν ή διορθώνουμε ιστοσελίδες/e-shops που υπήρχαν αλλά δεν απέδιδαν.' },
+];
+---
+
+  <!-- ============== HERO ============== -->
+  <section class="ab-hero">
+    <div class="ab-hero__bg" aria-hidden="true"></div>
+    <div class="container ab-hero__inner">
+      <div class="ab-hero__copy reveal">
+        <span class="ab-badge">Σχετικά</span>
+        <h1>
+          Μια ευέλικτη ομάδα<br />
+          που <span class="accent-text">εξειδικεύεται στο e-commerce</span>
+        </h1>
+        <p class="ab-hero__lead">
+          Η PHPixel δημιουργήθηκε από ανθρώπους με περισσότερα από 10 χρόνια
+          εμπειρίας στην ανάπτυξη και διαχείριση ηλεκτρονικών καταστημάτων.
+          Παρέχουμε προσωπική καθοδήγηση και υποστήριξη σε κάθε project που
+          αναλαμβάνουμε, ώστε οι δικές μας λύσεις να εξυπηρετούν τις δικές σου
+          ανάγκες.
+        </p>
+        <div class="ab-hero__actions">
+          <a href="/contact" class="btn btn--primary">Πες μας για το project σου</a>
+          <a href="/portfolio" class="btn btn--outline">Δες το portfolio μας</a>
+        </div>
+      </div>
+
+      <aside class="ab-roles reveal" style="transition-delay: 0.15s">
+        <h2 class="ab-roles__title">Τι σου παρέχουμε</h2>
+        <ul class="ab-roles__list">
+          {roles.map((r) => (
+            <li class="ab-role">
+              <span class="ab-role__icon">
+                <Icon name={r.icon} />
+              </span>
+              <span class="ab-role__text">
+                <strong>{r.title}</strong>
+                <span>{r.text}</span>
+              </span>
+            </li>
+          ))}
+        </ul>
+      </aside>
+    </div>
+  </section>
+
+  <!-- ============== ΙΣΤΟΡΙΑ ============== -->
+  <section class="ab-story">
+    <div class="container ab-story__inner">
+      <div class="ab-story__text reveal">
+        <SectionHeader title="Πώς δημιουργήθηκε η PHPixel" subtitle="Η ιστορία μας" align="left" />
+        <p>
+          Η PHPixel ξεκίνησε από τον κώδικα: χρόνια εργασίας πάνω σε μεγάλα και
+          απαιτητικά ηλεκτρονικά καταστήματα. Ενοποιήσαμε την εμπειρία αυτή
+          όταν διαπιστώσαμε ότι τα e-shop σπάνια χάνουν πωλήσεις επειδή
+          υστερούν αισθητικά. Τις χάνουν όταν η διαδρομή του πελάτη — από την
+          πρώτη επίσκεψη μέχρι την πληρωμή — είναι περίπλοκη ή αργή.
+        </p>
+        <p>
+          Παράλληλα, βλέπαμε ελληνικές επιχειρήσεις να επενδύουν σε
+          ιστοσελίδες χωρίς ουσιαστική καθοδήγηση, να ταλαιπωρούνται μιλώντας
+          με διαφορετικά άτομα σε κάθε τεχνικό αίτημα, και να μένουν χωρίς
+          κάλυψη αμέσως μετά την παράδοση του e-shop.
+        </p>
+        <p>
+          Γι' αυτό δημιουργήσαμε την PHPixel: μια εξειδικευμένη, boutique
+          ομάδα. Είμαστε αρκετά ευέλικτοι ώστε να γνωρίζουμε κάθε project
+          αναλυτικά, και αρκετά έμπειροι ώστε να εγγυόμαστε ένα σταθερό,
+          αποδοτικό e-shop που παράγει αποτελέσματα.
+        </p>
+      </div>
+
+      <ul class="ab-facts reveal" style="transition-delay: 0.15s">
+        {facts.map((f) => (
+          <li class="ab-fact">
+            <div class="ab-fact__icon">
+              <Icon name={f.icon} />
+            </div>
+            <div>
+              <strong>{f.label}</strong>
+              <span>{f.text}</span>
+            </div>
+          </li>
+        ))}
+      </ul>
+    </div>
+  </section>
+
+  <!-- ============== ΠΩΣ ΔΟΥΛΕΥΟΥΜΕ ============== -->
+  <section class="ab-how">
+    <div class="container">
+      <div class="reveal">
+        <SectionHeader
+          title="Πώς είναι να δουλεύεις μαζί μας"
+          subtitle="Στην πράξη"
+        />
+      </div>
+      <div class="ab-how__grid">
+        {howWeWork.map((item, i) => (
+          <div class="ab-how__card reveal" style={`transition-delay: ${i * 0.1}s`}>
+            <div class="ab-how__icon">
+              <Icon name={item.icon} />
+            </div>
+            <h3>{item.title}</h3>
+            <p>{item.desc}</p>
+          </div>
+        ))}
+      </div>
+      <p class="ab-how__more reveal">
+        Το βήμα προς βήμα, από την πρώτη κουβέντα μέχρι μετά το launch, είναι στο
+        <a href="/how-we-work">πώς δουλεύουμε</a>.
+      </p>
+    </div>
+  </section>
+
+  <!-- ============== ΤΙ ΜΑΣ ΔΙΑΦΟΡΟΠΟΙΕΙ (κοινό με το /about, /how-we-work) ============== -->
+  <Differentiators background="surface" />
+
+  <!-- ============== ΤΙ ΔΕΝ ΚΑΝΟΥΜΕ ============== -->
+  <section class="ab-not">
+    <div class="container ab-not__inner">
+      <div class="ab-not__intro reveal">
+        <SectionHeader
+          title="Και τι δεν κάνουμε"
+          subtitle="Για να μη χάσουμε χρόνο"
+          align="left"
+        />
+        <p>
+          Είναι πιο χρήσιμο να ξέρεις από την αρχή πού δεν ταιριάζουμε, παρά να
+          το ανακαλύψεις στη μέση του project.
+        </p>
+      </div>
+      <ul class="ab-not__list">
+        {notForYou.map((item, i) => (
+          <li class="ab-not__item reveal" style={`transition-delay: ${i * 0.08}s`}>
+            <Icon name="ic:baseline-close" class="ab-not__icon" />
+            <span>{item}</span>
+          </li>
+        ))}
+      </ul>
+    </div>
+  </section>
+
+  <!-- ============== ΑΠΟΔΕΙΞΗ ============== -->
+  <section class="ab-proof">
+    <div class="container">
+      <div class="ab-proof__card reveal">
+        <div class="ab-proof__text">
+          <h2>Τα λόγια είναι εύκολα. Οι δουλειές είναι live.</h2>
+          <p>
+            Κάθε project στο portfolio έχει όνομα, διεύθυνση και case study με το
+            τι υπήρχε πριν, τι φτιάξαμε και τι τρέχει σήμερα. Μπες και κρίνε μόνος
+            σου, χωρίς να μας πιστέψεις στα λόγια.
+          </p>
+        </div>
+        <div class="ab-proof__actions">
+          <a href="/portfolio" class="btn btn--primary">Δες τα case studies</a>
+          <a href="/contact" class="btn btn--outline">Μίλα μαζί μας</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+<style>
+  /* ============== HERO ============== */
+  .ab-hero {
+    position: relative;
+    padding: calc(var(--navbar-height) + 5rem) 0 5rem;
+  }
+
+  .ab-hero__bg {
+    position: absolute;
+    inset: 0;
+    background: var(--gradient-subtle);
+  }
+
+  .ab-hero__inner {
+    position: relative;
+    display: grid;
+    grid-template-columns: 1.35fr 1fr;
+    gap: 4rem;
+    align-items: center;
+  }
+
+  .ab-badge {
+    display: inline-block;
+    padding: 0.35rem 1rem;
+    font-size: 0.8rem;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    background: var(--theme-surface-1);
+    border-radius: 2rem;
+    margin-bottom: 1.5rem;
+  }
+
+  .ab-hero__copy h1 {
+    margin-bottom: 1.5rem;
+  }
+
+  .accent-text {
+    background: var(--gradient-accent);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  .ab-hero__lead {
+    font-size: 1.15rem;
+    line-height: 1.75;
+    opacity: 0.72;
+    max-width: 560px;
+    margin-bottom: 2rem;
+  }
+
+  .ab-hero__actions {
+    display: flex;
+    gap: 1rem;
+    flex-wrap: wrap;
+  }
+
+  .ab-roles {
+    padding: 2rem;
+    background: var(--glass-bg);
+    backdrop-filter: var(--glass-blur);
+    -webkit-backdrop-filter: var(--glass-blur);
+    border: 1px solid var(--glass-border);
+    border-radius: var(--theme-shape-radius-lg);
+    box-shadow: 0 16px 48px rgba(0, 0, 0, 0.08);
+  }
+
+  .ab-roles__title {
+    font-size: 0.8rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    opacity: 0.72;
+    margin-bottom: 1.5rem;
+  }
+
+  .ab-roles__list {
+    list-style: none;
+    display: grid;
+    gap: 1.25rem;
+    margin: 0;
+    padding: 0;
+  }
+
+  .ab-role {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.9rem;
+  }
+
+  .ab-role__icon {
+    width: 38px;
+    height: 38px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 0.7rem;
+    background: color-mix(in srgb, var(--accent-violet) 12%, transparent);
+    color: var(--accent-violet);
+    flex-shrink: 0;
+  }
+
+  .ab-role__icon svg,
+  .ab-role__icon [data-icon] {
+    width: 20px;
+    height: 20px;
+  }
+
+  .ab-role__text {
+    display: flex;
+    flex-direction: column;
+    gap: 0.1rem;
+  }
+
+  .ab-role__text strong {
+    font-size: 0.95rem;
+    font-weight: 700;
+    letter-spacing: -0.01em;
+  }
+
+  .ab-role__text span {
+    font-size: 0.88rem;
+    line-height: 1.55;
+    opacity: 0.72;
+  }
+
+  /* ============== ΙΣΤΟΡΙΑ ============== */
+  .ab-story {
+    padding: var(--section-padding);
+  }
+
+  .ab-story__inner {
+    display: grid;
+    grid-template-columns: 1.5fr 1fr;
+    gap: 4rem;
+    align-items: start;
+  }
+
+  .ab-story__text p {
+    font-size: 1.05rem;
+    line-height: 1.8;
+    opacity: 0.72;
+    margin-bottom: 1.15rem;
+  }
+
+  .ab-facts {
+    list-style: none;
+    display: grid;
+    gap: 1rem;
+    margin: 0;
+    padding: 0;
+  }
+
+  .ab-fact {
+    display: flex;
+    align-items: flex-start;
+    gap: 1rem;
+    padding: 1.35rem 1.5rem;
+    background: var(--glass-bg);
+    backdrop-filter: var(--glass-blur);
+    -webkit-backdrop-filter: var(--glass-blur);
+    border: 1px solid var(--glass-border);
+    border-radius: var(--theme-shape-radius);
+  }
+
+  .ab-fact__icon {
+    width: 42px;
+    height: 42px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 0.75rem;
+    background: color-mix(in srgb, var(--accent-blue) 10%, transparent);
+    color: var(--accent-blue);
+    flex-shrink: 0;
+  }
+
+  .ab-fact__icon svg,
+  .ab-fact__icon [data-icon] {
+    width: 22px;
+    height: 22px;
+  }
+
+  .ab-fact strong {
+    display: block;
+    font-size: 1rem;
+    font-weight: 700;
+    letter-spacing: -0.01em;
+    margin-bottom: 0.15rem;
+  }
+
+  .ab-fact span {
+    font-size: 0.9rem;
+    line-height: 1.6;
+    opacity: 0.72;
+  }
+
+  /* ============== ΠΩΣ ΔΟΥΛΕΥΟΥΜΕ ============== */
+  .ab-how {
+    padding: var(--section-padding);
+  }
+
+  .ab-how__grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1.5rem;
+  }
+
+  .ab-how__card {
+    padding: 2rem;
+    background: var(--glass-bg);
+    backdrop-filter: var(--glass-blur);
+    -webkit-backdrop-filter: var(--glass-blur);
+    border: 1px solid var(--glass-border);
+    border-radius: var(--theme-shape-radius);
+    transition: var(--theme-transition);
+  }
+
+  .ab-how__card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 12px 40px rgba(0, 0, 0, 0.08);
+  }
+
+  .ab-how__icon {
+    width: 48px;
+    height: 48px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 0.75rem;
+    background: color-mix(in srgb, var(--accent-violet) 12%, transparent);
+    color: var(--accent-violet);
+    margin-bottom: 1.25rem;
+  }
+
+  .ab-how__icon svg,
+  .ab-how__icon [data-icon] {
+    width: 24px;
+    height: 24px;
+  }
+
+  .ab-how__card h3 {
+    font-size: 1.1rem;
+    margin-bottom: 0.75rem;
+  }
+
+  .ab-how__card p {
+    font-size: 0.92rem;
+    line-height: 1.7;
+    opacity: 0.72;
+  }
+
+  .ab-how__more {
+    margin-top: 2rem;
+    text-align: center;
+    font-size: 0.95rem;
+    opacity: 0.72;
+  }
+
+  .ab-how__more a {
+    color: var(--accent-blue);
+    font-weight: 600;
+    text-decoration: underline;
+    text-underline-offset: 2px;
+  }
+
+  /* ============== ΤΙ ΔΕΝ ΚΑΝΟΥΜΕ ============== */
+  .ab-not {
+    padding: var(--section-padding);
+  }
+
+  .ab-not__inner {
+    display: grid;
+    grid-template-columns: 1fr 1.3fr;
+    gap: 4rem;
+    align-items: start;
+  }
+
+  .ab-not__intro p {
+    font-size: 1rem;
+    line-height: 1.75;
+    opacity: 0.72;
+    max-width: 380px;
+  }
+
+  .ab-not__list {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+    margin: 0;
+    padding: 0;
+  }
+
+  .ab-not__item {
+    display: flex;
+    align-items: flex-start;
+    gap: 1rem;
+    padding: 1.25rem 0;
+    border-bottom: 1px solid var(--theme-surface-2);
+    font-size: 1rem;
+    line-height: 1.7;
+    opacity: 0.8;
+  }
+
+  .ab-not__item:first-child {
+    border-top: 1px solid var(--theme-surface-2);
+  }
+
+  .ab-not__icon {
+    width: 20px;
+    height: 20px;
+    flex-shrink: 0;
+    margin-top: 0.35rem;
+    color: var(--accent-rose);
+  }
+
+  /* ============== ΑΠΟΔΕΙΞΗ ============== */
+  .ab-proof {
+    padding: 0 0 var(--section-margin);
+  }
+
+  .ab-proof__card {
+    display: grid;
+    grid-template-columns: 1.5fr auto;
+    gap: 3rem;
+    align-items: center;
+    padding: 3rem;
+    background: var(--theme-primary);
+    color: var(--theme-on-primary);
+    border-radius: var(--theme-shape-radius-lg);
+  }
+
+  .ab-proof__text h2 {
+    font-size: clamp(1.5rem, 3vw, 2.1rem);
+    margin-bottom: 1rem;
+  }
+
+  .ab-proof__text p {
+    font-size: 1rem;
+    line-height: 1.75;
+    opacity: 0.88;
+    max-width: 560px;
+  }
+
+  .ab-proof__actions {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+  }
+
+  .ab-proof__actions .btn--primary {
+    background: #fff;
+    color: var(--theme-primary);
+    border-color: #fff;
+  }
+
+  .ab-proof__actions .btn--primary:hover {
+    background: var(--theme-surface-1);
+    border-color: var(--theme-surface-1);
+  }
+
+  .ab-proof__actions .btn--outline {
+    color: #fff;
+    border-color: rgba(255, 255, 255, 0.35);
+  }
+
+  .ab-proof__actions .btn--outline:hover {
+    background: #fff;
+    color: var(--theme-primary);
+    border-color: #fff;
+  }
+
+  /* ============== RESPONSIVE ============== */
+  @media (max-width: 900px) {
+    .ab-hero__inner,
+    .ab-story__inner,
+    .ab-not__inner {
+      grid-template-columns: 1fr;
+      gap: 2.5rem;
+    }
+
+    .ab-roles {
+      max-width: 480px;
+      padding: 1.75rem;
+    }
+
+    .ab-how__grid {
+      grid-template-columns: 1fr;
+    }
+
+    .ab-proof__card {
+      grid-template-columns: 1fr;
+      gap: 2rem;
+      padding: 2rem;
+    }
+  }
+</style>

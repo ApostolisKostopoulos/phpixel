@@ -1,0 +1,29 @@
+---
+import Layout from '@layouts/Page.astro';
+import AboutPageV3 from '@components/pages/AboutPageV3.astro';
+import { seo, site } from '@config/site';
+
+/**
+ * Εναλλακτική εκδοχή του /about, όχι ακόμα linked από το nav. Ίδιο SEO node
+ * με το /about (ίδιο θέμα σελίδας), αλλά noindex όσο είναι υπό σύγκριση: δύο
+ * indexed σελίδες με το ίδιο θέμα θα ήταν duplicate content για τη Google.
+ */
+const pageSeo = {
+	...seo.about,
+	title: `${seo.about.title} (v3)`,
+	noindex: true,
+	schema: [
+		{
+			'@type': 'AboutPage',
+			name: 'Σχετικά με την phpixel',
+			url: new URL('/about-v3', Astro.site).href,
+			inLanguage: site.lang,
+			mainEntity: { '@id': `${new URL('/', Astro.site).href}#organization` },
+		},
+	],
+};
+---
+
+<Layout seo={pageSeo}>
+	<AboutPageV3 />
+</Layout>
