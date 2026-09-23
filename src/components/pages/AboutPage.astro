@@ -14,13 +14,7 @@
 import { Icon } from 'astro-icon/components';
 import SectionHeader from '@components/sections/SectionHeader.astro';
 import Differentiators from '@components/sections/Differentiators.astro';
-import { getProjects } from '@utils/content';
 
-const projects = await getProjects();
-const projectCount = projects.length;
-// Πόσα projects συνεχίζουν μετά το launch: βγαίνει από το `ongoing` του κάθε
-// case study, οπότε το νούμερο δεν μπορεί να ξεφύγει από την πραγματικότητα.
-const ongoingCount = projects.filter((p) => p.data.ongoing).length;
 
 // Ποιοι μπαίνουν σε ένα project: οι ρόλοι, όχι ονόματα και τίτλοι.
 const roles = [
@@ -74,7 +68,6 @@ const notForYou = [
 
 const facts = [
   { icon: 'ic:baseline-schedule', label: '10+ χρόνια', text: 'Εμπειρία στο e-commerce, από μεγάλα καταστήματα έως ατομικές επιχειρήσεις.' },
-  { icon: 'ic:baseline-autorenew', label: `${ongoingCount} στα ${projectCount} projects`, text: 'Συνεχίζουν μαζί μας μετά το launch για τεχνική υποστήριξη, SEO, διαφήμιση και email marketing.' },
   { icon: 'ic:baseline-construction', label: 'Από το μηδέν ή ανασχεδιασμός', text: 'Αναλαμβάνουμε νέες ιδέες από το μηδέν ή διορθώνουμε ιστοσελίδες/e-shops που υπήρχαν αλλά δεν απέδιδαν.' },
 ];
 ---

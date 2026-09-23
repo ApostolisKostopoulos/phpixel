@@ -35,7 +35,7 @@ export const GET: APIRoute = async ({ site: origin }) => {
 
 	const body = `# ${site.name}
 
-> Ψηφιακή ομάδα στην Ελλάδα: κατασκευή e-shop και ιστοσελίδων, SEO & AEO, email marketing, Google & Meta ads και custom web εφαρμογές. Δουλεύουμε πανελλαδικά. Μιλάς με αυτόν που γράφει τον κώδικα.
+> Ψηφιακή ομάδα στην Ελλάδα: κατασκευή e-shop και ιστοσελίδων, SEO & AEO, email marketing, Google & Meta ads και custom web εφαρμογές. Δουλεύουμε πανελλαδικά.
 
 ## Υπηρεσίες
 

@@ -11,7 +11,7 @@ export const site = {
 	name: 'phpixel',
 	tagline: 'From idea to pixel and code',
 	description:
-		'Κατασκευή e-shop με WooCommerce ή custom, ιστοσελίδες, SEO και email marketing. Δουλεύουμε με επιχειρήσεις σε όλη την Ελλάδα. Μιλάς με αυτόν που γράφει τον κώδικα.',
+		'Κατασκευή e-shop με WooCommerce ή custom, ιστοσελίδες, SEO και email marketing. Δουλεύουμε με επιχειρήσεις σε όλη την Ελλάδα.',
 	lang: 'el',
 	locale: 'el_GR',
 	// ===== Contact =====
