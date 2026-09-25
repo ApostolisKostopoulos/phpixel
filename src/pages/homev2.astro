@@ -1,0 +1,21 @@
+---
+import Layout from '@layouts/Page.astro';
+import HomePageV2 from '@components/pages/HomePageV2.astro';
+import { seo } from '@config/site';
+
+/**
+ * Εναλλακτική αρχική, υπό σύγκριση με το /. Ίδιο hero, αλλά το υπόλοιπο
+ * μιλάει για το τι κερδίζει ο πελάτης και όχι για το τι κάνουμε εμείς.
+ * Δεν είναι linked από το nav, noindex και εκτός sitemap όσο συγκρίνεται:
+ * δύο indexed αρχικές θα ήταν duplicate content για τη Google.
+ */
+const pageSeo = {
+	...seo.home,
+	title: `${seo.home.title} (v2)`,
+	noindex: true,
+};
+---
+
+<Layout seo={pageSeo}>
+	<HomePageV2 />
+</Layout>

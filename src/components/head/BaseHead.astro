@@ -32,6 +32,8 @@ export interface Props {
 	breadcrumbs?: { name: string; path?: string }[];
 	/** JSON-LD nodes της σελίδας. Org/Business/WebSite/breadcrumbs μπαίνουν αυτόματα. */
 	schema?: Record<string, unknown>[];
+	/** Ρητό noindex, ανεξάρτητα από branch — για draft/σελίδες υπό σύγκριση. */
+	noindex?: boolean;
 }
 
 /**
@@ -48,6 +50,7 @@ const {
 	type = 'website',
 	breadcrumbs,
 	schema: pageSchema = [],
+	noindex = false,
 } = Astro.props;
 
 /**
@@ -104,7 +107,7 @@ const jsonLd = graph([
 <meta name="description" content={description} />
 <link rel="canonical" href={canonicalURL} />
 <meta name="generator" content={Astro.generator} />
-{isPreview && <meta name="robots" content="noindex, nofollow" />}
+{(isPreview || noindex) && <meta name="robots" content="noindex, nofollow" />}
 
 <!-- Open Graph -->
 <meta property="og:type" content={type} />

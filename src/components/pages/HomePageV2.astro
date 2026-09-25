@@ -1,0 +1,2489 @@
+---
+/**
+ * /homev2: η αρχική γραμμένη από τη μεριά του πελάτη.
+ *
+ * Το / λέει τι κάνουμε (υπηρεσίες, διαδικασία, portfolio). Εδώ κάθε ενότητα
+ * απαντά στο «τι κερδίζω εγώ», με τη σειρά που το ρωτάει ένας επισκέπτης:
+ *
+ *   1. Τι κερδίζω            (κάθε πόνος του hero γίνεται όφελος + link υπηρεσίας)
+ *   2. Τι μου κοστίζει σήμερα (στοιχεία με πηγή + calculator με τα δικά του νούμερα)
+ *   3. Από πού ξεκινάω       (3 αφετηρίες: μηδέν / δεν αποδίδει / θέλω ανάπτυξη)
+ *   4. Τι άλλαξε για άλλους  (πριν → μετά, μόνο επιβεβαιωμένα γεγονότα)
+ *   5. Τι λένε               (κριτικές Google)
+ *   6. Τι ισχύει γραπτώς     (ομάδα + οι 4 δεσμεύσεις)
+ *   7. Πώς ξεκινάμε          (3 βήματα + CTA)
+ *   8. Αντιρρήσεις           (FAQ)
+ *
+ * Hero, header και footer είναι κοινά με το / (βλ. HomeHero.astro).
+ *
+ * ΠΡΟΣΩΡΙΝΑ: ό,τι περιμένει πραγματικό περιεχόμενο (κριτικές Google,
+ * φωτογραφία ομάδας, φράσεις πελατών) έχει την κλάση .ph και φαίνεται με
+ * διακεκομμένο περίγραμμα, ώστε να μη μπερδευτεί ποτέ με τελικό κείμενο.
+ * Όλα είναι μαζεμένα στο μπλοκ PLACEHOLDERS πιο κάτω.
+ */
+import HomeHero from '@components/sections/HomeHero.astro';
+import FaqSection from '@components/sections/FaqSection.astro';
+import Logo from '@components/Logo.astro';
+import { getProjects } from '@utils/content';
+import { publicImageExists } from '@utils/publicImages';
+
+// ═══ PLACEHOLDERS ═══════════════════════════════════════════════════════
+// Κριτικές Google. Όσο ένα πεδίο είναι κενό, στη θέση του φαίνεται οδηγία
+// (ή lorem ipsum για το κείμενο της κριτικής). Συμπλήρωσε αυτούσιες κριτικές
+// από το Google Business Profile, όπως ακριβώς είναι γραμμένες εκεί.
+const googleReviews = {
+  rating: '', // π.χ. '4,9'
+  count: '', // π.χ. '23'
+  profileUrl: '', // το link «Δες όλες τις κριτικές» του Google Business Profile
+  items: [
+    { text: '', author: '', when: '' },
+    { text: '', author: '', when: '' },
+    { text: '', author: '', when: '' },
+  ],
+};
+const LOREM =
+  'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco.';
+
+// Φωτογραφία ομάδας: εμφανίζεται αυτόματα μόλις υπάρξει το αρχείο.
+const TEAM_PHOTO = '/images/team.webp';
+const teamPhotoExists = publicImageExists(TEAM_PHOTO);
+
+// Φράσεις πελατών: μπαίνουν στο `quote` του YAML κάθε project
+// (src/content/portfolio/*.yaml) και εμφανίζονται ΚΑΙ εδώ ΚΑΙ στο case study.
+// Μέχρι τότε, στη θέση τους φαίνεται η ερώτηση που αξίζει να κάνεις (`ask`).
+// ═════════════════════════════════════════════════════════════════════════
+
+// Ίδια icons με τα chips του hero: ο πόνος που είδε ο επισκέπτης εκεί
+// ξαναεμφανίζεται εδώ διαγραμμένος, με το όφελος από κάτω.
+const ICON = {
+  search: '<circle cx="11" cy="11" r="7"/><path d="M20 20l-3.6-3.6"/>',
+  funnel: '<path d="M3 5h18l-7 8v6.5l-4 1.8V13L3 5z"/>',
+  shield: '<path d="M12 2.8 19.3 6v5.4c0 4.5-3 8.2-7.3 9.4-4.3-1.2-7.3-4.9-7.3-9.4V6L12 2.8z"/><path d="M8.9 11.9l2.2 2.2 4.2-4.3"/>',
+  target: '<circle cx="12" cy="12" r="7.5"/><circle cx="12" cy="12" r="3"/><path d="M12 2.2v2.6M12 19.2v2.6M2.2 12h2.6M19.2 12h2.6"/>',
+  cart: '<path d="M2.6 3.5h2.3l2.2 10.4a1.6 1.6 0 0 0 1.6 1.3h7.6a1.6 1.6 0 0 0 1.6-1.2L19.6 7H5.7"/><circle cx="9.6" cy="19.4" r="1.4"/><circle cx="16.6" cy="19.4" r="1.4"/>',
+  sync: '<path d="M20 11a8 8 0 0 0-13.7-5.4L4.2 7.8"/><path d="M4 4.2v4h4"/><path d="M4 13a8 8 0 0 0 13.7 5.4l2.1-2.2"/><path d="M20 19.8v-4h-4"/>',
+};
+
+// 1. Τι κερδίζεις. Ένα όφελος ανά σελίδα υπηρεσίας, ώστε να μένουν τα
+// εσωτερικά links της παλιάς αρχικής (με anchor το όνομα της υπηρεσίας).
+const gains = [
+  {
+    pain: 'Δεν με βρίσκουν στο Google',
+    title: 'Σε βρίσκουν όσοι σε ψάχνουν',
+    text: 'Στη Google, αλλά και στα AI εργαλεία όπως το ChatGPT και το Gemini, που πλέον προτείνουν επιχειρήσεις και προϊόντα.',
+    how: 'SEO & AEO',
+    href: '/seo',
+    icon: ICON.search,
+  },
+  {
+    pain: 'Επισκέψεις, αλλά όχι πωλήσεις',
+    title: 'Οι επισκέψεις γίνονται παραγγελίες',
+    text: 'Γρήγορες σελίδες, καθαρή διαδρομή, checkout χωρίς εμπόδια. Λιγότερα «θα το σκεφτώ», περισσότερες ολοκληρωμένες αγορές.',
+    how: 'Κατασκευή e-shop',
+    href: '/kataskevi-eshop',
+    icon: ICON.funnel,
+  },
+  {
+    pain: 'Δεν με εμπιστεύονται αρκετά',
+    title: 'Σε εμπιστεύονται με την πρώτη ματιά',
+    text: 'Ένα site που δείχνει όσο σοβαρή είναι η δουλειά σου: γρήγορο, καθαρό, με ασφαλείς πληρωμές και κριτικές εκεί που πρέπει.',
+    how: 'Ιστοσελίδες & landing pages',
+    href: '/kataskevi-istoselidon',
+    icon: ICON.shield,
+  },
+  {
+    pain: 'Ακριβά clicks, λίγες πωλήσεις',
+    title: 'Κάθε ευρώ διαφήμισης λογοδοτεί',
+    text: 'Ξέρεις τι ξοδεύεις, τι σου φέρνει πίσω και τι πρέπει να σταματήσει. Με νούμερα που καταλαβαίνεις, όχι με αναφορές είκοσι σελίδων.',
+    how: 'Google Ads & Social',
+    href: '/diafimisi',
+    icon: ICON.target,
+  },
+  {
+    pain: 'Αφήνουν το καλάθι στη μέση',
+    title: 'Οι πελάτες σου ξαναγυρνάνε',
+    text: 'Αυτόματα emails για τα καλάθια που έμειναν στη μέση, για όσους αγόρασαν μία φορά και για όσους σε ξέχασαν. Δουλεύουν κι όταν κοιμάσαι.',
+    how: 'Email marketing',
+    href: '/email-marketing',
+    icon: ICON.cart,
+  },
+  {
+    pain: 'Στοκ & παραγγελίες στο χέρι',
+    title: 'Κερδίζεις πίσω τις ώρες σου',
+    text: 'Στοκ, παραγγελίες, ERP, feeds για το Skroutz: ό,τι σήμερα περνάς με το χέρι, γίνεται μόνο του.',
+    how: 'Custom εφαρμογές',
+    href: '/software-development',
+    icon: ICON.sync,
+  },
+];
+
+// 2. Τι σου κοστίζει σήμερα. Τρίτες πηγές, με link: κανένα νούμερο δικό μας.
+const stakes = [
+  {
+    value: '7 στα 10',
+    label: 'καλάθια εγκαταλείπονται πριν από την πληρωμή.',
+    source: 'Baymard Institute, μέσος όρος 50 ερευνών',
+    href: 'https://baymard.com/lists/cart-abandonment-rate',
+  },
+  {
+    value: '+35%',
+    label: 'μετατροπές μπορεί να φέρει, κατά μέσο όρο, μόνο ένα καλύτερα σχεδιασμένο checkout.',
+    source: 'Baymard Institute, έρευνα checkout',
+    href: 'https://baymard.com/lists/cart-abandonment-rate',
+  },
+  {
+    value: '55%',
+    label: 'των Ελλήνων που ψωνίζουν online δεν θα αγόραζε από κατάστημα που δεν του εμπνέει εμπιστοσύνη.',
+    source: 'GR.EC.A × ELTRUN, Έρευνα Ηλεκτρονικού Εμπορίου 2025',
+    href: 'https://www.aueb.gr/el/content/greca-x-eltrun-i-ereyna-ilektronikoy-emporioy-2025-hartografei-ti-nea-pragmatikotita-ton',
+  },
+];
+
+// Calculator: οι αρχικές τιμές υπολογίζονται και στο build, ώστε χωρίς JS
+// να φαίνεται ένα σωστό παράδειγμα και όχι κενά πεδία.
+const calc = { visits: 3000, value: 60, uplift: 0.5 };
+const nf0 = new Intl.NumberFormat('el-GR', { maximumFractionDigits: 0 });
+const nf2 = new Intl.NumberFormat('el-GR', { maximumFractionDigits: 2 });
+const calcExtra = (calc.visits * calc.uplift) / 100;
+const calcMonth = calcExtra * calc.value;
+const calcInitial = {
+  uplift: `+${nf2.format(calc.uplift)}`,
+  every: nf0.format(100 / calc.uplift),
+  extra: `+${nf0.format(calcExtra)}`,
+  month: `${nf0.format(calcMonth)} €`,
+  year: `${nf0.format(calcMonth * 12)} €`,
+  fill: `${((calc.uplift - 0.25) / 1.75) * 100}%`,
+};
+
+// 4. Πριν → μετά. Μόνο ό,τι υπάρχει ήδη στα case studies (πηγή: το
+// questionnaire των πελατών). Κανένα νούμερο μέχρι να υπάρξει μετρημένο.
+const stories: Record<string, { before: string; after: string; gain: string; ask: string }> = {
+  'angela-yfantidou': {
+    before: 'Όλη η δουλειά σκόρπια στα social. Οι επαφές με υποψήφιους πελάτες χάνονταν στα DMs, ανάμεσα σε spam και άσχετα μηνύματα.',
+    after: 'Δικό της δίγλωσσο site, με ξεκάθαρα πακέτα και τη δουλειά της μπροστά. Οι επαφές έρχονται πλέον μέσα από το site.',
+    gain: 'Ήσυχα DMs, ξεκάθαρα πακέτα',
+    ask: '[Φράση της Angela για το πριν και το μετά. Ρώτα την: «Πώς ήταν η επικοινωνία με τους πελάτες όταν όλα περνούσαν από τα DMs, και πώς είναι τώρα;» Υπογραφή: Angela Yfantidou και η ιδιότητά της.]',
+  },
+  'aporelli-artworks': {
+    before: 'Ένα e-shop που είχε μείνει χωρίς συντήρηση: αργό, με καλάθι και checkout που δεν δούλευαν σωστά.',
+    after: 'Γρήγορο e-shop με checkout που ολοκληρώνεται, και μηνιαία συντήρηση ώστε να μην ξαναμείνει πίσω.',
+    gain: 'Δεν χρειάστηκε καινούριο site',
+    ask: '[Φράση για την ανάληψη του e-shop. Ρώτα: «Τι σε απασχολούσε με το e-shop πριν το αναλάβουμε, και τι δεν σε απασχολεί πια;» Υπογραφή: όνομα, Aporelli Artworks.]',
+  },
+  alazo: {
+    before: 'Καμία παρουσία στο internet. Κανένα σημείο για να δει κανείς τις υπηρεσίες ή να κλείσει ραντεβού.',
+    after: 'Site με online κράτηση: ο επισκέπτης βλέπει τις υπηρεσίες, διαλέγει ώρα και κλείνει ραντεβού μόνος του.',
+    gain: 'Ραντεβού χωρίς τηλεφωνήματα',
+    ask: '[Φράση για τα online ραντεβού. Ρώτα: «Τι άλλαξε στην καθημερινότητά σου από τότε που τα ραντεβού κλείνονται μέσα από το site;» Υπογραφή: όνομα και ειδικότητα.]',
+  },
+  'mian-natural-cosmetics': {
+    before: 'Ένα brand φυσικών καλλυντικών χωρίς κανέναν τρόπο να αγοράσει κανείς τα προϊόντα του online.',
+    after: 'E-shop με φίλτρα προϊόντων, email για τα καλάθια που μένουν στη μέση, δομή Google Ads και πλάνο για τα επόμενα τρίμηνα.',
+    gain: 'Από το μηδέν σε κανάλι πωλήσεων',
+    ask: '[Φράση για το ξεκίνημα online. Ρώτα: «Πώς ήταν να ξεκινάς να πουλάς online από το μηδέν μαζί μας;» Υπογραφή: όνομα, MIAN Natural Cosmetics.]',
+  },
+  'vithopoulos-outdoor': {
+    before: 'Επιχείρηση εξοπλισμού πεζοπορίας και ορειβασίας, χωρίς καμία online παρουσία.',
+    after: 'E-shop με κατηγορίες που βγάζουν νόημα για όποιον ετοιμάζεται για βουνό, με SEO και email marketing που συνεχίζουν.',
+    gain: 'Από το ράφι στο internet',
+    ask: '[Φράση για το e-shop. Ρώτα: «Τι σου έφερε το e-shop που δεν είχες πριν;» Υπογραφή: όνομα, Vithopoulos Outdoor.]',
+  },
+};
+
+const cases = (await getProjects())
+  .filter((p) => stories[p.id])
+  .map((p) => {
+    const d = p.data;
+    const img = d.image && publicImageExists(d.image) ? d.image : d.thumb;
+    return {
+      slug: p.id,
+      name: d.name,
+      industry: d.industry,
+      category: d.category,
+      quote: d.quote,
+      img,
+      imgAlt: d.imageAlt ?? `Screenshot: ${d.name}`,
+      domain: d.url ? new URL(d.url).hostname.replace(/^www\./, '') : d.name,
+      ...stories[p.id],
+    };
+  });
+const caseBySlug = Object.fromEntries(cases.map((c) => [c.slug, c]));
+
+// 3. Από πού ξεκινάς. Οι χρόνοι είναι οι ίδιοι με το FAQ της αρχικής.
+const paths = [
+  {
+    id: 'zero',
+    tab: 'Ξεκινάω από το μηδέν',
+    sub: 'Δεν έχω site ή έχω μόνο social',
+    title: 'Από το τίποτα, σε κάτι που δουλεύει από την πρώτη μέρα.',
+    gets: [
+      'Site ή e-shop που εξηγεί τι κάνεις και γιατί να διαλέξουν εσένα',
+      'Online ραντεβού, παραγγελίες ή φόρμα, ώστε ο πελάτης να προχωράει μόνος του',
+      'Βάσεις SEO από την πρώτη γραμμή κώδικα, για να σε βρίσκει η Google',
+      'Όλα στο όνομά σου: domain, λογαριασμοί, κώδικας',
+    ],
+    time: 'Ιστοσελίδα σε 2–4 εβδομάδες, e-shop σε 3–6.',
+    cta: 'Ας ξεκινήσουμε από το μηδέν',
+    cases: ['alazo', 'mian-natural-cosmetics', 'angela-yfantidou'],
+  },
+  {
+    id: 'fix',
+    tab: 'Έχω site που δεν αποδίδει',
+    sub: 'Αργό, παλιό ή δεν φέρνει πελάτες',
+    title: 'Πρώτα μαθαίνεις τι φταίει. Μετά αποφασίζεις.',
+    gets: [
+      'Έλεγχο σε ταχύτητα, SEO και διαδρομή αγοράς, με ό,τι βρήκαμε γραμμένο απλά',
+      'Διορθώσεις εκεί που χάνονται πελάτες: checkout, κινητό, ταχύτητα',
+      'Συχνά χωρίς καινούριο site: το σωστό χέρι στο υπάρχον αρκεί',
+      'Συντήρηση μήνα με μήνα, για να μην ξαναμείνει πίσω',
+    ],
+    time: 'Πρώτα ο έλεγχος, χωρίς δέσμευση. Πλάνο και χρόνος μετά.',
+    cta: 'Στείλε μας το link σου',
+    cases: ['aporelli-artworks'],
+  },
+  {
+    id: 'grow',
+    tab: 'Δουλεύει, θέλω να μεγαλώσει',
+    sub: 'Θέλω περισσότερους πελάτες',
+    title: 'Περισσότεροι πελάτες από αυτό που ήδη έχεις.',
+    gets: [
+      'SEO και AEO για να ανεβαίνεις στη Google και στην AI αναζήτηση',
+      'Διαφήμιση με μετρήσιμο αποτέλεσμα: ξέρεις τι σου φέρνει κάθε ευρώ',
+      'Emails που φέρνουν πίσω καλάθια και πελάτες',
+      'Αυτοματισμοί που κόβουν τη χειροκίνητη δουλειά',
+    ],
+    time: 'Μήνα με μήνα, χωρίς δέσμευση διάρκειας.',
+    cta: 'Πες μας πού θες να φτάσεις',
+    cases: ['angela-yfantidou', 'mian-natural-cosmetics', 'vithopoulos-outdoor'],
+  },
+];
+
+// 6. Οι δεσμεύσεις. Επιβεβαιωμένες από τον ιδιοκτήτη ότι ισχύουν για ΚΑΘΕ πελάτη.
+const promises = [
+  {
+    title: 'Όλα είναι δικά σου.',
+    text: 'Domain, κώδικας, φιλοξενία, λογαριασμοί Analytics και διαφήμισης: στο όνομά σου από την πρώτη μέρα. Αν κάποτε φύγεις, τα παίρνεις όλα μαζί σου.',
+  },
+  {
+    title: 'Η τιμή δεν αλλάζει στον δρόμο.',
+    text: 'Αυτό που γράφει η προσφορά είναι αυτό που πληρώνεις. Αν προκύψει κάτι επιπλέον, το βλέπεις και το εγκρίνεις πριν γίνει.',
+  },
+  {
+    title: 'Χωρίς δέσμευση διάρκειας.',
+    text: 'Συντήρηση, SEO και διαφήμιση πάνε μήνα με μήνα. Μένεις επειδή σε συμφέρει, όχι επειδή υπέγραψες.',
+  },
+  {
+    title: 'Πρώτα έλεγχος, μετά πρόταση.',
+    text: 'Στείλε μας το link σου και θα σου πούμε τι σου κοστίζει πελάτες, χωρίς δέσμευση. Καμιά φορά η απάντηση είναι ότι δεν χρειάζεσαι καινούριο site.',
+  },
+];
+
+// 7. Πώς ξεκινάμε: η σύνοψη. Τα αναλυτικά βήματα ζουν στο /how-we-work.
+const steps = [
+  {
+    title: 'Μας λες πού βρίσκεσαι',
+    text: 'Μια κουβέντα ή απλώς ένα link. Ακούμε τι θες να πετύχεις και σου λέμε τίμια αν και πώς μπορούμε να βοηθήσουμε.',
+  },
+  {
+    title: 'Παίρνεις πλάνο και σταθερή τιμή',
+    text: 'Τι θα γίνει, σε πόσο καιρό και με ποιο κόστος. Γραμμένα, πριν ξεκινήσουμε οτιδήποτε.',
+  },
+  {
+    title: 'Βγαίνουμε live, και συνεχίζουμε',
+    text: 'Βλέπεις την πρόοδο με preview links σε κάθε βήμα. Μετά το launch μένουμε δίπλα σου, μήνα με μήνα.',
+  },
+];
+
+// 8. FAQ: οι αντιρρήσεις που έχει κάποιος πριν ξεκινήσει.
+const faqItems = [
+  {
+    q: 'Πόσο κοστίζει;',
+    a: 'Εξαρτάται από το τι χρειάζεσαι, γι’ αυτό δεν πετάμε νούμερα στα τυφλά. Μετά την πρώτη κουβέντα παίρνεις αναλυτική προσφορά με σταθερή τιμή: αυτό που γράφει είναι αυτό που πληρώνεις. Αν στην πορεία χρειαστεί κάτι επιπλέον, το βλέπεις και το εγκρίνεις πριν γίνει.',
+  },
+  {
+    q: 'Σε πόσο καιρό θα είναι έτοιμο;',
+    a: 'Ιστοσελίδα: συνήθως 2–4 εβδομάδες. E-shop: 3–6 εβδομάδες. Custom εφαρμογή: 1–3 μήνες. Θα σου πούμε ρεαλιστικό χρονοδιάγραμμα από την αρχή, όχι αυτό που θες να ακούσεις.',
+  },
+  {
+    q: 'Σε ποιον ανήκει το site;',
+    a: 'Σε σένα, από την πρώτη μέρα. Το domain, ο κώδικας, η φιλοξενία και οι λογαριασμοί Analytics και διαφήμισης είναι στο όνομά σου. Δεν κρατάμε τίποτα «όμηρο».',
+  },
+  {
+    q: 'Κι αν κάποια στιγμή θέλω να σταματήσουμε;',
+    a: 'Σταματάμε. Η συνεργασία μετά το launch (συντήρηση, SEO, διαφήμιση) πάει μήνα με μήνα, χωρίς δέσμευση διάρκειας. Κι αφού όλα είναι ήδη στο όνομά σου, συνεχίζεις με όποιον θέλεις.',
+  },
+  {
+    q: 'Έχω ήδη site. Πρέπει να φτιάξω καινούριο;',
+    a: 'Όχι απαραίτητα. Ξεκινάμε με έναν έλεγχο σε ταχύτητα, SEO και διαδρομή αγοράς, και σου λέμε τι φταίει και τι αξίζει να διορθωθεί. Συχνά δεν χρειάζεσαι καινούριο site, χρειάζεσαι το σωστό χέρι στο υπάρχον.',
+  },
+  {
+    q: 'Θα μπορώ να αλλάζω μόνος μου προϊόντα και κείμενα;',
+    a: 'Ναι. Κάθε site παραδίδεται με εύχρηστο σύστημα διαχείρισης και θα σου δείξουμε πώς να αλλάζεις προϊόντα, τιμές και κείμενα μόνος σου. Κι αν κολλήσεις, είμαστε ένα μήνυμα μακριά.',
+  },
+  {
+    q: 'Εγγυάστε θέσεις στη Google ή πωλήσεις;',
+    a: 'Όχι, και να προσέχεις όποιον το κάνει: κανείς δεν ελέγχει τη Google ή την αγορά. Αυτό που αναλαμβάνουμε είναι όσα ελέγχονται: γρήγορο site, σωστή τεχνική βάση, καθαρή διαδρομή αγοράς και μετρήσεις που βλέπεις κι εσύ. Πάνω σε αυτά χτίζονται τα αποτελέσματα.',
+  },
+  {
+    q: 'Με ποια τεχνολογία δουλεύετε;',
+    a: 'Με WordPress, WooCommerce, CS-Cart, Astro, React και Node.js. Αλλά το εργαλείο δεν κάνει τη δουλειά, ο τρόπος που το χρησιμοποιείς ναι. Γι’ αυτό διαλέγουμε ό,τι ταιριάζει στο δικό σου έργο, όχι ό,τι μας βολεύει.',
+  },
+  {
+    q: 'Δουλεύετε πανελλαδικά;',
+    a: 'Ναι. Δουλεύουμε με επιχειρήσεις σε όλη την Ελλάδα και τα περισσότερα projects τρέχουν εξ ολοκλήρου online: κλήσεις, preview links, καθημερινή επικοινωνία.',
+  },
+];
+
+const ARROW =
+  '<path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>';
+const CHECK =
+  '<circle cx="12" cy="12" r="9.2"/><path d="M8.2 12.4l2.6 2.6 5-5.2"/>';
+const STAR =
+  'M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z';
+---
+
+<HomeHero />
+
+<!-- ═══════════════════════════════════════════════
+     1. ΤΙ ΚΕΡΔΙΖΕΙΣ
+     ═══════════════════════════════════════════════ -->
+<section class="hv hv-gains" aria-labelledby="hv-gains-title">
+  <div class="container">
+    <header class="hv-head reveal">
+      <span class="hv-eyebrow">Τι κερδίζεις</span>
+      <h2 id="hv-gains-title" class="hv-title">Αυτό που μένει στο τέλος δεν είναι ο κώδικας.</h2>
+      <p class="hv-lead">
+        Είναι όσα αλλάζουν στη δουλειά σου από τη μέρα που θα βγει live. Ξεκινάμε από εκεί και
+        δουλεύουμε ανάποδα: πρώτα τι θες να κερδίσεις, μετά με ποια εργαλεία.
+      </p>
+    </header>
+
+    <div class="hv-gains__grid">
+      {gains.map((g, i) => (
+        <div class="reveal" style={`transition-delay: ${(i % 3) * 0.08}s`}>
+          <article class="hv-gain">
+            <p class="hv-gain__pain">
+              <span class="hv-gain__dot" aria-hidden="true"></span>
+              <span class="sr-only">Αντί για: </span>
+              <s>{g.pain}</s>
+            </p>
+            <span class="hv-gain__icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" set:html={g.icon} />
+            </span>
+            <h3>{g.title}</h3>
+            <p class="hv-gain__text">{g.text}</p>
+            <a class="hv-gain__how" href={g.href}>
+              <span class="hv-gain__how-label">Πώς:</span>
+              {g.how}
+              <svg width="14" height="14" viewBox="0 0 16 16" fill="none" aria-hidden="true" set:html={ARROW} />
+            </a>
+          </article>
+        </div>
+      ))}
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════
+     2. ΤΙ ΣΟΥ ΚΟΣΤΙΖΕΙ ΣΗΜΕΡΑ (+ calculator)
+     ═══════════════════════════════════════════════ -->
+<section class="hv hv-stakes on-dark" aria-labelledby="hv-stakes-title">
+  <div class="hv-stakes__bg" aria-hidden="true"></div>
+  <div class="container">
+    <header class="hv-head reveal">
+      <span class="hv-eyebrow">Τι σου κοστίζει σήμερα</span>
+      <h2 id="hv-stakes-title" class="hv-title">
+        Ένα site που δεν δουλεύει δεν είναι ουδέτερο. Σου κοστίζει κάθε μέρα.
+      </h2>
+      <p class="hv-lead">
+        Δεν το βλέπεις σε κανέναν λογαριασμό. Το βλέπεις στα καλάθια που δεν ολοκληρώνονται, στα
+        ραντεβού που δεν κλείνονται και στους πελάτες που πάνε αλλού χωρίς να σου πουν γιατί.
+      </p>
+    </header>
+
+    <ul class="hv-stats">
+      {stakes.map((s, i) => (
+        <li class="hv-stat reveal" style={`transition-delay: ${i * 0.1}s`}>
+          <p class="hv-stat__value">{s.value}</p>
+          <p class="hv-stat__label">{s.label}</p>
+          <p class="hv-stat__source">
+            Πηγή: <a href={s.href} target="_blank" rel="noopener">{s.source}</a>
+          </p>
+        </li>
+      ))}
+    </ul>
+
+    <div class="hv-stakes__bottom">
+      <div class="hv-calc reveal" role="group" aria-labelledby="hv-calc-title" data-calc>
+        <h3 id="hv-calc-title">Πόσο αξίζει για σένα λίγο καλύτερο site;</h3>
+        <p class="hv-calc__intro">Βάλε τα δικά σου νούμερα.</p>
+
+        <div class="hv-calc__fields">
+          <label class="hv-field">
+            <span>Επισκέψεις τον μήνα</span>
+            <input type="number" inputmode="numeric" min="0" step="100" value={calc.visits} data-calc-visits />
+          </label>
+          <label class="hv-field">
+            <span>Μέση αξία παραγγελίας ή πελάτη</span>
+            <span class="hv-field__affix">
+              <input type="number" inputmode="numeric" min="0" step="5" value={calc.value} data-calc-value />
+              <span aria-hidden="true">€</span>
+            </span>
+          </label>
+          <label class="hv-field hv-field--range">
+            <span>
+              Επιπλέον πελάτες ανά 100 επισκέψεις: <strong data-calc-uplift-out>{calcInitial.uplift}</strong>
+              <em>(1 ακόμα κάθε <span data-calc-every>{calcInitial.every}</span> επισκέψεις)</em>
+            </span>
+            <input
+              type="range"
+              min="0.25"
+              max="2"
+              step="0.25"
+              value={calc.uplift}
+              style={`--p: ${calcInitial.fill}`}
+              data-calc-uplift
+            />
+          </label>
+        </div>
+
+        <div class="hv-calc__result" aria-live="polite">
+          <div><output data-calc-extra>{calcInitial.extra}</output><span>πελάτες τον μήνα</span></div>
+          <div><output data-calc-month>{calcInitial.month}</output><span>τον μήνα</span></div>
+          <div><output data-calc-year>{calcInitial.year}</output><span>τον χρόνο</span></div>
+        </div>
+
+        <p class="hv-calc__note">
+          Απλή αριθμητική με τα δικά σου νούμερα, όχι υπόσχεση. Δείχνει πόσο μεγάλο είναι το παιχνίδι.
+        </p>
+      </div>
+
+      <div class="hv-stakes__cta reveal">
+        <p class="hv-stakes__good">
+          Τα καλά νέα: τα περισσότερα από αυτά είναι θέμα σχεδιασμού, όχι τύχης. Άρα διορθώνονται.
+        </p>
+        <a href="/contact" class="hv-btn hv-btn--light">
+          Στείλε μας το link σου
+          <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true" set:html={ARROW} />
+        </a>
+        <p class="hv-stakes__small">Θα σου πούμε τι σου κοστίζει πελάτες, χωρίς δέσμευση.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════
+     3. ΑΠΟ ΠΟΥ ΞΕΚΙΝΑΣ (tabs, χωρίς JS: όλα ανοιχτά)
+     ═══════════════════════════════════════════════ -->
+<section class="hv hv-paths" aria-labelledby="hv-paths-title" data-tabs>
+  <div class="container">
+    <header class="hv-head hv-head--center reveal">
+      <span class="hv-eyebrow">Από πού ξεκινάς</span>
+      <h2 id="hv-paths-title" class="hv-title">Πού βρίσκεσαι σήμερα;</h2>
+      <p class="hv-lead">
+        Διάλεξε. Θα δεις τι έχεις στο τέλος, πόσο παίρνει και ποιοι ξεκίνησαν από το ίδιο σημείο.
+      </p>
+    </header>
+
+    <div class="hv-paths__tabs reveal" role="tablist" aria-label="Από πού ξεκινάς">
+      {paths.map((p, i) => (
+        <button
+          type="button"
+          role="tab"
+          class="hv-tab"
+          id={`hv-tab-${p.id}`}
+          aria-controls={`hv-panel-${p.id}`}
+          aria-selected={i === 0 ? 'true' : 'false'}
+          tabindex={i === 0 ? 0 : -1}
+          data-tab
+        >
+          <span class="hv-tab__num" aria-hidden="true">{`0${i + 1}`}</span>
+          <span class="hv-tab__title">{p.tab}</span>
+          <span class="hv-tab__sub">{p.sub}</span>
+        </button>
+      ))}
+    </div>
+
+    {paths.map((p) => (
+      <div class="hv-panel" role="tabpanel" id={`hv-panel-${p.id}`} aria-labelledby={`hv-tab-${p.id}`} data-panel>
+        <div class="hv-panel__main">
+          <p class="hv-panel__kicker">{p.tab}</p>
+          <h3>{p.title}</h3>
+          <p class="hv-overline">Τι έχεις στο τέλος</p>
+          <ul class="hv-checks">
+            {p.gets.map((g) => (
+              <li>
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" set:html={CHECK} />
+                <span>{g}</span>
+              </li>
+            ))}
+          </ul>
+          <p class="hv-panel__time">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="8.5"/><path d="M12 7.2V12l3.1 2.1"/></svg>
+            {p.time}
+          </p>
+          <a href="/contact" class="hv-btn hv-btn--primary">
+            {p.cta}
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true" set:html={ARROW} />
+          </a>
+        </div>
+
+        <aside class="hv-panel__cases" aria-label="Επιχειρήσεις που ξεκίνησαν από εδώ">
+          <p class="hv-overline">Ξεκίνησαν από εδώ</p>
+          {p.cases.map((slug) => {
+            const c = caseBySlug[slug];
+            return c ? (
+              <a class="hv-mini" href={`/portfolio/${c.slug}`}>
+                <img src={c.img} alt="" width="1200" height="900" loading="lazy" decoding="async" />
+                <span class="hv-mini__body">
+                  <strong>{c.name}</strong>
+                  <span>{c.gain}</span>
+                </span>
+                <svg class="hv-mini__arrow" width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true" set:html={ARROW} />
+              </a>
+            ) : null;
+          })}
+        </aside>
+      </div>
+    ))}
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════
+     4. ΠΡΙΝ → ΜΕΤΑ (ένας πελάτης τη φορά, χωρίς JS: όλοι ανοιχτοί)
+     ═══════════════════════════════════════════════ -->
+<section class="hv hv-stories" aria-labelledby="hv-stories-title" data-tabs>
+  <div class="container">
+    <header class="hv-head reveal">
+      <span class="hv-eyebrow">Πριν και μετά</span>
+      <h2 id="hv-stories-title" class="hv-title">Τι άλλαξε για επιχειρήσεις σαν τη δική σου.</h2>
+      <p class="hv-lead">
+        Χωρίς φουσκωμένα νούμερα: τι υπήρχε πριν, τι υπάρχει τώρα και τι κέρδισε η κάθε επιχείρηση.
+      </p>
+    </header>
+
+    <div class="hv-cases__nav reveal" role="tablist" aria-label="Επιχειρήσεις">
+      {cases.map((c, i) => (
+        <button
+          type="button"
+          role="tab"
+          class="hv-case-tab"
+          id={`hv-case-tab-${c.slug}`}
+          aria-controls={`hv-case-${c.slug}`}
+          aria-selected={i === 0 ? 'true' : 'false'}
+          tabindex={i === 0 ? 0 : -1}
+          data-tab
+        >
+          <span class="hv-case-tab__name">{c.name}</span>
+          <span class="hv-case-tab__gain">{c.gain}</span>
+        </button>
+      ))}
+    </div>
+
+    {cases.map((c) => (
+      <article
+        class="hv-case"
+        role="tabpanel"
+        id={`hv-case-${c.slug}`}
+        aria-labelledby={`hv-case-tab-${c.slug}`}
+        data-panel
+      >
+        <a class="hv-frame" href={`/portfolio/${c.slug}`} tabindex="-1" aria-hidden="true">
+          <span class="hv-frame__bar">
+            <span class="hv-frame__dots"><i></i><i></i><i></i></span>
+            <span class="hv-frame__url">{c.domain}</span>
+          </span>
+          <span class="hv-frame__screen">
+            <img src={c.img} alt="" width="1200" height="900" loading="lazy" decoding="async" />
+          </span>
+        </a>
+
+        <div class="hv-case__body">
+          <p class="hv-case__meta">{c.industry}</p>
+          <h3>{c.name}</h3>
+
+          <div class="hv-case__ba">
+            <div class="hv-case__row hv-case__row--before">
+              <span class="hv-case__label">Πριν</span>
+              <p>{c.before}</p>
+            </div>
+            <div class="hv-case__row hv-case__row--after">
+              <span class="hv-case__label">Μετά</span>
+              <p>{c.after}</p>
+            </div>
+          </div>
+
+          <p class="hv-case__gain">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" set:html={CHECK} />
+            {c.gain}
+          </p>
+
+          {c.quote ? (
+            <blockquote class="hv-case__quote">
+              <p>“{c.quote.text}”</p>
+              <footer>{c.quote.author}{c.quote.role ? `, ${c.quote.role}` : ''}</footer>
+            </blockquote>
+          ) : (
+            <blockquote class="hv-case__quote ph">
+              <p>{c.ask}</p>
+            </blockquote>
+          )}
+
+          <a class="hv-link" href={`/portfolio/${c.slug}`}>
+            Δες όλη την ιστορία
+            <svg width="14" height="14" viewBox="0 0 16 16" fill="none" aria-hidden="true" set:html={ARROW} />
+          </a>
+        </div>
+      </article>
+    ))}
+
+    <div class="hv-stories__more reveal">
+      <a href="/portfolio" class="hv-btn hv-btn--outline">
+        Όλα τα projects
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true" set:html={ARROW} />
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════
+     5. ΚΡΙΤΙΚΕΣ GOOGLE (placeholders μέχρι να μπουν οι πραγματικές)
+     ═══════════════════════════════════════════════ -->
+<section class="hv hv-reviews" aria-labelledby="hv-reviews-title">
+  <div class="container">
+    <div class="hv-reviews__top reveal">
+      <div>
+        <span class="hv-eyebrow">Κριτικές</span>
+        <h2 id="hv-reviews-title" class="hv-title hv-title--sm">Τι λένε όσοι δούλεψαν μαζί μας.</h2>
+      </div>
+
+      <div class="hv-google">
+        <p class="hv-google__rating">
+          <span class:list={[{ ph: !googleReviews.rating }]}>{googleReviews.rating || '[Βαθμολογία, π.χ. 4,9]'}</span>
+        </p>
+        <span class="hv-stars" aria-hidden="true">
+          {Array.from({ length: 5 }).map(() => (
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d={STAR} /></svg>
+          ))}
+        </span>
+        <p class="hv-google__count">
+          <span class:list={[{ ph: !googleReviews.count }]}>
+            {googleReviews.count ? `${googleReviews.count} κριτικές` : '[Πλήθος] κριτικές'}
+          </span>
+          στο Google
+        </p>
+        {googleReviews.profileUrl ? (
+          <a class="hv-link" href={googleReviews.profileUrl} target="_blank" rel="noopener">
+            Δες τις όλες στο Google
+            <svg width="14" height="14" viewBox="0 0 16 16" fill="none" aria-hidden="true" set:html={ARROW} />
+          </a>
+        ) : (
+          <span class="hv-link ph">[Link του Google Business Profile]</span>
+        )}
+      </div>
+    </div>
+
+    <div class="hv-reviews__grid">
+      {googleReviews.items.map((r, i) => (
+        <figure class="hv-review reveal" style={`transition-delay: ${i * 0.08}s`}>
+          <span class="hv-stars" aria-hidden="true">
+            {Array.from({ length: 5 }).map(() => (
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor"><path d={STAR} /></svg>
+            ))}
+          </span>
+          <blockquote class:list={[{ ph: !r.text }]}>{r.text || LOREM}</blockquote>
+          <figcaption>
+            <span class="hv-review__avatar" aria-hidden="true">{r.author ? r.author.charAt(0) : '?'}</span>
+            <span>
+              <strong class:list={[{ ph: !r.author }]}>{r.author || '[Όνομα όπως εμφανίζεται στο Google]'}</strong>
+              <span class:list={[{ ph: !r.when }]}>{r.when || '[πότε, π.χ. πριν από 2 μήνες]'}</span>
+            </span>
+          </figcaption>
+        </figure>
+      ))}
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════
+     6. ΟΜΑΔΑ + ΟΙ ΔΕΣΜΕΥΣΕΙΣ ΜΑΣ
+     ═══════════════════════════════════════════════ -->
+<section class="hv hv-promise" aria-labelledby="hv-promise-title">
+  <div class="container">
+    <header class="hv-head reveal">
+      <span class="hv-eyebrow">Οι όροι μας</span>
+      <h2 id="hv-promise-title" class="hv-title">
+        Γραμμένα από πριν, για να μη χρειαστεί να τα συζητήσουμε μετά.
+      </h2>
+    </header>
+
+    <div class="hv-promise__layout">
+      <figure class="hv-team reveal">
+        {teamPhotoExists ? (
+          <img src={TEAM_PHOTO} alt="Η ομάδα της phpixel" width="1600" height="1200" loading="lazy" decoding="async" />
+        ) : (
+          <div class="hv-team__ph ph">
+            <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 8.5h3l1.6-2.3h6.8L17 8.5h3v10.3H4z"/><circle cx="12" cy="13.3" r="3.4"/></svg>
+            <p>
+              <strong>[Φωτογραφία της ομάδας]</strong>
+              Μία πραγματική φωτογραφία, όχι stock: οριζόντια 4:3, περίπου 1600×1200, κατά προτίμηση
+              στον χώρο που δουλεύετε. Αποθήκευσέ τη ως <code>public/images/team.webp</code> και θα
+              εμφανιστεί εδώ αυτόματα.
+            </p>
+          </div>
+        )}
+        <figcaption>
+          <strong>Με ποιους θα μιλάς</strong>
+          <span>
+            Μια μικρή ομάδα με 10+ χρόνια στο e-commerce. Οι ίδιοι άνθρωποι από την πρώτη κουβέντα
+            μέχρι μετά το launch.
+          </span>
+          <a href="/about" class="hv-link">
+            Γνώρισέ μας
+            <svg width="14" height="14" viewBox="0 0 16 16" fill="none" aria-hidden="true" set:html={ARROW} />
+          </a>
+        </figcaption>
+      </figure>
+
+      <div class="hv-terms reveal" style="transition-delay: 0.1s">
+        <p class="hv-terms__head">Ισχύει για κάθε συνεργασία</p>
+        <ol class="hv-terms__list">
+          {promises.map((p, i) => (
+            <li>
+              <span class="hv-terms__num" aria-hidden="true">{`0${i + 1}`}</span>
+              <div>
+                <h3>{p.title}</h3>
+                <p>{p.text}</p>
+              </div>
+            </li>
+          ))}
+        </ol>
+        <div class="hv-terms__sign">
+          <span>Με την υπογραφή μας,</span>
+          <Logo class="hv-terms__logo" decorative loading="lazy" />
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════
+     7. ΠΩΣ ΞΕΚΙΝΑΜΕ
+     ═══════════════════════════════════════════════ -->
+<section class="hv hv-plan" aria-labelledby="hv-plan-title">
+  <div class="container">
+    <header class="hv-head hv-head--center reveal">
+      <span class="hv-eyebrow">Πώς ξεκινάμε</span>
+      <h2 id="hv-plan-title" class="hv-title">Τρία βήματα μέχρι να δουλεύει για σένα.</h2>
+    </header>
+
+    <ol class="hv-plan__steps">
+      {steps.map((s, i) => (
+        <li class="hv-step reveal" style={`transition-delay: ${i * 0.1}s`}>
+          <span class="hv-step__num" aria-hidden="true">{i + 1}</span>
+          <h3>{s.title}</h3>
+          <p>{s.text}</p>
+        </li>
+      ))}
+    </ol>
+
+    <div class="hv-plan__cta reveal">
+      <a href="/contact" class="hv-btn hv-btn--primary hv-btn--lg">
+        Πες μας για το project σου
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true" set:html={ARROW} />
+      </a>
+      <a href="/how-we-work" class="hv-link">
+        Δες αναλυτικά πώς δουλεύουμε
+        <svg width="14" height="14" viewBox="0 0 16 16" fill="none" aria-hidden="true" set:html={ARROW} />
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════
+     8. FAQ (με FAQPage schema)
+     ═══════════════════════════════════════════════ -->
+<FaqSection items={faqItems} label="Συχνές ερωτήσεις" title="Ό,τι θα ρωτούσες πριν ξεκινήσουμε." />
+
+<!-- Calculator και tabs. Vanilla JS, μηδέν dependencies.
+     Χωρίς JS: το calculator δείχνει το παράδειγμα του build και όλα τα
+     panels των tabs είναι ανοιχτά, το ένα κάτω από το άλλο. -->
+<script is:inline>
+  (() => {
+    const nf0 = new Intl.NumberFormat('el-GR', { maximumFractionDigits: 0 });
+    const nf1 = new Intl.NumberFormat('el-GR', { maximumFractionDigits: 1 });
+    const nf2 = new Intl.NumberFormat('el-GR', { maximumFractionDigits: 2 });
+
+    function initCalc(root) {
+      const $ = (s) => root.querySelector(s);
+      const visits = $('[data-calc-visits]');
+      const value = $('[data-calc-value]');
+      const uplift = $('[data-calc-uplift]');
+      const num = (el) => Math.max(0, parseFloat(String(el.value).replace(',', '.')) || 0);
+
+      function update() {
+        const u = num(uplift);
+        const extra = (num(visits) * u) / 100;
+        const month = extra * num(value);
+        $('[data-calc-uplift-out]').textContent = '+' + nf2.format(u);
+        $('[data-calc-every]').textContent = nf0.format(u ? 100 / u : 0);
+        $('[data-calc-extra]').textContent = '+' + (extra < 10 ? nf1 : nf0).format(extra);
+        $('[data-calc-month]').textContent = nf0.format(month) + ' €';
+        $('[data-calc-year]').textContent = nf0.format(month * 12) + ' €';
+        const min = parseFloat(uplift.min), max = parseFloat(uplift.max);
+        uplift.style.setProperty('--p', ((u - min) / (max - min)) * 100 + '%');
+      }
+
+      [visits, value, uplift].forEach((el) => el.addEventListener('input', update));
+      update();
+    }
+
+    // Tabs κατά WAI-ARIA: βελάκια, Home/End, ένα tab στη σειρά του Tab.
+    // Χρησιμοποιείται από το «Από πού ξεκινάς» και από το «Πριν και μετά».
+    function initTabs(root) {
+      const tabs = [].slice.call(root.querySelectorAll('[data-tab]'));
+      const panels = [].slice.call(root.querySelectorAll('[data-panel]'));
+      if (!tabs.length || tabs.length !== panels.length) return;
+      root.classList.add('is-enhanced');
+
+      function select(i, focus) {
+        tabs.forEach((t, k) => {
+          t.setAttribute('aria-selected', String(k === i));
+          t.tabIndex = k === i ? 0 : -1;
+        });
+        panels.forEach((p, k) => { p.hidden = k !== i; });
+        if (focus) {
+          tabs[i].focus();
+          // Στο κινητό η σειρά με τα ονόματα σκρολάρει οριζόντια.
+          tabs[i].scrollIntoView({ block: 'nearest', inline: 'nearest' });
+        }
+      }
+
+      tabs.forEach((t, i) => {
+        t.addEventListener('click', () => select(i));
+        t.addEventListener('keydown', (e) => {
+          const n = tabs.length;
+          const j = { ArrowRight: (i + 1) % n, ArrowDown: (i + 1) % n, ArrowLeft: (i - 1 + n) % n, ArrowUp: (i - 1 + n) % n, Home: 0, End: n - 1 }[e.key];
+          if (j === undefined) return;
+          e.preventDefault();
+          select(j, true);
+        });
+      });
+      select(0);
+    }
+
+    // Με το ClientRouter το astro:page-load πυροδοτείται και στο πρώτο load,
+    // οπότε κάθε root σημαδεύεται για να μη δεθούν listeners δύο φορές.
+    function once(selector, fn) {
+      document.querySelectorAll(selector).forEach((root) => {
+        if (root.hasAttribute('data-hv-ready')) return;
+        root.setAttribute('data-hv-ready', '');
+        fn(root);
+      });
+    }
+
+    function init() {
+      once('[data-calc]', initCalc);
+      once('[data-tabs]', initTabs);
+    }
+
+    init();
+    document.addEventListener('astro:page-load', init);
+  })();
+</script>
+
+<style>
+  /* ═══════════════════════════════════════════
+     ΚΟΙΝΑ
+     ═══════════════════════════════════════════ */
+
+  .hv {
+    position: relative;
+    padding: clamp(4.5rem, 9vw, 7.5rem) 0;
+  }
+
+  .hv-head {
+    max-width: 780px;
+    margin-bottom: clamp(2.5rem, 5vw, 3.75rem);
+  }
+
+  .hv-head--center {
+    margin-inline: auto;
+    text-align: center;
+  }
+
+  .hv-eyebrow {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.6rem;
+    font-size: 0.75rem;
+    font-weight: 700;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--accent-blue);
+    margin-bottom: 1rem;
+  }
+
+  .hv-eyebrow::before {
+    content: '';
+    width: 18px;
+    height: 2px;
+    border-radius: 2px;
+    background: currentColor;
+  }
+
+  .hv-title {
+    font-size: clamp(2rem, 4.4vw, 3.25rem);
+    font-weight: 800;
+    letter-spacing: -0.035em;
+    line-height: 1.06;
+    color: var(--theme-on-bg);
+    text-wrap: balance;
+  }
+
+  .hv-title--sm {
+    font-size: clamp(1.75rem, 3.2vw, 2.4rem);
+  }
+
+  .hv-lead {
+    margin-top: 1.1rem;
+    max-width: 58ch;
+    font-size: clamp(1rem, 1.25vw, 1.125rem);
+    line-height: 1.65;
+    color: var(--theme-on-bg-muted);
+    text-wrap: pretty;
+  }
+
+  .hv-head--center .hv-lead {
+    margin-inline: auto;
+  }
+
+  .hv-overline {
+    font-size: 0.72rem;
+    font-weight: 700;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--ink-500);
+    margin-bottom: 0.85rem;
+  }
+
+  .sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    margin: -1px;
+    padding: 0;
+    overflow: hidden;
+    clip-path: inset(50%);
+    white-space: nowrap;
+    border: 0;
+  }
+
+  /* Κουμπιά & links */
+
+  .hv-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.55rem;
+    padding: 0.9rem 1.6rem;
+    border: 1.5px solid transparent;
+    border-radius: 10px;
+    font-weight: 600;
+    font-size: 0.95rem;
+    line-height: 1.2;
+    transition: background 0.25s ease, color 0.25s ease, border-color 0.25s ease,
+      transform 0.25s ease, box-shadow 0.25s ease;
+  }
+
+  .hv-btn svg,
+  .hv-link svg {
+    flex: none;
+    transition: transform 0.25s ease;
+  }
+
+  .hv-btn:hover svg,
+  .hv-link:hover svg {
+    transform: translateX(3px);
+  }
+
+  .hv-btn--primary {
+    background: var(--theme-primary);
+    color: var(--theme-on-primary);
+  }
+
+  .hv-btn--primary:hover {
+    background: var(--theme-primary-hover);
+    transform: translateY(-1px);
+    box-shadow: 0 12px 26px -14px rgba(75, 76, 124, 0.7);
+  }
+
+  .hv-btn--light {
+    background: #fff;
+    color: var(--ink-900);
+  }
+
+  .hv-btn--light:hover {
+    background: var(--purple-100);
+    transform: translateY(-1px);
+  }
+
+  .hv-btn--outline {
+    border-color: var(--theme-surface-2);
+    color: var(--theme-on-bg);
+    background: #fff;
+  }
+
+  .hv-btn--outline:hover {
+    border-color: var(--theme-primary);
+    background: var(--theme-primary);
+    color: var(--theme-on-primary);
+  }
+
+  .hv-btn--lg {
+    padding: 1.05rem 2rem;
+    font-size: 1rem;
+  }
+
+  .hv-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    font-weight: 600;
+    font-size: 0.92rem;
+    color: var(--theme-primary);
+    text-decoration: underline;
+    text-decoration-color: color-mix(in srgb, var(--theme-primary) 35%, transparent);
+    text-underline-offset: 4px;
+    transition: text-decoration-color 0.25s ease;
+  }
+
+  .hv-link:hover {
+    text-decoration-color: currentColor;
+  }
+
+  .hv-btn:focus-visible,
+  .hv-link:focus-visible,
+  .hv-tab:focus-visible,
+  .hv-mini:focus-visible,
+  .hv-gain__how:focus-visible {
+    outline: 2px solid var(--theme-brand);
+    outline-offset: 3px;
+  }
+
+  /* Placeholders: διακεκομμένο κεχριμπαρί περίγραμμα, για να μη μπερδευτούν
+     ποτέ με τελικό περιεχόμενο. */
+  .ph {
+    outline: 1.5px dashed #c9962f;
+    outline-offset: 3px;
+    background-color: rgba(246, 200, 107, 0.16);
+    border-radius: 6px;
+  }
+
+  /* ═══════════════════════════════════════════
+     1. ΤΙ ΚΕΡΔΙΖΕΙΣ
+     ═══════════════════════════════════════════ */
+
+  .hv-gains {
+    padding-top: clamp(3.5rem, 6vw, 5rem);
+  }
+
+  .hv-gains__grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 1rem;
+  }
+
+  .hv-gain {
+    position: relative;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    padding: 1.6rem 1.6rem 1.35rem;
+    background: #fff;
+    border: 1px solid var(--theme-surface-2);
+    border-radius: 18px;
+    transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
+  }
+
+  .hv-gain:hover {
+    transform: translateY(-3px);
+    border-color: var(--purple-200);
+    box-shadow: 0 22px 44px -28px rgba(57, 58, 91, 0.45);
+  }
+
+  .hv-gain__pain {
+    display: flex;
+    align-items: center;
+    gap: 0.55rem;
+    margin-bottom: 1.4rem;
+    font-size: 0.8rem;
+    font-weight: 600;
+    color: var(--ink-500);
+  }
+
+  .hv-gain__dot {
+    flex: none;
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: var(--accent-rose);
+    transition: background 0.4s ease 0.75s, box-shadow 0.4s ease 0.75s;
+  }
+
+  /* Ο πόνος «σβήνεται» μόλις η κάρτα μπει στην οθόνη: η γραμμή τραβιέται
+     από αριστερά και η κουκκίδα γίνεται πράσινη, όπως στο panel του hero. */
+  .hv-gain__pain s {
+    position: relative;
+    text-decoration: none;
+  }
+
+  .hv-gain__pain s::after {
+    content: '';
+    position: absolute;
+    left: -2px;
+    right: -2px;
+    top: 54%;
+    height: 1.5px;
+    border-radius: 2px;
+    background: var(--accent-rose);
+    transform: scaleX(0);
+    transform-origin: left center;
+    transition: transform 0.6s cubic-bezier(0.6, 0, 0.2, 1) 0.3s;
+  }
+
+  :global(html:not(.js-reveal)) .hv-gain__pain s::after,
+  .is-visible .hv-gain__pain s::after {
+    transform: scaleX(1);
+  }
+
+  :global(html:not(.js-reveal)) .hv-gain__dot,
+  .is-visible .hv-gain__dot {
+    background: var(--accent-emerald);
+    box-shadow: 0 0 0 3px color-mix(in srgb, var(--accent-emerald) 20%, transparent);
+  }
+
+  .hv-gain__icon {
+    display: grid;
+    place-items: center;
+    width: 44px;
+    height: 44px;
+    margin-bottom: 1rem;
+    border-radius: 12px;
+    background: var(--purple-50);
+    border: 1px solid var(--purple-100);
+    color: var(--purple-600);
+  }
+
+  .hv-gain__icon svg {
+    width: 22px;
+    height: 22px;
+  }
+
+  .hv-gain h3 {
+    margin-bottom: 0.55rem;
+    font-size: 1.3rem;
+    letter-spacing: -0.02em;
+    line-height: 1.2;
+    color: var(--ink-900);
+  }
+
+  .hv-gain__text {
+    flex: 1;
+    font-size: 0.93rem;
+    line-height: 1.62;
+    color: var(--theme-on-bg-muted);
+  }
+
+  /* Inline ροή: αν το όνομα της υπηρεσίας σπάσει σε δύο γραμμές, το βελάκι
+     ακολουθεί το κείμενο αντί να μένει μόνο του στην άκρη. */
+  .hv-gain__how {
+    display: block;
+    margin-top: 1.25rem;
+    padding-top: 1rem;
+    border-top: 1px dashed var(--theme-surface-2);
+    font-size: 0.86rem;
+    font-weight: 600;
+    color: var(--theme-primary);
+  }
+
+  /* Όλη η κάρτα είναι clickable, με ένα μόνο link στο DOM. */
+  .hv-gain__how::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+  }
+
+  .hv-gain__how-label {
+    margin-right: 0.3rem;
+    font-weight: 500;
+    color: var(--ink-500);
+  }
+
+  .hv-gain__how svg {
+    display: inline-block;
+    margin-left: 0.3rem;
+    vertical-align: -2px;
+    transition: transform 0.25s ease;
+  }
+
+  .hv-gain:hover .hv-gain__how svg {
+    transform: translateX(3px);
+  }
+
+  /* ═══════════════════════════════════════════
+     2. ΤΙ ΣΟΥ ΚΟΣΤΙΖΕΙ ΣΗΜΕΡΑ
+     ═══════════════════════════════════════════ */
+
+  .hv-stakes {
+    isolation: isolate;
+    overflow: hidden;
+    color: #fff;
+    background: var(--ink-900);
+  }
+
+  .hv-stakes__bg {
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    background:
+      radial-gradient(55% 75% at 88% 8%, rgba(121, 123, 180, 0.38), transparent 62%),
+      radial-gradient(45% 65% at 0% 100%, rgba(32, 156, 213, 0.22), transparent 62%),
+      var(--gradient-hero);
+  }
+
+  .hv-stakes__bg::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background-image:
+      linear-gradient(rgba(255, 255, 255, 0.045) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(255, 255, 255, 0.045) 1px, transparent 1px);
+    background-size: 48px 48px;
+    -webkit-mask-image: radial-gradient(ellipse 80% 70% at 50% 0%, #000 25%, transparent 75%);
+    mask-image: radial-gradient(ellipse 80% 70% at 50% 0%, #000 25%, transparent 75%);
+  }
+
+  .hv-stakes .hv-title {
+    color: #fff;
+  }
+
+  .hv-stakes .hv-lead {
+    color: var(--ink-300);
+  }
+
+  .hv-stats {
+    list-style: none;
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: clamp(1rem, 3vw, 2.5rem);
+    margin: 0 0 clamp(3rem, 6vw, 4.5rem);
+    padding: 0;
+  }
+
+  .hv-stat {
+    padding-top: 1.5rem;
+    border-top: 1px solid rgba(255, 255, 255, 0.16);
+  }
+
+  .hv-stat__value {
+    margin-bottom: 0.8rem;
+    font-size: clamp(2.6rem, 5.4vw, 4rem);
+    font-weight: 800;
+    letter-spacing: -0.045em;
+    line-height: 1;
+    color: #fff;
+    background: linear-gradient(120deg, #fff 30%, var(--blue-300));
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+
+  .hv-stat__label {
+    max-width: 32ch;
+    font-size: 1rem;
+    line-height: 1.5;
+    color: #fff;
+  }
+
+  .hv-stat__source {
+    margin-top: 0.8rem;
+    font-size: 0.78rem;
+    color: var(--ink-300);
+  }
+
+  .hv-stat__source a {
+    color: inherit;
+    text-decoration: underline;
+    text-underline-offset: 3px;
+    text-decoration-color: rgba(255, 255, 255, 0.35);
+  }
+
+  .hv-stat__source a:hover {
+    color: #fff;
+  }
+
+  .hv-stakes__bottom {
+    display: grid;
+    grid-template-columns: minmax(0, 1.35fr) minmax(0, 1fr);
+    gap: clamp(2rem, 5vw, 4rem);
+    align-items: center;
+  }
+
+  /* Calculator */
+
+  .hv-calc {
+    padding: clamp(1.4rem, 3vw, 2rem);
+    background: rgba(255, 255, 255, 0.06);
+    border: 1px solid rgba(255, 255, 255, 0.13);
+    border-radius: 20px;
+    -webkit-backdrop-filter: blur(8px);
+    backdrop-filter: blur(8px);
+  }
+
+  .hv-calc h3 {
+    font-size: 1.25rem;
+    letter-spacing: -0.02em;
+    color: #fff;
+  }
+
+  .hv-calc__intro {
+    margin: 0.3rem 0 1.3rem;
+    font-size: 0.9rem;
+    color: var(--ink-300);
+  }
+
+  .hv-calc__fields {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+  }
+
+  .hv-field {
+    display: flex;
+    flex-direction: column;
+    gap: 0.45rem;
+    font-size: 0.82rem;
+    font-weight: 600;
+    line-height: 1.4;
+    color: var(--ink-200);
+  }
+
+  .hv-field strong {
+    color: #fff;
+  }
+
+  .hv-field em {
+    font-style: normal;
+    font-weight: 500;
+    color: var(--ink-300);
+  }
+
+  .hv-field--range {
+    grid-column: 1 / -1;
+  }
+
+  .hv-field input[type='number'] {
+    width: 100%;
+    padding: 0.7rem 0.85rem;
+    font: inherit;
+    font-size: 1.05rem;
+    font-weight: 700;
+    color: #fff;
+    background: rgba(255, 255, 255, 0.08);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 10px;
+    -moz-appearance: textfield;
+    appearance: textfield;
+  }
+
+  .hv-field input[type='number']::-webkit-outer-spin-button,
+  .hv-field input[type='number']::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+  }
+
+  .hv-field input:focus-visible {
+    outline: 2px solid var(--blue-300);
+    outline-offset: 2px;
+  }
+
+  .hv-field__affix {
+    position: relative;
+    display: block;
+  }
+
+  .hv-field__affix input {
+    padding-right: 2rem;
+  }
+
+  .hv-field__affix > span {
+    position: absolute;
+    top: 50%;
+    right: 0.85rem;
+    transform: translateY(-50%);
+    color: var(--ink-300);
+    pointer-events: none;
+  }
+
+  .hv-field input[type='range'] {
+    --p: 14%;
+    width: 100%;
+    height: 22px;
+    margin: 0.2rem 0 0;
+    background: transparent;
+    -webkit-appearance: none;
+    appearance: none;
+    cursor: pointer;
+  }
+
+  .hv-field input[type='range']::-webkit-slider-runnable-track {
+    height: 6px;
+    border-radius: 99px;
+    background: linear-gradient(to right, var(--blue-300) var(--p), rgba(255, 255, 255, 0.18) var(--p));
+  }
+
+  .hv-field input[type='range']::-moz-range-track {
+    height: 6px;
+    border-radius: 99px;
+    background: linear-gradient(to right, var(--blue-300) var(--p), rgba(255, 255, 255, 0.18) var(--p));
+  }
+
+  .hv-field input[type='range']::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    width: 20px;
+    height: 20px;
+    margin-top: -7px;
+    border-radius: 50%;
+    background: #fff;
+    border: 0;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.35), 0 0 0 4px rgba(131, 199, 231, 0.3);
+  }
+
+  .hv-field input[type='range']::-moz-range-thumb {
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    background: #fff;
+    border: 0;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.35), 0 0 0 4px rgba(131, 199, 231, 0.3);
+  }
+
+  .hv-calc__result {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 0.75rem;
+    margin-top: 1.4rem;
+    padding-top: 1.25rem;
+    border-top: 1px solid rgba(255, 255, 255, 0.13);
+  }
+
+  .hv-calc__result > div {
+    display: flex;
+    flex-direction: column;
+    gap: 0.15rem;
+    min-width: 0;
+  }
+
+  .hv-calc__result output {
+    font-size: clamp(1.3rem, 2.4vw, 1.75rem);
+    font-weight: 800;
+    letter-spacing: -0.03em;
+    line-height: 1.15;
+    color: #fff;
+    font-variant-numeric: tabular-nums;
+    white-space: nowrap;
+  }
+
+  .hv-calc__result > div:first-child output {
+    color: var(--blue-300);
+  }
+
+  .hv-calc__result span {
+    font-size: 0.78rem;
+    color: var(--ink-300);
+  }
+
+  .hv-calc__note {
+    margin-top: 1rem;
+    font-size: 0.78rem;
+    line-height: 1.5;
+    color: var(--ink-300);
+  }
+
+  .hv-stakes__good {
+    margin-bottom: 1.6rem;
+    font-size: clamp(1.3rem, 2.3vw, 1.7rem);
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    line-height: 1.3;
+    color: #fff;
+    text-wrap: balance;
+  }
+
+  .hv-stakes__small {
+    margin-top: 0.85rem;
+    font-size: 0.86rem;
+    color: var(--ink-300);
+  }
+
+  .hv-stakes .hv-btn--light:focus-visible,
+  .hv-stakes a:focus-visible {
+    outline-color: var(--blue-300);
+  }
+
+  /* ═══════════════════════════════════════════
+     3. ΑΠΟ ΠΟΥ ΞΕΚΙΝΑΣ
+     ═══════════════════════════════════════════ */
+
+  .hv-paths {
+    background: var(--theme-surface-1);
+  }
+
+  .hv-paths__tabs {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 0.75rem;
+    margin-bottom: 1rem;
+  }
+
+  /* Χωρίς JS τα tabs δεν κάνουν τίποτα: κρύβονται και φαίνονται όλα τα panels. */
+  .hv-paths:not(.is-enhanced) .hv-paths__tabs {
+    display: none;
+  }
+
+  .hv-paths:not(.is-enhanced) .hv-panel + .hv-panel {
+    margin-top: 1rem;
+  }
+
+  .hv-tab {
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr);
+    align-items: center;
+    column-gap: 0.9rem;
+    row-gap: 0.1rem;
+    padding: 1.1rem 1.25rem;
+    font: inherit;
+    text-align: left;
+    color: var(--theme-on-bg);
+    background: #fff;
+    border: 1.5px solid var(--theme-surface-2);
+    border-radius: 16px;
+    cursor: pointer;
+    transition: border-color 0.25s ease, box-shadow 0.25s ease, transform 0.25s ease;
+  }
+
+  .hv-tab:hover {
+    border-color: var(--purple-300);
+    transform: translateY(-1px);
+  }
+
+  .hv-tab[aria-selected='true'] {
+    border-color: var(--theme-primary);
+    box-shadow: 0 0 0 4px color-mix(in srgb, var(--theme-brand) 16%, transparent);
+  }
+
+  .hv-tab__num {
+    grid-row: span 2;
+    display: grid;
+    place-items: center;
+    width: 38px;
+    height: 38px;
+    border-radius: 10px;
+    font-size: 0.8rem;
+    font-weight: 800;
+    color: var(--ink-600);
+    background: var(--theme-surface-1);
+    transition: background 0.25s ease, color 0.25s ease;
+  }
+
+  .hv-tab[aria-selected='true'] .hv-tab__num {
+    color: #fff;
+    background: var(--theme-primary);
+  }
+
+  .hv-tab__title {
+    font-size: 1rem;
+    font-weight: 700;
+    letter-spacing: -0.01em;
+    line-height: 1.3;
+  }
+
+  .hv-tab__sub {
+    font-size: 0.82rem;
+    line-height: 1.35;
+    color: var(--ink-500);
+  }
+
+  .hv-panel {
+    display: grid;
+    grid-template-columns: minmax(0, 1.25fr) minmax(0, 1fr);
+    gap: clamp(1.75rem, 4vw, 3.5rem);
+    padding: clamp(1.5rem, 4vw, 2.75rem);
+    background: #fff;
+    border: 1px solid var(--theme-surface-2);
+    border-radius: 22px;
+  }
+
+  .hv-panel[hidden] {
+    display: none;
+  }
+
+  .hv-paths.is-enhanced .hv-panel:not([hidden]) {
+    animation: hv-panel-in 0.4s ease both;
+  }
+
+  @keyframes hv-panel-in {
+    from { opacity: 0; transform: translateY(8px); }
+    to { opacity: 1; transform: none; }
+  }
+
+  .hv-panel__kicker {
+    margin-bottom: 0.5rem;
+    font-size: 0.75rem;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--purple-700);
+  }
+
+  .hv-paths.is-enhanced .hv-panel__kicker {
+    display: none;
+  }
+
+  .hv-panel h3 {
+    margin-bottom: 1.5rem;
+    font-size: clamp(1.45rem, 2.6vw, 1.95rem);
+    letter-spacing: -0.03em;
+    line-height: 1.15;
+    text-wrap: balance;
+  }
+
+  .hv-checks {
+    list-style: none;
+    display: grid;
+    gap: 0.75rem;
+    margin: 0 0 1.5rem;
+    padding: 0;
+  }
+
+  .hv-checks li {
+    display: grid;
+    grid-template-columns: 22px minmax(0, 1fr);
+    gap: 0.7rem;
+    font-size: 0.97rem;
+    line-height: 1.5;
+    color: var(--ink-800);
+  }
+
+  .hv-checks svg {
+    width: 22px;
+    height: 22px;
+    color: var(--accent-emerald);
+  }
+
+  .hv-panel__time {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin-bottom: 1.6rem;
+    padding: 0.55rem 0.95rem;
+    font-size: 0.88rem;
+    font-weight: 600;
+    line-height: 1.35;
+    color: var(--ink-700);
+    background: var(--theme-surface-1);
+    border-radius: 99px;
+  }
+
+  .hv-panel__time svg {
+    flex: none;
+    width: 17px;
+    height: 17px;
+    color: var(--accent-blue);
+  }
+
+  .hv-panel__main .hv-btn {
+    display: flex;
+    width: fit-content;
+  }
+
+  .hv-panel__cases {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+  }
+
+  .hv-mini {
+    display: grid;
+    grid-template-columns: 104px minmax(0, 1fr) auto;
+    align-items: center;
+    gap: 0.95rem;
+    padding: 0.6rem 1rem 0.6rem 0.6rem;
+    background: var(--ink-50);
+    border: 1px solid var(--theme-surface-2);
+    border-radius: 14px;
+    transition: border-color 0.25s ease, background 0.25s ease, transform 0.25s ease;
+  }
+
+  .hv-mini:hover {
+    background: #fff;
+    border-color: var(--purple-300);
+    transform: translateX(3px);
+  }
+
+  .hv-mini img {
+    width: 104px;
+    height: 78px;
+    object-fit: cover;
+    object-position: top;
+    border-radius: 9px;
+    border: 1px solid var(--theme-surface-2);
+  }
+
+  .hv-mini__body strong {
+    display: block;
+    font-size: 0.95rem;
+    letter-spacing: -0.01em;
+  }
+
+  .hv-mini__body span {
+    display: block;
+    font-size: 0.83rem;
+    line-height: 1.4;
+    color: var(--ink-500);
+  }
+
+  .hv-mini__arrow {
+    color: var(--theme-primary);
+  }
+
+  /* ═══════════════════════════════════════════
+     4. ΠΡΙΝ → ΜΕΤΑ
+     ═══════════════════════════════════════════ */
+
+  .hv-cases__nav {
+    display: flex;
+    gap: 0.5rem;
+    margin-bottom: 1rem;
+    padding: 0.4rem;
+    overflow-x: auto;
+    background: var(--theme-surface-1);
+    border-radius: 16px;
+    scrollbar-width: none;
+  }
+
+  .hv-cases__nav::-webkit-scrollbar {
+    display: none;
+  }
+
+  .hv-stories:not(.is-enhanced) .hv-cases__nav {
+    display: none;
+  }
+
+  .hv-stories:not(.is-enhanced) .hv-case + .hv-case {
+    margin-top: 1rem;
+  }
+
+  /* Μοιράζονται το πλάτος. Στο κινητό κρατάνε ελάχιστο πλάτος και η σειρά
+     σκρολάρει οριζόντια. */
+  .hv-case-tab {
+    flex: 1 1 0;
+    min-width: 11.5rem;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.1rem;
+    padding: 0.7rem 1rem;
+    font: inherit;
+    text-align: left;
+    color: var(--ink-600);
+    background: transparent;
+    border: 0;
+    border-radius: 12px;
+    cursor: pointer;
+    transition: background 0.25s ease, color 0.25s ease, box-shadow 0.25s ease;
+  }
+
+  .hv-case-tab:hover {
+    color: var(--ink-900);
+    background: rgba(255, 255, 255, 0.6);
+  }
+
+  .hv-case-tab[aria-selected='true'] {
+    color: var(--ink-900);
+    background: #fff;
+    box-shadow: 0 1px 2px rgba(26, 29, 35, 0.06), 0 6px 16px -10px rgba(26, 29, 35, 0.25);
+  }
+
+  .hv-case-tab:focus-visible {
+    outline: 2px solid var(--theme-brand);
+    outline-offset: 2px;
+  }
+
+  .hv-case-tab__name {
+    font-size: 0.95rem;
+    font-weight: 700;
+    letter-spacing: -0.01em;
+  }
+
+  .hv-case-tab__gain {
+    font-size: 0.78rem;
+    color: var(--ink-500);
+  }
+
+  .hv-case {
+    display: grid;
+    grid-template-columns: minmax(0, 1.05fr) minmax(0, 1fr);
+    gap: clamp(1.75rem, 4vw, 3.5rem);
+    align-items: start;
+    padding: clamp(1.25rem, 3vw, 2rem);
+    background: #fff;
+    border: 1px solid var(--theme-surface-2);
+    border-radius: 22px;
+  }
+
+  .hv-case[hidden] {
+    display: none;
+  }
+
+  .hv-stories.is-enhanced .hv-case:not([hidden]) {
+    animation: hv-panel-in 0.4s ease both;
+  }
+
+  .hv-frame {
+    display: block;
+    overflow: hidden;
+    background: #fff;
+    border: 1px solid var(--theme-surface-2);
+    border-radius: 16px;
+    box-shadow: 0 34px 70px -44px rgba(26, 29, 35, 0.45), 0 12px 24px -20px rgba(26, 29, 35, 0.2);
+    transition: transform 0.4s ease, box-shadow 0.4s ease;
+  }
+
+  .hv-frame:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 40px 80px -44px rgba(26, 29, 35, 0.5), 0 14px 28px -20px rgba(26, 29, 35, 0.22);
+  }
+
+  .hv-frame__bar {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    height: 40px;
+    padding: 0 0.9rem;
+    background: var(--ink-50);
+    border-bottom: 1px solid var(--theme-surface-2);
+  }
+
+  .hv-frame__dots {
+    display: flex;
+    gap: 6px;
+  }
+
+  .hv-frame__dots i {
+    width: 9px;
+    height: 9px;
+    border-radius: 50%;
+    background: var(--ink-200);
+  }
+
+  .hv-frame__url {
+    flex: 1;
+    max-width: 260px;
+    margin-inline: auto;
+    padding: 0.2rem 0.9rem;
+    overflow: hidden;
+    font-size: 0.75rem;
+    font-weight: 600;
+    text-align: center;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    color: var(--ink-500);
+    background: #fff;
+    border: 1px solid var(--theme-surface-2);
+    border-radius: 99px;
+  }
+
+  .hv-frame__screen {
+    display: block;
+    aspect-ratio: 4 / 3;
+    background: var(--ink-100);
+  }
+
+  .hv-frame__screen img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: top;
+  }
+
+  .hv-case__meta {
+    margin-bottom: 0.3rem;
+    font-size: 0.74rem;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--ink-500);
+  }
+
+  .hv-case h3 {
+    margin-bottom: 1.1rem;
+    font-size: clamp(1.45rem, 2.4vw, 1.85rem);
+    letter-spacing: -0.03em;
+  }
+
+  /* Πριν / μετά ως δύο σειρές με ετικέτα αριστερά, ενωμένες σαν ένα μπλοκ. */
+  .hv-case__ba {
+    margin-bottom: 1.1rem;
+    overflow: hidden;
+    border: 1px solid var(--theme-surface-2);
+    border-radius: 14px;
+  }
+
+  .hv-case__row {
+    display: grid;
+    grid-template-columns: 4.25rem minmax(0, 1fr);
+    align-items: baseline;
+    gap: 0.75rem;
+    padding: 0.9rem 1.1rem;
+    font-size: 0.93rem;
+    line-height: 1.55;
+  }
+
+  .hv-case__row--before {
+    color: var(--ink-600);
+    background: color-mix(in srgb, var(--accent-rose) 5%, #fff);
+  }
+
+  .hv-case__row--after {
+    color: var(--ink-800);
+    background: color-mix(in srgb, var(--accent-emerald) 7%, #fff);
+    border-top: 1px solid var(--theme-surface-2);
+  }
+
+  .hv-case__label {
+    font-size: 0.7rem;
+    font-weight: 800;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+  }
+
+  .hv-case__row--before .hv-case__label {
+    color: var(--accent-rose);
+  }
+
+  .hv-case__row--after .hv-case__label {
+    color: #1f5f53;
+  }
+
+  .hv-case__gain {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin-bottom: 1rem;
+    font-size: 1rem;
+    font-weight: 700;
+    color: var(--ink-900);
+  }
+
+  .hv-case__gain svg {
+    flex: none;
+    color: var(--accent-emerald);
+  }
+
+  /* Το global blockquote (typography.css) βάζει σκούρα γραμμή και βάρος 500. */
+  .hv-case__quote {
+    margin: 0 0 1.1rem;
+    padding: 0.85rem 1.1rem;
+    font-size: 0.9rem;
+    font-weight: 400;
+    line-height: 1.6;
+    color: var(--ink-700);
+    background: var(--ink-50);
+    border-left: 3px solid var(--theme-brand);
+    border-radius: 0 12px 12px 0;
+  }
+
+  .hv-case__quote footer {
+    margin-top: 0.5rem;
+    font-size: 0.82rem;
+    font-weight: 700;
+    color: var(--ink-800);
+  }
+
+  .hv-case__quote.ph {
+    border-left-color: transparent;
+    border-radius: 12px;
+  }
+
+  .hv-stories__more {
+    display: flex;
+    justify-content: center;
+    margin-top: clamp(2rem, 4vw, 3rem);
+  }
+
+  /* ═══════════════════════════════════════════
+     5. ΚΡΙΤΙΚΕΣ
+     ═══════════════════════════════════════════ */
+
+  .hv-reviews {
+    background: var(--theme-surface-1);
+  }
+
+  .hv-reviews__top {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 1.5rem 3rem;
+    margin-bottom: clamp(2rem, 4vw, 2.75rem);
+  }
+
+  .hv-reviews__top .hv-title {
+    max-width: 16ch;
+  }
+
+  /* Η «ταμπέλα» του Google: βαθμός, αστέρια, πλήθος και link σε μία σειρά. */
+  .hv-google {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 0.6rem 1.1rem;
+    padding: 1rem 1.35rem;
+    background: #fff;
+    border: 1px solid var(--theme-surface-2);
+    border-radius: 16px;
+  }
+
+  .hv-google__rating {
+    font-size: 2.2rem;
+    font-weight: 800;
+    letter-spacing: -0.04em;
+    line-height: 1.1;
+  }
+
+  .hv-google__rating .ph {
+    font-size: 1rem;
+    letter-spacing: 0;
+  }
+
+  .hv-google__count {
+    font-size: 0.9rem;
+    color: var(--theme-on-bg-muted);
+  }
+
+  .hv-stars {
+    display: flex;
+    gap: 2px;
+    color: #c9962f;
+  }
+
+  .hv-reviews__grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 1rem;
+  }
+
+  .hv-review {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    height: 100%;
+    margin: 0;
+    padding: 1.4rem;
+    background: #fff;
+    border: 1px solid var(--theme-surface-2);
+    border-radius: 18px;
+  }
+
+  .hv-review blockquote {
+    flex: 1;
+    padding: 0;
+    border: 0;
+    font-weight: 400;
+    font-size: 0.92rem;
+    line-height: 1.65;
+    color: var(--ink-700);
+  }
+
+  .hv-review figcaption {
+    display: flex;
+    align-items: center;
+    gap: 0.7rem;
+    font-size: 0.8rem;
+    color: var(--ink-500);
+  }
+
+  .hv-review figcaption strong {
+    display: block;
+    font-size: 0.86rem;
+    color: var(--ink-800);
+  }
+
+  .hv-review figcaption > span:last-child {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.3rem;
+  }
+
+  .hv-review__avatar {
+    flex: none;
+    display: grid;
+    place-items: center;
+    width: 36px;
+    height: 36px;
+    font-size: 0.85rem;
+    font-weight: 700;
+    color: #fff;
+    background: var(--ink-800);
+    border-radius: 50%;
+  }
+
+  /* ═══════════════════════════════════════════
+     6. ΟΜΑΔΑ + ΔΕΣΜΕΥΣΕΙΣ
+     ═══════════════════════════════════════════ */
+
+  .hv-promise__layout {
+    display: grid;
+    grid-template-columns: minmax(0, 0.95fr) minmax(0, 1.2fr);
+    gap: clamp(1.5rem, 4vw, 3rem);
+    align-items: start;
+  }
+
+  .hv-team {
+    display: flex;
+    flex-direction: column;
+    gap: 1.25rem;
+    margin: 0;
+  }
+
+  .hv-team img,
+  .hv-team__ph {
+    width: 100%;
+    aspect-ratio: 4 / 3;
+    object-fit: cover;
+    border-radius: 20px;
+  }
+
+  .hv-team__ph {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 0.85rem;
+    padding: clamp(1.5rem, 4vw, 2.5rem);
+    text-align: center;
+    font-size: 0.88rem;
+    line-height: 1.6;
+    color: var(--ink-600);
+    background: repeating-linear-gradient(135deg, var(--ink-100) 0 12px, var(--ink-50) 12px 24px);
+    outline-offset: -1px;
+  }
+
+  .hv-team__ph strong {
+    display: block;
+    margin-bottom: 0.25rem;
+    color: var(--ink-800);
+  }
+
+  .hv-team__ph code {
+    font-size: 0.82rem;
+    padding: 0.1rem 0.35rem;
+    background: #fff;
+    border-radius: 5px;
+  }
+
+  .hv-team figcaption strong {
+    display: block;
+    margin-bottom: 0.3rem;
+    font-size: 1.15rem;
+    letter-spacing: -0.02em;
+  }
+
+  .hv-team figcaption > span {
+    display: block;
+    max-width: 46ch;
+    margin-bottom: 0.7rem;
+    font-size: 0.95rem;
+    line-height: 1.6;
+    color: var(--theme-on-bg-muted);
+  }
+
+  .hv-terms {
+    position: relative;
+    overflow: hidden;
+    padding: clamp(1.5rem, 3.5vw, 2.5rem);
+    background: #fff;
+    border: 1px solid var(--theme-surface-2);
+    border-radius: 22px;
+    box-shadow: 0 34px 64px -48px rgba(26, 29, 35, 0.45);
+  }
+
+  .hv-terms::before {
+    content: '';
+    position: absolute;
+    inset: 0 0 auto 0;
+    height: 4px;
+    background: var(--gradient-accent);
+  }
+
+  .hv-terms__head {
+    padding-bottom: 1rem;
+    font-size: 0.74rem;
+    font-weight: 700;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--ink-500);
+    border-bottom: 1px solid var(--theme-surface-2);
+  }
+
+  .hv-terms__list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+
+  .hv-terms__list li {
+    display: grid;
+    grid-template-columns: 44px minmax(0, 1fr);
+    gap: 0.9rem;
+    padding: 1.2rem 0;
+    border-bottom: 1px dashed var(--theme-surface-2);
+  }
+
+  .hv-terms__num {
+    padding-top: 0.2rem;
+    font-size: 0.95rem;
+    font-weight: 800;
+    color: var(--theme-primary);
+    font-variant-numeric: tabular-nums;
+  }
+
+  .hv-terms h3 {
+    margin-bottom: 0.3rem;
+    font-size: 1.12rem;
+    letter-spacing: -0.015em;
+    line-height: 1.3;
+  }
+
+  .hv-terms p {
+    font-size: 0.93rem;
+    line-height: 1.6;
+    color: var(--theme-on-bg-muted);
+  }
+
+  .hv-terms__sign {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    padding-top: 1.1rem;
+    font-size: 0.85rem;
+    font-style: italic;
+    color: var(--ink-500);
+  }
+
+  .hv-terms__sign :global(.hv-terms__logo) {
+    height: 40px;
+    width: auto;
+  }
+
+  /* ═══════════════════════════════════════════
+     7. ΠΩΣ ΞΕΚΙΝΑΜΕ
+     ═══════════════════════════════════════════ */
+
+  .hv-plan {
+    background: var(--gradient-subtle);
+  }
+
+  .hv-plan__steps {
+    position: relative;
+    list-style: none;
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: clamp(1.5rem, 3vw, 2rem);
+    margin: 0;
+    padding: 0;
+  }
+
+  /* Η διακεκομμένη γραμμή που ενώνει τα βήματα, από κέντρο σε κέντρο. */
+  .hv-plan__steps::before {
+    content: '';
+    position: absolute;
+    top: 28px;
+    left: calc(100% / 6);
+    right: calc(100% / 6);
+    height: 2px;
+    background: repeating-linear-gradient(90deg, var(--purple-300) 0 8px, transparent 8px 16px);
+  }
+
+  .hv-step {
+    text-align: center;
+  }
+
+  .hv-step__num {
+    position: relative;
+    z-index: 1;
+    display: grid;
+    place-items: center;
+    width: 56px;
+    height: 56px;
+    margin: 0 auto 1.25rem;
+    font-size: 1.2rem;
+    font-weight: 800;
+    color: var(--theme-primary);
+    background: #fff;
+    border: 2px solid var(--purple-200);
+    border-radius: 50%;
+  }
+
+  .hv-step:last-child .hv-step__num {
+    color: #fff;
+    background: var(--theme-primary);
+    border-color: var(--theme-primary);
+  }
+
+  .hv-step h3 {
+    margin-bottom: 0.5rem;
+    font-size: 1.2rem;
+    letter-spacing: -0.02em;
+  }
+
+  .hv-step p {
+    max-width: 34ch;
+    margin-inline: auto;
+    font-size: 0.94rem;
+    line-height: 1.6;
+    color: var(--theme-on-bg-muted);
+  }
+
+  .hv-plan__cta {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1.1rem;
+    margin-top: clamp(2.75rem, 5vw, 3.75rem);
+  }
+
+  /* ═══════════════════════════════════════════
+     RESPONSIVE
+     ═══════════════════════════════════════════ */
+
+  @media (max-width: 1024px) {
+    .hv-gains__grid {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .hv-stakes__bottom,
+    .hv-promise__layout {
+      grid-template-columns: minmax(0, 1fr);
+    }
+
+    .hv-stakes__cta {
+      max-width: 560px;
+    }
+
+    .hv-team {
+      max-width: 620px;
+    }
+  }
+
+  @media (max-width: 879px) {
+    .hv-panel {
+      grid-template-columns: minmax(0, 1fr);
+    }
+
+    .hv-paths__tabs {
+      grid-template-columns: minmax(0, 1fr);
+    }
+
+    .hv-reviews__grid {
+      grid-template-columns: minmax(0, 1fr);
+    }
+
+    .hv-case {
+      grid-template-columns: minmax(0, 1fr);
+    }
+
+    .hv-case .hv-frame {
+      max-width: 560px;
+    }
+  }
+
+  @media (max-width: 768px) {
+    .hv-gains__grid,
+    .hv-stats,
+    .hv-plan__steps {
+      grid-template-columns: minmax(0, 1fr);
+    }
+
+    .hv-stats {
+      gap: 1.75rem;
+    }
+
+    .hv-plan__steps::before {
+      display: none;
+    }
+
+    .hv-calc__fields {
+      grid-template-columns: minmax(0, 1fr);
+    }
+
+    .hv-case__row {
+      grid-template-columns: minmax(0, 1fr);
+      gap: 0.3rem;
+    }
+  }
+
+  @media (max-width: 480px) {
+    .hv-calc__result {
+      grid-template-columns: minmax(0, 1fr);
+      gap: 0.6rem;
+    }
+
+    .hv-calc__result > div {
+      flex-direction: row;
+      align-items: baseline;
+      justify-content: space-between;
+      gap: 1rem;
+    }
+
+    .hv-mini {
+      grid-template-columns: 84px minmax(0, 1fr);
+    }
+
+    .hv-mini img {
+      width: 84px;
+      height: 63px;
+    }
+
+    .hv-mini__arrow {
+      display: none;
+    }
+
+    .hv-panel__main .hv-btn {
+      width: 100%;
+      justify-content: center;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .hv-gain__pain s::after,
+    .hv-gain__dot,
+    .hv-frame,
+    .hv-gain,
+    .hv-tab,
+    .hv-case-tab,
+    .hv-mini,
+    .hv-btn {
+      transition: none;
+    }
+
+    .hv-paths.is-enhanced .hv-panel:not([hidden]),
+    .hv-stories.is-enhanced .hv-case:not([hidden]) {
+      animation: none;
+    }
+  }
+</style>

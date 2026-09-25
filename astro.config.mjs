@@ -44,8 +44,9 @@ export default defineConfig({
 	integrations: [
 		sitemap({
 			// Οι σελίδες κατάστασης της φόρμας δεν είναι προορισμοί αναζήτησης:
-			// βγάζουν νόημα μόνο αμέσως μετά από υποβολή.
-			filter: (page) => !/\/(success|fail)$/.test(page.replace(/\/$/, '')),
+			// βγάζουν νόημα μόνο αμέσως μετά από υποβολή. Το /homev2 είναι
+			// noindex όσο συγκρίνεται με την αρχική, άρα δεν ανήκει στο sitemap.
+			filter: (page) => !/\/(success|fail|homev2)$/.test(page.replace(/\/$/, '')),
 		}),
 		mdx(),
 		icon(),
